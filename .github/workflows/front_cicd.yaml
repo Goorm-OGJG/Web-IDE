@@ -1,0 +1,36 @@
+name: Front-CICD
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "front/**"
+jobs:
+  build-front:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@master
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Npm Install
+        working-directory: front
+        run: |
+          npm install
+      - name: Npm Build
+        working-directory: front
+        run: |
+          npm run build
+      - name: Upload /build to S3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --delete
+        env:
+          AWS_S3_BUCKET: ${{ secrets.FRONT_AWS_STAGING_BUCKET_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.FRONT_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.FRONT_AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.FRONT_AWS_DEFAULT_REGION }}
+          SOURCE_DIR: "front/dist"
