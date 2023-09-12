@@ -57,8 +57,9 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
           
       - name: print
-        run: ls -a |
-          cd ./back |
+        run: |
+          ls -a
+          cd ./back
           ls -a
 
       - name: Build and push
