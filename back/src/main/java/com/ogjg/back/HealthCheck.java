@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HealthCheck {
     @GetMapping("/health-check")
     public ResponseEntity<?> heclthCheck() {
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("체크 완료", HttpStatus.OK);
     }
 }
