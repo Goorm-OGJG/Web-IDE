@@ -33,11 +33,24 @@ jobs:
         run: ./gradlew build -x test
         working-directory: ./back
 
-      - name: Upload Build Artifact
+      - name: Upload Gradle Build Artifact
         uses: actions/upload-artifact@v3
         with:
           name: web-ide.jar
           path: back/build/libs/back-0.0.1-SNAPSHOT.jar
+
+      - name: Upload Dockerfile Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Dockerfile
+          path: back/Dockerfile
+
+      - name: Upload docker-compose.yml Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker-compose
+          path: back/docker-compose.yml
+
 
   deploy:
     needs: build
@@ -48,7 +61,16 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: web-ide.jar
-          path: ./back/
+
+      - name: Download Dockerfile Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: Dockerfile
+
+      - name: Download docker-compose.yml Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: docker-compose
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -65,7 +87,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: ./back/
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/web-ide:latest
 
@@ -78,4 +99,4 @@ jobs:
           environment_name: OGJG-env
           version_label: OGJG_Deploy-${{ github.SHA }}
           region: ${{ secrets.BACK_AWS_REGION }}
-          deployment_package: ./back/docker-compose.yml
+          deployment_package: docker-compose.yml
