@@ -78,6 +78,9 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
+      - name: Zip the docker-compose file
+        run: zip deployment.zip docker-compose.yml
+
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
@@ -94,4 +97,4 @@ jobs:
           environment_name: OGJG-env
           version_label: OGJG_Deploy-${{ github.SHA }}
           region: ${{ secrets.BACK_AWS_REGION }}
-          deployment_package: docker-compose.yml
+          deployment_package: deployment.zip
