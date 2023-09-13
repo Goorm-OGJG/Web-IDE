@@ -25,7 +25,7 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
-    public ApiResponse<?> customValidationHandler(
+    public ApiResponse<?> validationHandler(
             HttpServletResponse response, MethodArgumentNotValidException e
     ) {
         response.setStatus(ErrorCode.INVALID_FORMAT.getStatusCode().value());
