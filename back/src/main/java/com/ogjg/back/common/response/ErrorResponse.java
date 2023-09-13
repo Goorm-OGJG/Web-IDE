@@ -3,7 +3,7 @@ package com.ogjg.back.common.response;
 import com.ogjg.back.common.exception.ErrorCode;
 import com.ogjg.back.common.exception.ErrorData;
 
-public class ErrorResponse extends ApiResponse{
+public class ErrorResponse extends ApiResponse<Object> {
 
     public ErrorResponse(ErrorCode errorCode) {
         super(errorCode);

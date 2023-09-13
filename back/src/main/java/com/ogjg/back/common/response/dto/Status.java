@@ -4,7 +4,6 @@ package com.ogjg.back.common.response.dto;
 import com.ogjg.back.common.exception.ErrorCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @NoArgsConstructor

@@ -5,7 +5,7 @@ import com.ogjg.back.common.response.dto.Status;
 import lombok.Getter;
 
 @Getter
-public class ApiResponse<T>{
+public class ApiResponse<T> {
 
     private Status status;
 

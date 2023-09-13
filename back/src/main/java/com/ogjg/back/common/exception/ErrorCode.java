@@ -7,8 +7,9 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ErrorCode {
 
-    SUCCESS(HttpStatus.OK,"200","OK"),
-    NOT_FOUND_USER(HttpStatus.NOT_FOUND, "코드는내맘대로에러","회원를 찾을 수 없습니다");
+    SUCCESS(HttpStatus.OK, "200", "OK"),
+    NOT_FOUND_USER(HttpStatus.NOT_FOUND, "404", "회원를 찾을 수 없습니다"),
+    INVALID_FORMAT(HttpStatus.BAD_REQUEST, "400", "데이터를 검증 실패");
 
     @JsonIgnore
     private final HttpStatus statusCode;
@@ -21,7 +22,7 @@ public enum ErrorCode {
         this.message = message;
     }
 
-    ErrorCode changeMessage(String message){
+    public ErrorCode changeMessage(String message) {
         this.message = message;
         return this;
     }
