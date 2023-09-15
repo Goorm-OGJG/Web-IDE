@@ -12,6 +12,7 @@ on:
 
 jobs:
   build:
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/feature/backend-cd-test')
     runs-on: ubuntu-latest
 
     steps:
