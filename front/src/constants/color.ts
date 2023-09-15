@@ -1,23 +1,30 @@
-//Main
-export const Point = "#F96262";
-
 // Black & White
-export const White = "#FAFAFA";
-export const Black = "#000";
+export const White = "#FFFFFF";
+export const Black = "#000000";
 
 // Grayscale
-export const Gray1 = "#ebebeb";
-export const Gray2 = "#b7b7b7";
-export const Gray3 = "#757575";
-export const Gray4 = "#646464";
-export const Gray5 = "#242424";
+export const Gray1 = "#F5F5F5";
+export const Gray2 = "#E2E1E5";
+export const Gray3 = "#D2D2D2";
+export const Gray4 = "#B4B4B4";
+export const Gray5 = "#D9D9D9";
+export const Gray6 = "#858899";
+export const Gray7 = "#696969";
+export const Gray8 = "#384051";
+export const Gray9 = "#2F3336";
+export const Gray10 = "#525463";
+export const Gray11 = "#141617";
+export const Gray12 = "#2B2D36";
 
-// Notice
-export const NoticeBg = "#707B82";
-export const NoticeLine = "#57626A";
+// Purple
+export const Purple1 = "#5C7CEE";
+export const Purple2 = "#5E5BFF";
 
-// Blue
-export const Blue1 = "#446DD7";
-export const Blue2 = "#3670a5";
+// Red
+export const Red1 = "#EC4E60";
+export const Red2 = "#F14668";
+
+// Green
+export const Green1 = "#00A881";
 
 export const Overlay = "rgba(0,0,0,0.3)";
