@@ -30,6 +30,8 @@ export const Modal = styled.div`
   background-color: ${COLOR.White};
   padding: 20px;
   border-radius: 5px;
+  max-width: 450px;
+  width: 90%;
 `;
 
 export const Title = styled.h3`
@@ -72,6 +74,7 @@ export const EndWrapper = styled(InfoWrapper)`
   display: flex;
   justify-content: flex-end;
   padding-bottom: 10px;
+  gap: 10px;
 `;
 
 export const DeleteButton = styled(CancelButton)`
