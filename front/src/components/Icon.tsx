@@ -10,6 +10,7 @@ import * as Fa from "react-icons/fa";
 import * as Ri from "react-icons/ri";
 import * as Gr from "react-icons/gr";
 import * as Fi from "react-icons/fi";
+import "./Icons.css";
 const DEFAULT = 16;
 
 // 로그인
@@ -54,7 +55,9 @@ export const Back = ({ size = DEFAULT }) => <Bs.BsArrowLeftShort size={size} />;
 // 컨테이너 코드 편집
 export const FolderOpen = ({ size = DEFAULT }) => <Ai.AiFillFolderOpen size={size} />;
 export const FolderClose = ({ size = DEFAULT }) => <Bs.BsFolderMinus size={size} />;
-export const Refresh = ({ size = DEFAULT }) => <Gr.GrRefresh size={size} />;
+export const Refresh = ({ size = DEFAULT }) => (
+  <Gr.GrRefresh size={size} className="GrReresh" />
+);
 export const Save = ({ size = DEFAULT }) => <Bi.BiSave size={size} />;
 export const Chat = ({ size = DEFAULT }) => <Bs.BsChatLeftDots size={size} />;
 

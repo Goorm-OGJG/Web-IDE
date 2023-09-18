@@ -1,5 +1,11 @@
+import Sidebar from "./components/Sidebar/Sidebar";
+import * as S from "./EditContainer.style";
 function EditContainer() {
-  return <div>EditContainer</div>;
+  return (
+    <S.Container>
+      <Sidebar />
+    </S.Container>
+  );
 }
 
 export default EditContainer;

@@ -10,8 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@monaco-editor/react": "^4.5.2",
     "@tanstack/react-query": "^4.33.0",
     "axios": "^1.4.0",
+    "rc-tooltip": "^6.0.1",
+    "rc-tree": "^5.7.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.10.1",
