@@ -13,7 +13,7 @@ function Sidebar() {
       <Desktop>
         <S.Container>
           <SidebarHeader />
-          <SidebarFileTree />/
+          <SidebarFileTree />
         </S.Container>
       </Desktop>
 
@@ -26,7 +26,7 @@ function Sidebar() {
           {isSidebarOpened && (
             <S.Container>
               <SidebarHeader />
-              <SidebarFileTree />/
+              <SidebarFileTree />
             </S.Container>
           )}
         </S.MobileContainer>
