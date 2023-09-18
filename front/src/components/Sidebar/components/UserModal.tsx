@@ -1,7 +1,7 @@
 import * as S from "./UserModal.style";
 import * as Icon from "../../Icon";
 import { useNavigate } from "react-router";
-const users = {
+const user = {
   id: 1,
   userName: "조재균(풀스택1회차)",
   userEmail: "kyeun950830@gmail.com",
@@ -9,22 +9,25 @@ const users = {
 };
 function UserModal() {
   const navigate = useNavigate();
+  const handleNavigate = (destination: string) => {
+    navigate(destination);
+  };
   return (
     <>
       <S.UserModalBox>
         <S.UserHeader>
           <S.UserImgBox>
-            <S.UserImg src={users.imgUrl} alt="userImg" />
+            <S.UserImg src={user.imgUrl} alt="userImg" />
           </S.UserImgBox>
-          <S.UserName>{users.userName}</S.UserName>
+          <S.UserName>{user.userName}</S.UserName>
         </S.UserHeader>
         <S.UserEmailBox>
-          <S.UserEmail>{users.userEmail}</S.UserEmail>
+          <S.UserEmail>{user.userEmail}</S.UserEmail>
         </S.UserEmailBox>
         <S.EtcBox>
           <S.SettingBox
             onClick={() => {
-              navigate(`/my`);
+              handleNavigate(`/my`);
             }}
           >
             <S.SettingIcon>

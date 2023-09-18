@@ -7,7 +7,7 @@ import { Desktop, Mobile } from "../../components/Responsive";
 function Main() {
   const isSidebarOpen = useRecoilValue(isSidebarOpenState);
   const isMSidebarOpen = useRecoilValue(isMSidebarOpenState);
-  console.log(isSidebarOpen);
+
   return (
     <div>
       <Desktop>

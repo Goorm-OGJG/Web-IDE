@@ -25,9 +25,9 @@ function Sidebar() {
   const handleHoverOutMenu = () => {
     setIsMenuHover(false);
   };
-  console.log("isSidebarOpen", isSidebarOpen);
-  console.log("isMSidebarOpen", isMSidebarOpen);
-
+  const handleNavigate = (destination: string) => {
+    navigate(destination);
+  };
   return (
     <div>
       <Desktop>
@@ -49,7 +49,7 @@ function Sidebar() {
           <UserInfo />
           <S.MyPageBtn
             onClick={() => {
-              navigate(`/my`);
+              handleNavigate(`/my`);
             }}
           >
             <Icon.User />
