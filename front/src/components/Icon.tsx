@@ -21,6 +21,7 @@ export const Build = ({ size = DEFAULT }) => <Hi2.HiOutlineBuildingOffice2 size=
 export const Menu = ({ size = DEFAULT }) => <Ai.AiOutlineMenu size={size} />;
 export const MenuHide = ({ size = DEFAULT }) => <Ai.AiOutlineDoubleLeft size={size} />;
 export const Bell = ({ size = DEFAULT }) => <Go.GoBellFill size={size} />;
+export const Space = ({ size = DEFAULT }) => <Md.MdOutlineSpaceDashboard size={size} />;
 export const LogOut = ({ size = DEFAULT }) => <Io.IoLogOutOutline size={size} />;
 export const DownArrow1 = ({ size = DEFAULT }) => <Bi.BiSolidDownArrow size={size} />;
 export const RightArrow1 = ({ size = DEFAULT }) => <Bi.BiSolidRightArrow size={size} />;
