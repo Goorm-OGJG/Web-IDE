@@ -7,7 +7,7 @@ export const Header = styled.div`
   padding: 10px;
   background-color: ${COLOR.Gray10};
   justify-content: space-between;
-  color: white;
+  color: ${COLOR.White};
   height: 30px;
   align-items: center;
 `;

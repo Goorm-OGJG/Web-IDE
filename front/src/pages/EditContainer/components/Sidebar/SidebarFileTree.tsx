@@ -2,6 +2,8 @@ import Tree, { TreeNode, TreeNodeProps, TreeProps } from "rc-tree";
 import "rc-tree/assets/index.css";
 import * as T from "../../../../types/FileTree";
 import * as S from "./SidebarFileTree.style";
+import * as FONT from "../../../../constants/font";
+import * as COLOR from "../../../../constants/color";
 import { getIcon } from "../../../../components/FileIcon";
 import { useRecoilValue } from "recoil";
 import { isExtandAllFilesState } from "../../../../recoil/CodeEditorState";
@@ -40,7 +42,7 @@ const fileData: T.FileData = {
 function SidebarFileTree() {
   const [selectedInfo, setSelectedInfo] = useState<T.InfoType | null>(null);
   const isExtandAllFiles = useRecoilValue<number>(isExtandAllFilesState);
-  
+
   // 파일시스템 요소 타입(파일, 혹은 디렉토리)에 따른 아이콘 생성 로직
   const switcherIcon: TreeProps["switcherIcon"] = (fsElement) => {
     let iconType: string;
@@ -78,9 +80,9 @@ function SidebarFileTree() {
             title={fsElement.title}
             key={fsElement.key}
             style={{
-              fontWeight: "bold",
-              color: "#a9a9a9",
-              fontSize: "13px",
+              fontWeight: FONT.Bold,
+              color: COLOR.Gray3,
+              fontSize: FONT.S,
             }}
           >
             {getTreeNode(fsElement.children)}
@@ -94,9 +96,8 @@ function SidebarFileTree() {
             title={fsElement.title}
             key={fsElement.key}
             style={{
-              fontWeight: "normal",
-              color: "#a9a9a9",
-              fontSize: "13px",
+              color: COLOR.Gray3,
+              fontSize: FONT.S,
             }}
           />
         );
