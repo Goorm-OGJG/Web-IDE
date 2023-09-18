@@ -32,6 +32,8 @@ function ContextMenu({ info, setSelectedInfo }: PropsType) {
   return (
     <S.Menus ref={contextMenuRef} y={info.event.clientY} x={info.event.clientX}>
       {isFile && <S.Menu>저장</S.Menu>}
+      {!isFile && <S.Menu>파일 추가</S.Menu>}
+      {!isFile && <S.Menu>폴더 추가</S.Menu>}
       <S.Menu>이름 변경</S.Menu>
       <S.Menu>삭제</S.Menu>
     </S.Menus>
