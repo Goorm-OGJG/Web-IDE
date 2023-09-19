@@ -16,6 +16,8 @@ export const Input = styled.input`
   border-radius: 5px;
   transition: 0.3s;
   padding-right: 40px;
+
+  margin-bottom: 10px;
   & ::placeholder {
     color: ${COLOR.Gray4};
   }
@@ -33,4 +35,15 @@ export const Count = styled.span`
   font-size: ${FONT.S};
   padding: 5px;
   color: ${COLOR.Gray4};
+`;
+
+export const AlertP = styled.p`
+  position: absolute;
+  color: ${COLOR.Red1};
+  font-size: ${FONT.XS};
+  padding-top: 5px;
+`;
+
+export const CorrectP = styled(AlertP)`
+  color: ${COLOR.Green1};
 `;

@@ -8,7 +8,7 @@ export const InfoTitle = styled.h4`
   font-size: ${FONT.M};
   color: ${COLOR.Gray9};
   margin-left: 5px;
-  margin-top: 15px;
+  margin-top: 30px;
   margin-bottom: 20px;
 `;
 
@@ -35,12 +35,13 @@ export const Input = styled.input`
 
 export const Button = styled.button`
   border: none;
-  margin-top: 20px;
+  margin-top: 30px;
   width: 100%;
   line-height: 1em;
   color: ${COLOR.White};
   background-color: ${COLOR.Purple1};
   padding: 10px;
   border-radius: 5px;
+
   cursor: pointer;
 `;

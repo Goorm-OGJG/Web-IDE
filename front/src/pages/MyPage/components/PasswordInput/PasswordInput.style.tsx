@@ -47,3 +47,19 @@ export const IconWrapper = styled.div`
 export const IconBox = styled.div`
   position: absolute;
 `;
+
+export const AlertP = styled.p`
+  position: absolute;
+  color: ${COLOR.Red1};
+  font-size: ${FONT.XS};
+  padding-top: 5px;
+`;
+
+export const CorrectP = styled(AlertP)`
+  color: ${COLOR.Green1};
+`;
+
+export const PasswordWrapper = styled.div`
+  position: relative;
+  padding-bottom: 20px;
+`;

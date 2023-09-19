@@ -8,7 +8,7 @@ export const InfoTitle = styled.h4`
   font-size: ${FONT.M};
   color: ${COLOR.Gray9};
   margin-left: 5px;
-  margin-top: 15px;
+  margin-top: 30px;
 `;
 
 export const Input = styled.input`
@@ -21,7 +21,6 @@ export const Input = styled.input`
   border-radius: 5px;
   margin-top: 20px;
   transition: 0.3s;
-
   &::placeholder {
     color: ${COLOR.Gray12};
     font-size: ${FONT.S};
@@ -30,6 +29,17 @@ export const Input = styled.input`
   &:focus {
     border: 1px solid ${COLOR.Purple1};
   }
+`;
+
+export const AlertP = styled.p`
+  position: absolute;
+  color: ${COLOR.Red1};
+  font-size: ${FONT.XS};
+  padding-top: 5px;
+`;
+
+export const CorrectP = styled(AlertP)`
+  color: ${COLOR.Green1};
 `;
 
 export const Button = styled.button`
