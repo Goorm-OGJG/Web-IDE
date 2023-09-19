@@ -75,7 +75,7 @@ function VoiceChat() {
   };
 
   return (
-    <S.Wrapper>
+    <React.Fragment>
       <S.IconBox>
         <S.Button onClick={connectRoom} isConnect={isConnect}>
           <Icon.Phone size={25} />
@@ -117,7 +117,7 @@ function VoiceChat() {
           </Mobile>
         </React.Fragment>
       )}
-    </S.Wrapper>
+    </React.Fragment>
   );
 }
 

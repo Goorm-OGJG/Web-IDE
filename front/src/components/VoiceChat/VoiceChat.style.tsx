@@ -6,23 +6,13 @@ interface Style {
   isConnect: boolean;
 }
 
-export const Wrapper = styled.div`
-  position: relative;
-`;
-
 export const Button = styled.button<Style>`
   display: flex;
   padding: 0;
   border: none;
   cursor: pointer;
-  padding: 10px;
-  background-color: ${(props) =>
-    props.isConnect ? `${COLOR.Green1}` : `${COLOR.Gray10}`};
+  background-color: ${(props) => (props.isConnect ? `${COLOR.Green1}` : `transparent`)};
   color: ${COLOR.White};
-
-  &:hover {
-    background-color: ${COLOR.Gray11};
-  }
 `;
 
 export const IconBox = styled.div`

@@ -31,7 +31,10 @@ function MSidebar({ isSidebarOpened, setIsSidebarOpened }: PropsType) {
         <S.IconWrapper>
           <Icon.Chat size={25} />
         </S.IconWrapper>
-        <VoiceChat />
+
+        <S.IconWrapper>
+          <VoiceChat />
+        </S.IconWrapper>
       </S.Icons>
     </S.Container>
   );
