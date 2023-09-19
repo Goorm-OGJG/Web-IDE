@@ -1,19 +1,21 @@
 package com.ogjg.back.user.domain;
 
-import jakarta.persistence.*;
+import com.ogjg.back.user.dto.request.UserRequest;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long id;
-
     private String email;
 
     private String password;
@@ -22,8 +24,10 @@ public class User {
 
     private String userImg;
 
-    @OneToOne
-    @JoinColumn(name = "refreshtoken_id")
-    private RefreshToken refreshToken;
-
+    @Builder
+    public User(UserRequest userRequest) {
+        this.email = userRequest.getEmail();
+        this.password = userRequest.getPassword();
+        this.name = userRequest.getName();
+    }
 }
