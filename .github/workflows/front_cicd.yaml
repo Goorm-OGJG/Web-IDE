@@ -16,6 +16,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Create .env file
+        working-directory: front
+        run: |
+          touch .env
+          echo VITE_KAKAO_ID=${{ secrets.VITE_KAKAO_ID }} >> .env
+          echo VITE_KAKAO_SECRET=${{ secrets.VITE_KAKAO_SECRET }} >> .env
+          cat .env
       - name: Npm Install
         working-directory: front
         run: |

@@ -10,6 +10,7 @@ import * as Fa from "react-icons/fa";
 import * as Ri from "react-icons/ri";
 import * as Gr from "react-icons/gr";
 import * as Fi from "react-icons/fi";
+import * as Pi from "react-icons/pi";
 import "./Icons.css";
 const DEFAULT = 16;
 
@@ -66,3 +67,10 @@ export const Emoji = ({ size = DEFAULT }) => <Bs.BsEmojiSmile size={size} />;
 export const User = ({ size = DEFAULT }) => <Ai.AiOutlineUser size={size} />;
 
 export const ChatLogOut = ({ size = DEFAULT }) => <Fi.FiLogOut size={size} />;
+
+// 보이스 채팅 UI
+export const Mic = ({ size = DEFAULT }) => <Pi.PiMicrophoneLight size={size} />;
+export const MicX = ({ size = DEFAULT }) => <Pi.PiMicrophoneSlashLight size={size} />;
+export const Phone = ({ size = DEFAULT }) => <Pi.PiPhoneLight size={size} />;
+export const PhoneX = ({ size = DEFAULT }) => <Pi.PiPhoneXLight size={size} />;
+export const Speaker = ({ size = DEFAULT }) => <Pi.PiSpeakerHigh size={size} />;

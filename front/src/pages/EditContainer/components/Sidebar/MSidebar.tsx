@@ -1,6 +1,7 @@
 import * as S from "./MSidebar.style";
 import * as Icon from "../../../../components/Icon";
 import React from "react";
+import VoiceChat from "../../../../components/VoiceChat/VoiceChat";
 
 type PropsType = {
   isSidebarOpened: boolean;
@@ -30,6 +31,7 @@ function MSidebar({ isSidebarOpened, setIsSidebarOpened }: PropsType) {
         <S.IconWrapper>
           <Icon.Chat size={25} />
         </S.IconWrapper>
+        <VoiceChat />
       </S.Icons>
     </S.Container>
   );
