@@ -66,6 +66,7 @@ export const Refresh = ({ size = DEFAULT }) => (
 );
 export const Save = ({ size = DEFAULT }) => <Bi.BiSave size={size} />;
 export const Chat = ({ size = DEFAULT }) => <Bs.BsChatLeftDots size={size} />;
+export const Close = ({ size = DEFAULT }) => <Ai.AiOutlineClose size={size} />;
 
 // 채팅 UI
 export const Emoji = ({ size = DEFAULT }) => <Bs.BsEmojiSmile size={size} />;

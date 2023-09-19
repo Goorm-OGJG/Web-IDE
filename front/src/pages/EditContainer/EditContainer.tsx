@@ -1,10 +1,13 @@
+import ResizableDiv from "../../components/ResizeableDiv/ResizeableDiv";
+import CodeEditer from "./components/CodeEditor/CodeEditor";
 import Sidebar from "./components/Sidebar/Sidebar";
-import * as S from "./EditContainer.style";
+
 function EditContainer() {
   return (
-    <S.Container>
+    <ResizableDiv initialRatios={[2, 10]}>
       <Sidebar />
-    </S.Container>
+      <CodeEditer />
+    </ResizableDiv>
   );
 }
 

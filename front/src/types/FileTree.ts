@@ -16,3 +16,8 @@ export type InfoType = {
   event: React.MouseEvent<Element, MouseEvent>;
   node: EventDataNode<DataNode>;
 };
+
+export type TabsStateType = {
+  active: number;
+  files: string[];
+};

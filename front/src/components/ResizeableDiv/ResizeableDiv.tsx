@@ -2,12 +2,16 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 
 type ResizableContainerProps = {
   children: React.ReactNode[];
+  initialRatios?: number[];
 };
 
-const ResizableContainer: React.FC<ResizableContainerProps> = ({ children }) => {
-  const initialWidth = 100 / children.length;
-  const [widths, setWidths] = useState<number[]>(
-    new Array(children.length).fill(initialWidth),
+const ResizableContainer: React.FC<ResizableContainerProps> = ({
+  children,
+  initialRatios,
+}) => {
+  const initialRatio = 100 / children.length;
+  const [flexes, setFlexes] = useState<number[]>(
+    initialRatios ? initialRatios : new Array(children.length).fill(initialRatio),
   );
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [draggingDivIndex, setDraggingDivIndex] = useState<number | null>(null);
@@ -28,18 +32,23 @@ const ResizableContainer: React.FC<ResizableContainerProps> = ({ children }) => 
       if (isDragging && containerRef.current !== null && draggingDivIndex !== null) {
         const totalWidth = containerRef.current.getBoundingClientRect().width;
         const newWidth =
-          ((e.clientX - containerRef.current.getBoundingClientRect().left) / totalWidth) *
-          100;
-        const offset = newWidth - widths[draggingDivIndex];
+          (e.clientX - containerRef.current.getBoundingClientRect().left) / totalWidth;
 
-        const updatedWidths = [...widths];
-        updatedWidths[draggingDivIndex] = newWidth;
-        updatedWidths[draggingDivIndex + 1] -= offset;
+        let remainingFlex = 1 - newWidth; // 전체 flex 값에서 newWidth를 뺀 값
+        remainingFlex -= flexes
+          .slice(0, draggingDivIndex)
+          .reduce((acc, val) => acc + val, 0); // 앞쪽 div들의 flex 값을 뺌
 
-        setWidths(updatedWidths);
+        const updatedFlexes = [...flexes];
+        updatedFlexes[draggingDivIndex] = newWidth;
+        if (draggingDivIndex + 1 < flexes.length) {
+          updatedFlexes[draggingDivIndex + 1] = remainingFlex; // 남은 flex 값을 다음 div에 할당
+        }
+
+        setFlexes(updatedFlexes);
       }
     },
-    [isDragging, draggingDivIndex, widths],
+    [isDragging, draggingDivIndex, flexes],
   );
 
   useEffect(() => {
@@ -57,7 +66,7 @@ const ResizableContainer: React.FC<ResizableContainerProps> = ({ children }) => 
       {React.Children.map(children, (child, index) => (
         <div
           style={{
-            width: `${widths[index] || initialWidth}%`,
+            flex: flexes[index] || initialRatio,
             position: "relative",
             minWidth: "200px",
           }}
