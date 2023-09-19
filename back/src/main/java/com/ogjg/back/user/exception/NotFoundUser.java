@@ -5,11 +5,12 @@ import com.ogjg.back.common.exception.ErrorCode;
 import com.ogjg.back.common.exception.ErrorData;
 
 public class NotFoundUser extends CustomException {
-    public NotFoundUser(ErrorCode errorCode) {
-        super(errorCode);
+
+    public NotFoundUser() {
+        super(ErrorCode.NOT_FOUND_USER);
     }
 
-    public NotFoundUser(ErrorCode errorCode, ErrorData errorData) {
-        super(errorCode, errorData);
+    public NotFoundUser(ErrorData errorData) {
+        super(ErrorCode.NOT_FOUND_USER, errorData);
     }
 }
