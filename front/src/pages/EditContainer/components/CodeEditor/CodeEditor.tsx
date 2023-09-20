@@ -5,6 +5,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { codeState, tabsState } from "../../../../recoil/CodeEditorState";
 import * as S from "./CodeEditor.style";
 import Tab from "./Components/Tab";
+import { Desktop, Mobile } from "../../../../components/Responsive";
 
 function CodeEditer() {
   const [code, setCode] = useRecoilState(codeState);
@@ -37,22 +38,45 @@ function CodeEditer() {
 
   return (
     <React.Fragment>
-      <S.Header>
-        {tabs.files.map((file) => (
-          <Tab key={file} file={file} />
-        ))}
-      </S.Header>
+      <Desktop>
+        <S.Header>
+          {tabs.files.map((file) => (
+            <Tab key={file} file={file} />
+          ))}
+        </S.Header>
 
-      <Editor
-        height="100vh"
-        defaultLanguage="javascript"
-        onMount={handleEditorDidMount}
-        theme="vs-dark"
-        options={options}
-        value={code}
-        onChange={handleCode}
-      />
-      {/* <div onClick={showValue}>Show value</div> */}
+        <Editor
+          height="100vh"
+          defaultLanguage="javascript"
+          onMount={handleEditorDidMount}
+          theme="vs-dark"
+          options={options}
+          value={code}
+          onChange={handleCode}
+        />
+        {/* <div onClick={showValue}>Show value</div> */}
+      </Desktop>
+
+      <Mobile>
+        <S.MContainer>
+          <S.Header>
+            {tabs.files.map((file) => (
+              <Tab key={file} file={file} />
+            ))}
+          </S.Header>
+
+          <Editor
+            height="100vh"
+            defaultLanguage="javascript"
+            onMount={handleEditorDidMount}
+            theme="vs-dark"
+            options={options}
+            value={code}
+            onChange={handleCode}
+          />
+          {/* <div onClick={showValue}>Show value</div> */}
+        </S.MContainer>
+      </Mobile>
     </React.Fragment>
   );
 }

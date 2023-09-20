@@ -13,14 +13,14 @@ export const Menus = styled.div<PosType>`
   top: ${(props) => `${props.y}px`};
   left: ${(props) => `${props.x}px`};
   z-index: 10;
-  font-size: ${FONT.S};
+  font-size: ${FONT.XS};
 `;
 
 export const Menu = styled.div`
   padding: 10px 30px;
-  width: 250px;
+  width: 200px;
   background-color: ${COLOR.Gray8};
-  border-bottom: 1px solid ${COLOR.Gray6};
+  border-bottom: 1px solid ${COLOR.Gray10};
 
   &:hover {
     background-color: ${COLOR.Gray7};

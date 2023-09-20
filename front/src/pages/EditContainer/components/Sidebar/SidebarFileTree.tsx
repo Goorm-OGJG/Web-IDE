@@ -1,110 +1,65 @@
+// 외부 라이브러리
 import { useEffect, useState } from "react";
+import Tree, { TreeProps } from "rc-tree";
+import "rc-tree/assets/index.css";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import * as T from "../../../../types/FileTree";
 import * as S from "./SidebarFileTree.style";
-import * as FONT from "../../../../constants/font";
-import * as COLOR from "../../../../constants/color";
-import ContextMenu from "./ContextMenu";
-import "rc-tree/assets/index.css";
-import Tree, { TreeNode, TreeNodeProps, TreeProps } from "rc-tree";
+import * as RS from "../../../../recoil/CodeEditorState";
 import { getIcon } from "../../../../components/FileIcon";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  FileDataState,
-  TreeDataState,
-  codeState,
-  isExtandAllFilesState,
-  tabsState,
-} from "../../../../recoil/CodeEditorState";
+import ContextMenu from "./ContextMenu";
+import { getTreeNode } from "./TreeNodes";
 
 function SidebarFileTree() {
-  const [treeData, setTreeData] = useRecoilState(TreeDataState);
-  const [fileData, setFileData] = useRecoilState(FileDataState);
-  const [tabs, setTabs] = useRecoilState(tabsState);
+  const [tabs, setTabs] = useRecoilState(RS.tabsState);
+  const [treeData, setTreeData] = useRecoilState(RS.treeDataState);
+  const [fileData, setFileData] = useRecoilState(RS.fileDataState);
   const [selectedInfo, setSelectedInfo] = useState<T.InfoType | null>(null);
-  const isExtandAllFiles = useRecoilValue<number>(isExtandAllFilesState);
-  const setCode = useSetRecoilState(codeState);
+  const isExtandAllFiles = useRecoilValue<number>(RS.isExtandAllFilesState);
+  const setCode = useSetRecoilState(RS.codeState);
 
   // 파일시스템 요소 타입(파일, 혹은 디렉토리)에 따른 아이콘 생성 로직
   const switcherIcon: TreeProps["switcherIcon"] = (fsElement) => {
-    let iconType: string;
+    let iconType: string = fsElement.title?.toString().split(".").pop() as string;
+    const isDirectory: boolean = fsElement.isLeaf ? false : true;
 
-    if (isFile(fsElement)) iconType = getFileType(fsElement) as string;
-    else iconType = fsElement.expanded ? "openDirectory" : "closedDirectory";
+    if (isDirectory && fsElement.expanded) iconType = "openDirectory";
+    if (isDirectory && !fsElement.expanded) iconType = "closedDirectory";
 
     return getIcon(iconType);
   };
 
-  const isFile = (fsElement: TreeNodeProps) => {
-    return fsElement.isLeaf ? true : false;
-  };
-
-  const getFileType = (fsElement: TreeNodeProps) => {
-    return fsElement.title?.toString().split(".").pop();
-  };
-
   // 파일이 선택됐을 때 실행할 로직
   const onSelect: TreeProps["onSelect"] = (checkedKeys, info) => {
-    if (fileData[checkedKeys[0]]) {
-      const selectedFile = info.node.key as string;
-      let newTabs: T.TabsStateType;
+    const selectedKey = checkedKeys[0];
+    const selectedFile = info.node.key as string;
 
-      if (!tabs.files.includes(selectedFile)) {
-        newTabs = {
-          active: tabs.active + 1,
-          files: [...tabs.files, selectedFile],
-        };
-      } else {
-        newTabs = {
-          active: tabs.files.indexOf(selectedFile),
+    if (!fileData[selectedKey]) return;
+
+    const getNewTabsState = (): T.TabsStateType => {
+      const fileIndex = tabs.files.indexOf(selectedFile);
+
+      if (fileIndex !== -1) {
+        return {
+          active: fileIndex,
           files: tabs.files,
         };
       }
-      setTabs(newTabs);
-      setCode(`${fileData[checkedKeys[0]]}`);
-    }
+
+      return {
+        active: tabs.active + 1,
+        files: [...tabs.files, selectedFile],
+      };
+    };
+
+    const newTabs = getNewTabsState();
+    setTabs(newTabs);
+    setCode(`${fileData[selectedKey]}`);
   };
 
   const onRightClick: TreeProps["onRightClick"] = (info) => {
     setSelectedInfo(info);
   };
-
-  // 트리 노드 생성 함수
-  const getTreeNode = (data: T.FileTreeType) => {
-    return data.map((fsElement) => {
-      // 폴더인 경우
-      if (fsElement.children) {
-        return (
-          <TreeNode
-            title={fsElement.title}
-            key={fsElement.key}
-            style={{
-              fontWeight: FONT.Bold,
-              color: COLOR.Gray3,
-              fontSize: FONT.S,
-            }}
-          >
-            {getTreeNode(fsElement.children)}
-          </TreeNode>
-        );
-      }
-      // 파일인 경우
-      else {
-        return (
-          <TreeNode
-            title={fsElement.title}
-            key={fsElement.key}
-            style={{
-              color: COLOR.Gray3,
-              fontSize: FONT.S,
-            }}
-          />
-        );
-      }
-    });
-  };
-
-  // 트리 노드 생성
-  const treeNodes = getTreeNode(treeData);
 
   useEffect(() => {
     setTreeData([
@@ -153,7 +108,7 @@ function SidebarFileTree() {
         expandAction={"click"}
         autoExpandParent={true}
       >
-        {treeNodes}
+        {getTreeNode(treeData)}
       </Tree>
     </S.Container>
   );

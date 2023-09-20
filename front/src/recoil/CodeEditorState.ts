@@ -6,13 +6,13 @@ export const isExtandAllFilesState = atom<number>({
   default: 0,
 });
 
-export const TreeDataState = atom<T.FileTreeType>({
+export const treeDataState = atom<T.FileTreeType>({
   key: "treeDataState",
   default: [],
 });
 
-export const FileDataState = atom<T.FileData>({
-  key: "FileDataState",
+export const fileDataState = atom<T.FileData>({
+  key: "fileDataState",
   default: {},
 });
 
@@ -25,6 +25,6 @@ export const tabsState = atom<T.TabsStateType>({
   key: "tabsState",
   default: {
     active: -1,
-    files: []
+    files: [],
   },
 });

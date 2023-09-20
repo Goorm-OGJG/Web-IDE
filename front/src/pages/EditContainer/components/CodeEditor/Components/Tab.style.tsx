@@ -16,6 +16,7 @@ export const TabWrapper = styled.div<ActiveProps>`
   background-color: ${(props) => (props.active ? `${COLOR.Gray12}` : `transparent`)};
   color: ${COLOR.White};
   border-right: 1px solid ${COLOR.Gray6};
+  height: 30px;
 `;
 
 export const Tab = styled.div<ActiveProps>`

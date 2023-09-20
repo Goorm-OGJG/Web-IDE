@@ -2,7 +2,7 @@ import * as S from "./Tab.style";
 import * as Icon from "../../../../../components/Icon";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
-  FileDataState,
+  fileDataState,
   codeState,
   tabsState,
 } from "../../../../../recoil/CodeEditorState";
@@ -17,7 +17,7 @@ function Tab({ file }: PropsType) {
   const title = file.split("/").pop() as string;
   const [tabs, setTabs] = useRecoilState(tabsState);
   const setCode = useSetRecoilState(codeState);
-  const fileData = useRecoilValue(FileDataState);
+  const fileData = useRecoilValue(fileDataState);
 
   const handleTabClick = () => {
     const newTabs = { ...tabs };
@@ -45,7 +45,7 @@ function Tab({ file }: PropsType) {
     setTabs(newTabs);
     setCode(newTabs.active != -1 ? fileData[newTabs.files[newTabs.active]] : "");
   };
-  
+
   const extension = file.split(".").pop() as string;
   const extensionIcon = getIcon(extension);
 
