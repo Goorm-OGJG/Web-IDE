@@ -35,18 +35,17 @@ function Tab({ file }: PropsType) {
     newTabs.files = newTabs.files.filter(
       (_, targetIndex) => targetIndex != closeTabIndex,
     );
-    // 탭이 없으면 -1
-    if (newTabs.files.length == 0) {
-      newTabs.active = -1;
-    } else if (closeTabIndex == 0 && newTabs.files.length > 0) {
-      newTabs.active = 0;
-    } else {
-      newTabs.active = closeTabIndex - 1;
-    }
+
+    if (closeTabIndex === newTabs.active)
+      newTabs.active = newTabs.files.length === 0 ? -1 : closeTabIndex - 1;
+
+    if (closeTabIndex !== newTabs.active && closeTabIndex < newTabs.active)
+      newTabs.active = newTabs.files.length === 0 ? -1 : newTabs.active - 1;
 
     setTabs(newTabs);
     setCode(newTabs.active != -1 ? fileData[newTabs.files[newTabs.active]] : "");
   };
+  
   const extension = file.split(".").pop() as string;
   const extensionIcon = getIcon(extension);
 
