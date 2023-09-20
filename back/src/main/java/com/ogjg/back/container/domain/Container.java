@@ -2,6 +2,7 @@ package com.ogjg.back.container.domain;
 
 import com.ogjg.back.user.domain.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -44,4 +45,19 @@ public class Container {
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @Builder
+    public Container(Long containerId, User user, String name, String description, String language, String containerUrl, Boolean isPrivate, Long availableStorage, Boolean isPinned, LocalDateTime modifiedAt, LocalDateTime createdAt) {
+        this.containerId = containerId;
+        this.user = user;
+        this.name = name;
+        this.description = description;
+        this.language = language;
+        this.containerUrl = containerUrl;
+        this.isPrivate = isPrivate;
+        this.availableStorage = availableStorage;
+        this.isPinned = isPinned;
+        this.modifiedAt = modifiedAt;
+        this.createdAt = createdAt;
+    }
 }
