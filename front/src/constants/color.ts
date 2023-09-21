@@ -15,6 +15,7 @@ export const Gray9 = "#2F3336";
 export const Gray10 = "#525463";
 export const Gray11 = "#141617";
 export const Gray12 = "#2B2D36";
+export const Gray13 = "#1E1E1E";
 
 // Purple
 export const Purple1 = "#5C7CEE";

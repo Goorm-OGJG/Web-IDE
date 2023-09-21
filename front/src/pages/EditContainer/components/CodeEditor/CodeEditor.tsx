@@ -6,6 +6,7 @@ import { optionsState, tabsState } from "../../../../recoil/CodeEditorState";
 import * as S from "./CodeEditor.style";
 import Tab from "./Components/Tab";
 import { Desktop, Mobile } from "../../../../components/Responsive";
+import EmptyActiveTap from "./Components/EmptyActiveTap";
 
 function CodeEditer() {
   const [tabs, setTabs] = useRecoilState(tabsState);
@@ -36,14 +37,17 @@ function CodeEditer() {
   return (
     <React.Fragment>
       <Desktop>
-        <S.Header>
-          {tabs.files.map((file) => (
-            <Tab key={file} file={file} />
-          ))}
-        </S.Header>
+        {tabs.active != -1 && (
+          <S.Header>
+            {tabs.files.map((file) => (
+              <Tab key={file} file={file} />
+            ))}
+          </S.Header>
+        )}
+
         {tabs.active !== -1 && (
           <Editor
-            height="100vh"
+            height="calc(100vh - 30px)"
             defaultLanguage="javascript"
             onMount={handleEditorDidMount}
             theme="vs-dark"
@@ -52,7 +56,7 @@ function CodeEditer() {
             onChange={handleCode}
           />
         )}
-        {tabs.active == -1 && <div>활성화 탭이 없습니다.</div>}
+        {tabs.active == -1 && <EmptyActiveTap />}
         {/* <div onClick={showValue}>Show value</div> */}
       </Desktop>
 
@@ -75,7 +79,7 @@ function CodeEditer() {
               onChange={handleCode}
             />
           )}
-          {tabs.active == -1 && <div>활성화 탭이 없습니다.</div>}
+          {tabs.active == -1 && <EmptyActiveTap />}
           {/* <div onClick={showValue}>Show value</div> */}
         </S.MContainer>
       </Mobile>
