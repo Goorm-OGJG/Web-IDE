@@ -28,3 +28,15 @@ export const tabsState = atom<T.TabsStateType>({
     files: [],
   },
 });
+
+export const optionsState = atom<T.OptionsType>({
+  key: "optionState",
+  default: {
+    mouseWheelZoom: true,
+    minimap: {
+      enabled: true,
+    },
+    readOnly: false,
+    addExtraSpaceOnTop: true,
+  },
+});

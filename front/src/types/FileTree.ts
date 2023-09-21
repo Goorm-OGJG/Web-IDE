@@ -21,3 +21,12 @@ export type TabsStateType = {
   active: number;
   files: string[];
 };
+
+export type OptionsType = {
+  mouseWheelZoom: boolean;
+  minimap: {
+    enabled: boolean;
+  };
+  readOnly: boolean;
+  addExtraSpaceOnTop: boolean;
+};

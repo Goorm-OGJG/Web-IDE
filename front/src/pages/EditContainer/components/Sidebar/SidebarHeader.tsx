@@ -6,7 +6,7 @@ import { isExtandAllFilesState } from "../../../../recoil/CodeEditorState";
 
 function SidebarHeader() {
   const [isExtandAllFiles, setIsExtandAllFilesState] =
-    useRecoilState<number>(isExtandAllFilesState);
+    useRecoilState(isExtandAllFilesState);
 
   const handleCloseFileTree = () => {
     setIsExtandAllFilesState(isExtandAllFiles + 1);
