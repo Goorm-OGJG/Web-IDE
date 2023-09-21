@@ -10,4 +10,9 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 public class InfoUpdateRequest {
     String name;
+
+    @Builder
+    public InfoUpdateRequest(String name) {
+        this.name = name;
+    }
 }
