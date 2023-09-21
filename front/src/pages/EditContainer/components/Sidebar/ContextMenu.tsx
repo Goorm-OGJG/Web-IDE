@@ -10,7 +10,7 @@ type PropsType = {
 function ContextMenu({ info, setSelectedInfo }: PropsType) {
   const isFile = info.node.title?.toString().includes(".");
   const contextMenuRef = useRef<HTMLDivElement>(null);
-  const { saveFile } = useFileManage();
+  const { saveFile, deleteFile } = useFileManage();
 
   const handleClickOutside = (event: MouseEvent) => {
     const isContextMenuAvailable = contextMenuRef.current !== null;
@@ -41,6 +41,7 @@ function ContextMenu({ info, setSelectedInfo }: PropsType) {
 
   const handleDeleteFile = (info: T.InfoType): void => {
     console.log(`${info.node.key} 파일 삭제`);
+    deleteFile(info);
   };
 
   const handleCreateFile = (info: T.InfoType): void => {
@@ -57,6 +58,7 @@ function ContextMenu({ info, setSelectedInfo }: PropsType) {
 
   const handleDeleteDirectory = (info: T.InfoType): void => {
     console.log(`${info.node.key} 폴더 삭제`);
+    deleteFile(info);
   };
 
   return (

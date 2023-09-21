@@ -74,7 +74,7 @@ function SidebarFileTree() {
             children: [{ key: "/hello/duck/duck1.css", title: "duck1.css" }],
           },
           {
-            key: "/hello/bird",
+            key: "/hello/bird/",
             title: "bird",
             children: [
               { key: "/hello/bird/bird1.png", title: "bird1.png" },
