@@ -4,6 +4,7 @@ import * as S from "./ProfileImg.style";
 function ProfileImg() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState("");
+
   const fileHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const maxSize = 1024 ** 2;
     const files = e.target.files;

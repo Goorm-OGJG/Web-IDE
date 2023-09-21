@@ -1,6 +1,8 @@
 import React, { forwardRef, useState } from "react";
 import * as S from "./PasswordInput.style";
 import * as Icon from "../../../../components/Icon";
+import useRegTest from "../../../../hooks/useRegTest";
+import { PASSWORD_REG } from "../../../../constants/regExp";
 
 interface Props {
   placeholder: string;
@@ -12,19 +14,11 @@ const PasswordInput = forwardRef(function PasswordInput(
 ) {
   const [show, setShow] = useState(false);
   const [value, setValue] = useState("");
-  const [isOk, setIsOk] = useState(-1);
+  const [isOk, setIsOk] = useRegTest();
+
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
-    const reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,30}$/;
-    const correctTest = reg.test(e.target.value);
-
-    if (correctTest) {
-      setIsOk(1);
-    } else if (e.target.value === "") {
-      setIsOk(-1);
-    } else {
-      setIsOk(0);
-    }
+    setIsOk(PASSWORD_REG, e.target.value);
   };
 
   return (

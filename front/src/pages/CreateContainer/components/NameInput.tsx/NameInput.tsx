@@ -1,25 +1,14 @@
+import { CONTAINER_NAME_REG } from "../../../../constants/regExp";
+import useRegTest from "../../../../hooks/useRegTest";
 import * as S from "./NameInput.style";
 import { useState } from "react";
 
 function NameInput() {
   const [value, setValue] = useState("");
-  const [isOk, setIsOk] = useState(-1);
-
+  const [isOk, setIsOk] = useRegTest();
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
-    const reg = /^[a-zA-Z0-9\-_]+$/;
-    const correctTest =
-      reg.test(e.target.value) &&
-      e.target.value.length > 0 &&
-      e.target.value.length <= 20;
-
-    if (correctTest) {
-      setIsOk(1);
-    } else if (e.target.value === "") {
-      setIsOk(-1);
-    } else {
-      setIsOk(0);
-    }
+    setIsOk(CONTAINER_NAME_REG, e.target.value);
   };
   return (
     <S.Wrapper>
