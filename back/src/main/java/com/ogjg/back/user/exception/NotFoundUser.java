@@ -10,7 +10,15 @@ public class NotFoundUser extends CustomException {
         super(ErrorCode.NOT_FOUND_USER);
     }
 
-    public NotFoundUser(ErrorData errorData) {
+    public NotFoundUser(
+            String message
+    ) {
+        super(ErrorCode.NOT_FOUND_USER, message);
+    }
+
+    public NotFoundUser(
+            ErrorData errorData
+    ) {
         super(ErrorCode.NOT_FOUND_USER, errorData);
     }
 }

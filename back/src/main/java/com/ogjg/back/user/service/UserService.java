@@ -3,6 +3,7 @@ package com.ogjg.back.user.service;
 import com.ogjg.back.user.domain.User;
 import com.ogjg.back.user.dto.request.InfoUpdateRequest;
 import com.ogjg.back.user.dto.request.PasswordUpdateRequest;
+import com.ogjg.back.user.dto.request.UserRequest;
 import com.ogjg.back.user.dto.response.ImgUpdateResponse;
 import com.ogjg.back.user.exception.NotFoundUser;
 import com.ogjg.back.user.repository.UserRepository;
@@ -23,7 +24,7 @@ public class UserService {
 
         // todo : 이미지 데이터 aws 업로드 로직 추가
         // S3에 파일 데이터 저장 후, 경로 반환
-        String aws_url = "temp_url : {bucket-name}.s3.{region-code}.amazonaws.com/" +findUser.getEmail()+"/{fileName}";
+        String aws_url = "temp_url : {bucket-name}.s3.{region-code}.amazonaws.com/" + findUser.getEmail() + "/{fileName}";
 
         User user = findUser.updateImg(aws_url);
         return ImgUpdateResponse.of(user);
@@ -47,9 +48,15 @@ public class UserService {
         findUser.deactivate();
     }
 
-    @Transactional(readOnly = true)
     protected User findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundUser());
+                .orElseThrow(NotFoundUser::new);
+    }
+
+    /*
+     * 회원가입
+     * */
+    public void signUp(UserRequest userRequest) {
+        userRepository.save(new User(userRequest));
     }
 }
