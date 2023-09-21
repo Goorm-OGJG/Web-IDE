@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Tree, { TreeProps } from "rc-tree";
 import "rc-tree/assets/index.css";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import * as T from "../../../../types/FileTree";
 import * as S from "./SidebarFileTree.style";
 import * as RS from "../../../../recoil/CodeEditorState";
@@ -16,7 +16,6 @@ function SidebarFileTree() {
   const [fileData, setFileData] = useRecoilState(RS.fileDataState);
   const [selectedInfo, setSelectedInfo] = useState<T.InfoType | null>(null);
   const isExtandAllFiles = useRecoilValue<number>(RS.isExtandAllFilesState);
-  const setCode = useSetRecoilState(RS.codeState);
 
   // 파일시스템 요소 타입(파일, 혹은 디렉토리)에 따른 아이콘 생성 로직
   const switcherIcon: TreeProps["switcherIcon"] = (fsElement) => {
@@ -33,6 +32,7 @@ function SidebarFileTree() {
   const onSelect: TreeProps["onSelect"] = (checkedKeys, info) => {
     const selectedKey = checkedKeys[0];
     const selectedFile = info.node.key as string;
+    const selectedCode = fileData[selectedFile];
 
     if (!fileData[selectedKey]) return;
 
@@ -43,18 +43,19 @@ function SidebarFileTree() {
         return {
           active: fileIndex,
           files: tabs.files,
+          codes: tabs.codes,
         };
       }
 
       return {
         active: tabs.active + 1,
         files: [...tabs.files, selectedFile],
+        codes: [...tabs.codes, selectedCode],
       };
     };
 
     const newTabs = getNewTabsState();
     setTabs(newTabs);
-    setCode(`${fileData[selectedKey]}`);
   };
 
   const onRightClick: TreeProps["onRightClick"] = (info) => {

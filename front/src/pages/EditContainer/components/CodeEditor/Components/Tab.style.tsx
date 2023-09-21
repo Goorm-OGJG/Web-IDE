@@ -6,6 +6,11 @@ type ActiveProps = {
   active: boolean;
 };
 
+type TabProps = {
+  active: boolean;
+  edited: boolean;
+};
+
 export const TabWrapper = styled.div<ActiveProps>`
   display: flex;
   align-items: center;
@@ -19,12 +24,26 @@ export const TabWrapper = styled.div<ActiveProps>`
   height: 30px;
 `;
 
-export const Tab = styled.div<ActiveProps>`
+export const Tab = styled.div<TabProps>`
   padding-left: 5px;
   padding-right: 30px;
   font-size: ${FONT.S};
-  color: ${(props) => (props.active ? `${COLOR.Purple1}` : `${COLOR.White}`)};
   font-weight: ${(props) => (props.active ? `${FONT.Bold}` : `${FONT.Regular}`)};
+  color: ${(props) => {
+    if (props.edited) {
+      return "#eae24b";
+    } else if (props.active) {
+      return COLOR.Purple1;
+    } else {
+      return COLOR.White;
+    }
+  }};
+
+  &::after {
+    content: "*";
+    display: ${(props) => (props.edited ? "inline" : "none")};
+    padding-left: 2px;
+  }
 `;
 
 export const IconWrapper = styled.div``;

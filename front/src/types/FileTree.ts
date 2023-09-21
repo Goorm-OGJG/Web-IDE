@@ -20,6 +20,7 @@ export type InfoType = {
 export type TabsStateType = {
   active: number;
   files: string[];
+  codes: string[];
 };
 
 export type OptionsType = {

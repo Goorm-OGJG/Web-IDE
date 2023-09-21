@@ -2,18 +2,25 @@ import Editor, { OnMount } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
 import React, { useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { codeState, optionsState, tabsState } from "../../../../recoil/CodeEditorState";
+import { optionsState, tabsState } from "../../../../recoil/CodeEditorState";
 import * as S from "./CodeEditor.style";
 import Tab from "./Components/Tab";
 import { Desktop, Mobile } from "../../../../components/Responsive";
 
 function CodeEditer() {
-  const [code, setCode] = useRecoilState(codeState);
-  const tabs = useRecoilValue(tabsState);
+  const [tabs, setTabs] = useRecoilState(tabsState);
   const options = useRecoilValue(optionsState);
 
   const handleCode = () => {
-    setCode(editorRef.current?.getValue() as string);
+    const newCode = editorRef.current?.getValue() as string;
+    setTabs((prevTabs) => {
+      return {
+        ...prevTabs,
+        codes: prevTabs.codes.map((code, index) =>
+          index === prevTabs.active ? newCode : code,
+        ),
+      };
+    });
   };
 
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
@@ -34,16 +41,18 @@ function CodeEditer() {
             <Tab key={file} file={file} />
           ))}
         </S.Header>
-
-        <Editor
-          height="100vh"
-          defaultLanguage="javascript"
-          onMount={handleEditorDidMount}
-          theme="vs-dark"
-          options={options}
-          value={code}
-          onChange={handleCode}
-        />
+        {tabs.active !== -1 && (
+          <Editor
+            height="100vh"
+            defaultLanguage="javascript"
+            onMount={handleEditorDidMount}
+            theme="vs-dark"
+            options={options}
+            value={tabs.codes[tabs.active]}
+            onChange={handleCode}
+          />
+        )}
+        {tabs.active == -1 && <div>활성화 탭이 없습니다.</div>}
         {/* <div onClick={showValue}>Show value</div> */}
       </Desktop>
 
@@ -55,15 +64,18 @@ function CodeEditer() {
             ))}
           </S.Header>
 
-          <Editor
-            height="100vh"
-            defaultLanguage="javascript"
-            onMount={handleEditorDidMount}
-            theme="vs-dark"
-            options={options}
-            value={code}
-            onChange={handleCode}
-          />
+          {tabs.active !== -1 && (
+            <Editor
+              height="100vh"
+              defaultLanguage="javascript"
+              onMount={handleEditorDidMount}
+              theme="vs-dark"
+              options={options}
+              value={tabs.codes[tabs.active]}
+              onChange={handleCode}
+            />
+          )}
+          {tabs.active == -1 && <div>활성화 탭이 없습니다.</div>}
           {/* <div onClick={showValue}>Show value</div> */}
         </S.MContainer>
       </Mobile>

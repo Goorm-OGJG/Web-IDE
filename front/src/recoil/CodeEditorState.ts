@@ -16,16 +16,13 @@ export const fileDataState = atom<T.FileData>({
   default: {},
 });
 
-export const codeState = atom<string>({
-  key: "codeState",
-  default: "// Happy Coding!!!",
-});
 
 export const tabsState = atom<T.TabsStateType>({
   key: "tabsState",
   default: {
     active: -1,
     files: [],
+    codes: [],
   },
 });
 

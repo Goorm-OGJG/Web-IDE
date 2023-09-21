@@ -31,6 +31,8 @@ function ContextMenu({ info, setSelectedInfo }: PropsType) {
 
   const handleSaveFile = (info: T.InfoType): void => {
     saveFile(info);
+    setSelectedInfo(null);
+    alert("저장되었습니다.");
   };
 
   const handleChangeFileName = (info: T.InfoType): void => {
