@@ -17,6 +17,6 @@ ENV LANG C.UTF-8
 ENV JAVA_HOME=/usr/lib/jvm/default-jvm
 ENV PATH=$PATH:/usr/lib/jvm/default-jvm/bin
 
-COPY web-ide.jar /app/
+COPY back-0.0.1-SNAPSHOT.jar /app/
 
-ENTRYPOINT ["java", "-jar", "/app/web-ide.jar"]
+ENTRYPOINT ["java", "-jar", "/app/back-0.0.1-SNAPSHOT.jar"]
