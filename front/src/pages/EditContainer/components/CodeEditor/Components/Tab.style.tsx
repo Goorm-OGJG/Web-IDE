@@ -31,7 +31,7 @@ export const Tab = styled.div<TabProps>`
   font-weight: ${(props) => (props.active ? `${FONT.Bold}` : `${FONT.Regular}`)};
   color: ${(props) => {
     if (props.edited) {
-      return "#eae24b";
+      return COLOR.Yellow1;
     } else if (props.active) {
       return COLOR.Purple1;
     } else {

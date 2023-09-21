@@ -28,3 +28,6 @@ export const Red2 = "#F14668";
 export const Green1 = "#00A881";
 
 export const Overlay = "rgba(0,0,0,0.3)";
+
+// Yellow
+export const Yellow1 = "#e7df4a";
