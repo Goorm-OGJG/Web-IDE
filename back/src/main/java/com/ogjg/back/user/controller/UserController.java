@@ -62,7 +62,7 @@ public class UserController {
      */
     @PatchMapping("/info")
     public ApiResponse<Void> updateInfo(
-            @RequestBody InfoUpdateRequest request
+            @Valid @RequestBody InfoUpdateRequest request
     ) {
         String loginEmail = "ogjg1234@naver.com";
 

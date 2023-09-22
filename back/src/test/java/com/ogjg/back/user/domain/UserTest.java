@@ -1,10 +1,13 @@
 package com.ogjg.back.user.domain;
 
+import com.ogjg.back.user.dto.request.PasswordUpdateRequest;
+import com.ogjg.back.user.exception.InvalidCurrentPassword;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class UserTest {
 
@@ -51,13 +54,38 @@ public class UserTest {
     @Test
     public void updatePassword() throws Exception {
         //given
+        String storedPassword = "1q2w3e4r!";
+        String currentPassword = "1q2w3e4r!";
         String newPassword = "1q2w3e4r@";
 
+        PasswordUpdateRequest request = PasswordUpdateRequest.builder()
+                .newPassword(newPassword)
+                .currentPassword(currentPassword)
+                .build();
+
         //when
-        User updatedUser = user.updatePassword(newPassword);
+        User updatedUser = user.updatePassword(storedPassword, request);
 
         //then
         assertThat(updatedUser.getPassword()).isEqualTo(newPassword);
+    }
+
+    @DisplayName("회원 비밀번호 변경 예외 - 현재 비밀번호 db와 불일치")
+    @Test
+    public void invalidCurrentPassword() throws Exception {
+        //given
+        String storedPassword = "1q2w3e4r!";
+        String currentPassword = "123invalidPassword!@#";
+        String newPassword = "1q2w3e4r@";
+
+        PasswordUpdateRequest request = PasswordUpdateRequest.builder()
+                .currentPassword(currentPassword)
+                .newPassword(newPassword)
+                .build();
+
+        //whe, then
+        assertThatThrownBy(() -> user.updatePassword(storedPassword, request))
+                .isInstanceOf(InvalidCurrentPassword.class);
     }
 
     @DisplayName("회원 탈퇴")

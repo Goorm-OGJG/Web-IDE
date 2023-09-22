@@ -100,10 +100,12 @@ public class UserControllerTest extends ControllerTest {
     public void updatePassword() throws Exception {
         //given
         String loginEmail = "ogjg1234@naver.com";
+        String currentPassword = "1q2w3e4r!";
         String newPassword = "1q2w3e4r!@#";
 
         PasswordUpdateRequest request = PasswordUpdateRequest.builder()
-                .password(newPassword)
+                .currentPassword(currentPassword)
+                .newPassword(newPassword)
                 .build();
 
         doNothing().when(userService).updatePassword(any(PasswordUpdateRequest.class), eq(loginEmail));
@@ -121,7 +123,8 @@ public class UserControllerTest extends ControllerTest {
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 requestFields(
-                        fieldWithPath("password").description("변경할 새 이름")
+                        fieldWithPath("currentPassword").description("검증할 현재 비밀번호"),
+                        fieldWithPath("newPassword").description("새 비밀번호")
                 )
         )).andExpect(status().isOk());
     }

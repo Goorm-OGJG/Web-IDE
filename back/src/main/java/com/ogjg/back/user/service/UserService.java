@@ -39,7 +39,7 @@ public class UserService {
     @Transactional
     public void updatePassword(PasswordUpdateRequest request, String loginEmail) {
         User findUser = findByEmail(loginEmail);
-        findUser.updatePassword(request.getPassword());
+        findUser.updatePassword(findUser.getPassword(), request);
     }
 
     @Transactional
