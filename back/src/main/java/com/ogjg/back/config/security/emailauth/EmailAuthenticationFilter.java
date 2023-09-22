@@ -42,7 +42,7 @@ public class EmailAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (!uri.startsWith("/api/user/email-auth/success/")) {
+        if (!uri.startsWith("/api/users/email-auth/success/")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -50,7 +50,7 @@ public class EmailAuthenticationFilter extends OncePerRequestFilter {
         Authentication authenticate = null;
         try {
 
-            String token = uri.substring("/api/user/email-auth/success/".length());
+            String token = uri.substring("/api/users/email-auth/success/".length());
             EmailAuthenticationToken emailAuthenticationToken = new EmailAuthenticationToken(token);
 
             authenticate = authenticationManager.authenticate(emailAuthenticationToken);

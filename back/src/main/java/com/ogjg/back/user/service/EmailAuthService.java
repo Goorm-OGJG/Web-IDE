@@ -37,7 +37,7 @@ public class EmailAuthService {
     private final JavaMailSender mailSender;
     private final JwtUtils jwtUtils;
     private final Map<String, SseEmitter> clients;
-    private static final String EMAIL_AUTH_ADDRESS = "http://localhost:8080/api/user/email-auth/success";
+    private static final String EMAIL_AUTH_ADDRESS = "http://localhost:8080/api/users/email-auth/success";
 
     /*
      * 이메일 중복 체크 후 인증관련 데이터 저장 후 인증 메일 발송

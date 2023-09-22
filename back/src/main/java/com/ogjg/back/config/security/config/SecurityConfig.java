@@ -9,10 +9,7 @@ import com.ogjg.back.user.service.EmailAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -35,8 +32,10 @@ public class SecurityConfig {
 
 
     private final List<String> permitUrlList = new ArrayList<>(
-            List.of("/api/user/email-auth/.*",
-                    "/signup"
+            List.of("/api/users/email-auth/.*",
+                    "/signup",
+                    "health",
+                    "/test"
             ));
 
 
@@ -58,31 +57,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    @Primary
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authenticationConfiguration
-    ) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
-    public AuthenticationManager emailAuthenticationManager() throws Exception {
-        return new ProviderManager(Collections.singletonList(emailAuthenticationProvider()));
-    }
-
-    @Bean
-    public AuthenticationManager jwtAuthenticationManager() throws Exception {
-        return new ProviderManager(Collections.singletonList(jwtAuthenticationProvider()));
-    }
-
-    @Bean
     public EmailAuthenticationFilter emailAuthenticationFilter() throws Exception {
-        return new EmailAuthenticationFilter(emailAuthenticationManager(), emailAuthService);
+        return new EmailAuthenticationFilter(new ProviderManager(Collections.singletonList(emailAuthenticationProvider())), emailAuthService);
     }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        return new JwtAuthenticationFilter(jwtAuthenticationManager(), permitUrlList);
+        return new JwtAuthenticationFilter(new ProviderManager(Collections.singletonList(jwtAuthenticationProvider())), permitUrlList);
     }
 
     @Bean
