@@ -20,8 +20,8 @@ function SidebarFileTree() {
   // 파일시스템 요소 타입(파일, 혹은 디렉토리)에 따른 아이콘 생성 로직
   const switcherIcon: TreeProps["switcherIcon"] = (fsElement) => {
     let iconType: string = fsElement.title?.toString().split(".").pop() as string;
-    const isDirectory: boolean = fsElement.isLeaf ? false : true;
-
+    const isDirectory: boolean = !fsElement?.data?.key.toString().includes(".");
+    
     if (isDirectory && fsElement.expanded) iconType = "openDirectory";
     if (isDirectory && !fsElement.expanded) iconType = "closedDirectory";
 
@@ -80,6 +80,11 @@ function SidebarFileTree() {
               { key: "/hello/bird/bird1.png", title: "bird1.png" },
               { key: "/hello/bird/bird2.txt", title: "bird2.txt" },
             ],
+          },
+          {
+            key: "/hello/empty/",
+            title: "empty",
+            children: [],
           },
         ],
       },
