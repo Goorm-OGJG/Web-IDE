@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class ImgUpdateResponse {
-    String url;
+    private String url;
 
     @Builder
     public ImgUpdateResponse(String url) {

@@ -9,7 +9,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 public class PasswordUpdateRequest {
-    String password;
+    private String password;
 
     @Builder
     public PasswordUpdateRequest(String password) {

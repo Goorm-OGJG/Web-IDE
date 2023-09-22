@@ -9,7 +9,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 public class InfoUpdateRequest {
-    String name;
+    private String name;
 
     @Builder
     public InfoUpdateRequest(String name) {
