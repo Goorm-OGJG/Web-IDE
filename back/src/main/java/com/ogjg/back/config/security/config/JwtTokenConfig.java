@@ -6,6 +6,7 @@ import com.ogjg.back.user.dto.request.JwtUserClaimsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.Map;
@@ -17,11 +18,13 @@ public class JwtTokenConfig {
 
 
     @Bean
+    @RequestScope
     public JwtTokenClaims jwtUserClaimsDto() {
         return new JwtUserClaimsDto();
     }
 
     @Bean
+    @RequestScope
     public JwtTokenClaims jwtEmailAuthClaims() {
         return new JwtEmailAuthClaimsDto();
     }

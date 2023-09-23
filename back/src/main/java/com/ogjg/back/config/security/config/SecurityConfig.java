@@ -34,7 +34,7 @@ public class SecurityConfig {
     private final List<String> permitUrlList = new ArrayList<>(
             List.of("/api/users/email-auth/.*",
                     "/signup",
-                    "health",
+                    "/health",
                     "/test"
             ));
 
