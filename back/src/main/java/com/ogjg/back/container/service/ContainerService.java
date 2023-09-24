@@ -43,7 +43,7 @@ public class ContainerService {
         );
     }
 
-    private boolean isDuplicated(String containerName, String loginEmail) {
+    protected boolean isDuplicated(String containerName, String loginEmail) {
        return containerRepository.findByNameAndEmail(containerName, loginEmail)
                 .isPresent();
     }
