@@ -1,6 +1,5 @@
 package com.ogjg.back.user.service;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -12,10 +11,10 @@ class EmailAuthServiceTest {
 
 
 
-    @Test
-    void userExceptionTest(){
-
-    }
+//    @Test
+//    void userExceptionTest(){
+//
+//    }
 
 
 }

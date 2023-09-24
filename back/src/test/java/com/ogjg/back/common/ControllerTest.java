@@ -1,7 +1,10 @@
-package com.ogjg.back.user.common;
+package com.ogjg.back.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ogjg.back.container.controller.ContainerController;
+import com.ogjg.back.container.service.ContainerService;
 import com.ogjg.back.user.controller.UserController;
+import com.ogjg.back.user.service.EmailAuthService;
 import com.ogjg.back.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -19,7 +22,8 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 
 @AutoConfigureRestDocs
 @WebMvcTest({
-        UserController.class
+        UserController.class,
+        ContainerController.class
 })
 public class ControllerTest {
 
@@ -42,4 +46,10 @@ public class ControllerTest {
 
     @MockBean
     protected UserService userService;
+
+    @MockBean
+    protected ContainerService containerService;
+
+    @MockBean
+    protected EmailAuthService emailAuthService;
 }

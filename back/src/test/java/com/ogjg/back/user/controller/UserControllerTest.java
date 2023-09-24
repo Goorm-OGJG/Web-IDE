@@ -1,12 +1,9 @@
 package com.ogjg.back.user.controller;
 
-import com.ogjg.back.user.common.ControllerTest;
-import com.ogjg.back.user.domain.User;
-import com.ogjg.back.user.domain.UserStatus;
+import com.ogjg.back.common.ControllerTest;
 import com.ogjg.back.user.dto.request.InfoUpdateRequest;
 import com.ogjg.back.user.dto.request.PasswordUpdateRequest;
 import com.ogjg.back.user.dto.response.ImgUpdateResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -25,19 +22,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class UserControllerTest extends ControllerTest {
-    private User user;
-
-    @BeforeEach
-    public void setUp() {
-        user = User.builder()
-                .email("ogjg1234@naver.com")
-                .password("1q2w3e4r!")
-                .name("이회장")
-                .userImg("temp_url : {bucket-name}.s3.{region-code}.amazonaws.com/ogjg5678@naver.com/{fileName}")
-                .userStatus(UserStatus.ACTIVE)
-                .build();
-    }
-
 
     @DisplayName("프로필 사진 업로드(변경 시 덮어씀)")
     @Test
@@ -92,16 +76,16 @@ public class UserControllerTest extends ControllerTest {
                 .name(newName)
                 .build();
 
-        //when
         doNothing().when(userService).updateInfo(any(InfoUpdateRequest.class), eq(loginEmail));
 
-        //then
+        //when
         ResultActions result = this.mockMvc.perform(
                 patch("/api/users/info")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
+        //then
         result.andDo(document("user/info",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
@@ -122,10 +106,9 @@ public class UserControllerTest extends ControllerTest {
                 .password(newPassword)
                 .build();
 
-        //when
         doNothing().when(userService).updatePassword(any(PasswordUpdateRequest.class), eq(loginEmail));
 
-        //then
+        //when
         ResultActions result = this.mockMvc.perform(
                 patch("/api/users/password")
                         .content(objectMapper.writeValueAsString(request))
@@ -133,6 +116,7 @@ public class UserControllerTest extends ControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
         );
 
+        //then
         result.andDo(document("user/password",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
@@ -148,14 +132,14 @@ public class UserControllerTest extends ControllerTest {
         //given
         String loginEmail = "ogjg1234@naver.com";
 
-        //when
         doNothing().when(userService).deactivate(eq(loginEmail));
 
-        //then
+        //when
         ResultActions result = this.mockMvc.perform(
                 patch("/api/users/deactivate")
         );
 
+        //then
         result.andDo(document("user/deactivate",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())

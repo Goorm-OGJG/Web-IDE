@@ -4,7 +4,7 @@ import com.ogjg.back.user.domain.User;
 import com.ogjg.back.user.domain.UserStatus;
 import com.ogjg.back.user.exception.NotFoundUser;
 import com.ogjg.back.user.repository.UserRepository;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,21 +15,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-public class UserServiceTest {
+public class UserServiceIntegrationTest {
 
-    static User user;
+    private User user;
     @Autowired
-    UserService userService;
+    private UserService userService;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
-    @BeforeAll
-    public static void setUp() {
+    @BeforeEach
+    public void setUser() {
         user = User.builder()
                 .email("ogjg1234@naver.com")
                 .password("1q2w3e4r!")
                 .name("김회원")
-                .userImg("temp_url : {bucket-name}.s3.{region-code}.amazonaws.com/" + 1L + "/{fileName}")
+                .userImg("temp_url : {bucket-name}.s3.{region-code}.amazonaws.com/ogjg1234@naver.com/{fileName}")
                 .userStatus(UserStatus.ACTIVE)
                 .build();
     }

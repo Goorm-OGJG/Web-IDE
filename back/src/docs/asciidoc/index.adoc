@@ -48,8 +48,14 @@ api2
 
 == 컨테이너 생성 API
 
-=== API1
-api1
+=== 컨테이너 생성
+include::{snippets}/container/create/http-request.adoc[]
+include::{snippets}/container/create/request-fields.adoc[]
 
-=== API2
-api2
+include::{snippets}/container/create/http-response.adoc[]
+
+=== 컨테이너 이름 중복체크
+include::{snippets}/container/check/http-request.adoc[]
+include::{snippets}/container/check/query-parameters.adoc[]
+
+include::{snippets}/container/check/http-response.adoc[]
