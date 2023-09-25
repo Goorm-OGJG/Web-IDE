@@ -9,6 +9,22 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [value, setValue] = useState("");
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  const handleRemeber = () => {
+    setRemeber(!remember);
+  };
+
+  const handleShow = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <React.Fragment>
       <Desktop>
@@ -21,7 +37,7 @@ export default function LoginForm() {
               type={"text"}
               placeholder="이메일"
               value={email}
-              onChange={(e) => setEmail(e.target.value as string)}
+              onChange={handleEmailChange}
             />
 
             <S.PasswordBox>
@@ -29,7 +45,7 @@ export default function LoginForm() {
                 <S.ShowPassword
                   placeholder="비밀번호"
                   value={value}
-                  onChange={(e) => setValue(e.target.value)}
+                  onChange={handlePassword}
                   minLength={8}
                   maxLength={30}
                 />
@@ -38,19 +54,19 @@ export default function LoginForm() {
                   placeholder="비밀번호"
                   type="password"
                   value={value}
-                  onChange={(e) => setValue(e.target.value)}
+                  onChange={handlePassword}
                   minLength={8}
                   maxLength={30}
                 />
               )}
 
-              <S.IconWrapper>
+              <S.IconWrapper onClick={handleShow}>
                 {showPassword ? (
-                  <S.IconBox onClick={() => setShowPassword(false)}>
+                  <S.IconBox>
                     <Icon.EyeOn />
                   </S.IconBox>
                 ) : (
-                  <S.IconBox onClick={() => setShowPassword(true)}>
+                  <S.IconBox>
                     <Icon.EyeOff />
                   </S.IconBox>
                 )}
@@ -61,11 +77,7 @@ export default function LoginForm() {
 
             <S.Wrapper>
               <S.Rememberbox>
-                <input
-                  type="checkbox"
-                  checked={remember}
-                  onChange={() => setRemeber(!remember)}
-                />
+                <input type="checkbox" onChange={handleRemeber} />
                 로그인 상태 유지
               </S.Rememberbox>
 
@@ -93,7 +105,7 @@ export default function LoginForm() {
               type={"text"}
               placeholder="이메일"
               value={email}
-              onChange={(e) => setEmail(e.target.value as string)}
+              onChange={handleEmailChange}
             />
 
             <S.PasswordBox>
@@ -101,7 +113,7 @@ export default function LoginForm() {
                 <S.ShowPassword
                   placeholder="비밀번호"
                   value={value}
-                  onChange={(e) => setValue(e.target.value)}
+                  onChange={handlePassword}
                   minLength={8}
                   maxLength={30}
                 />
@@ -110,19 +122,19 @@ export default function LoginForm() {
                   placeholder="비밀번호"
                   type="password"
                   value={value}
-                  onChange={(e) => setValue(e.target.value)}
+                  onChange={handlePassword}
                   minLength={8}
                   maxLength={30}
                 />
               )}
 
-              <S.IconWrapper>
+              <S.IconWrapper onClick={handleShow}>
                 {showPassword ? (
-                  <S.IconBox onClick={() => setShowPassword(false)}>
+                  <S.IconBox>
                     <Icon.EyeOn />
                   </S.IconBox>
                 ) : (
-                  <S.IconBox onClick={() => setShowPassword(true)}>
+                  <S.IconBox>
                     <Icon.EyeOff />
                   </S.IconBox>
                 )}
@@ -133,11 +145,7 @@ export default function LoginForm() {
 
             <S.Wrapper>
               <S.Rememberbox>
-                <input
-                  type="checkbox"
-                  checked={remember}
-                  onChange={() => setRemeber(!remember)}
-                />
+                <input type="checkbox" onChange={handleEmailChange} />
                 로그인 상태 유지
               </S.Rememberbox>
 

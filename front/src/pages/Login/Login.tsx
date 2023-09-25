@@ -10,9 +10,9 @@ const Login = () => {
         <S.LeftBackground>
           <ServeBackground />
           <S.Leftwrapper>
-            <S.StyledTitle1>WELCOME</S.StyledTitle1>
-            <S.StyledTitle2>OGJG</S.StyledTitle2>
-            <S.StyledTitle3>IDE</S.StyledTitle3>
+            <S.StyledTitle>WELCOME</S.StyledTitle>
+            <S.StyledTitle>OGJG</S.StyledTitle>
+            <S.StyledTitle>IDE</S.StyledTitle>
           </S.Leftwrapper>
         </S.LeftBackground>
       </Desktop>

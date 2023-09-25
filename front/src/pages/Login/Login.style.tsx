@@ -26,19 +26,7 @@ export const Leftwrapper = styled.div`
   position: relative;
 `;
 
-export const StyledTitle1 = styled.div`
-  color: ${COLOR.White};
-  font-size: ${FONT.Title};
-  margin: 10px;
-`;
-
-export const StyledTitle2 = styled.div`
-  color: ${COLOR.White};
-  font-size: ${FONT.Title};
-  margin: 10px;
-`;
-
-export const StyledTitle3 = styled.div`
+export const StyledTitle = styled.div`
   color: ${COLOR.White};
   font-size: ${FONT.Title};
   margin: 10px;
