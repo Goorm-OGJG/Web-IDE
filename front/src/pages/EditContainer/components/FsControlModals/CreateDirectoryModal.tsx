@@ -5,21 +5,21 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { modeState, selectedInfoState } from "../../../../recoil/CodeEditorState";
 import { useFileManage } from "../../../../hooks/CodeEditor/useFileManage";
 import * as T from "../../../../types/FileTree";
-import { FILENAME_REG } from "../../../../constants/regExp";
+import { DIRECTORYNAME_REG } from "../../../../constants/regExp";
 
-function CreateFileModal() {
+function CreateDirectoryModal() {
   const setMode = useSetRecoilState(modeState);
   const selectedInfo = useRecoilValue(selectedInfoState);
   const path = selectedInfo?.node.key;
   const inputRef = useRef<HTMLInputElement | null>(null);
   const modalRef = useRef<HTMLInputElement | null>(null);
-  const { createFile } = useFileManage();
+  const { createDirectory } = useFileManage();
   const [isNotOK, setIsNotOK] = useState(false);
 
   const handlerOK = () => {
-    if (FILENAME_REG.test(inputRef.current!.value)) {
+    if (DIRECTORYNAME_REG.test(inputRef.current!.value)) {
       setIsNotOK(false);
-      createFile(selectedInfo as T.InfoType, inputRef.current!.value);
+      createDirectory(selectedInfo as T.InfoType, inputRef.current!.value);
       setMode("EDIT");
       return;
     }
@@ -51,12 +51,12 @@ function CreateFileModal() {
 
   return (
     <S.Container ref={modalRef}>
-      <S.Title>파일 추가</S.Title>
+      <S.Title>폴더 추가</S.Title>
       <S.Explain>
-        <S.Path>{path}</S.Path> 에 생성팔 파일명을 입력해주세요.
+        <S.Path>{path}</S.Path> 에 생성팔 폴더명을 입력해주세요.
       </S.Explain>
       <InputFsName ref={inputRef} />
-      {isNotOK && <S.Warning>올바르지 않은 파일명 입니다.</S.Warning>}
+      {isNotOK && <S.Warning>올바르지 않은 폴더명 입니다.</S.Warning>}
       <S.ButtonWrapper>
         <S.Button onClick={handlerOK}>확인</S.Button>
         <S.Button onClick={handlerCancel}>취소</S.Button>
@@ -65,4 +65,4 @@ function CreateFileModal() {
   );
 }
 
-export default CreateFileModal;
+export default CreateDirectoryModal;

@@ -35,7 +35,7 @@ function SidebarFileTree() {
   const onSelect: TreeProps["onSelect"] = (_, info) => {
     const selectedFile = info.node.key as string;
     const selectedCode = fileData[selectedFile];
-
+    console.log(treeData);
     if (typeof fileData[selectedFile] === "undefined") return;
 
     const newTabs = getNewTabsState(selectedFile, selectedCode);

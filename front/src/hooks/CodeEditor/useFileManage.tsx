@@ -19,7 +19,7 @@ export const useFileManage = () => {
     }));
   };
 
-  const addFile = (info: T.InfoType, fileName: string) => {
+  const createFile = (info: T.InfoType, fileName: string) => {
     // 부모 디렉터리의 경로
     const parentPath = info.node.key as string;
     const newFilePath = `${parentPath}${fileName}`;
@@ -40,11 +40,11 @@ export const useFileManage = () => {
 
     // 3. 원격 데이터 추가
     setTreeData((prevTreeData: T.FileTreeType) =>
-      addByPath(prevTreeData, parentPath, fileName),
+      createFileByPath(prevTreeData, parentPath, fileName),
     );
   };
 
-  const addByPath = (
+  const createFileByPath = (
     treeData: T.FileTreeType,
     parentPath: string,
     fileName: string,
@@ -57,7 +57,53 @@ export const useFileManage = () => {
         ];
         return { ...item, children: newChildren };
       } else if (item.children) {
-        const newChildren = addByPath(item.children, parentPath, fileName);
+        const newChildren = createFileByPath(item.children, parentPath, fileName);
+        if (newChildren !== item.children) {
+          return { ...item, children: newChildren };
+        }
+      }
+      return item;
+    });
+  };
+
+  const createDirectory = (info: T.InfoType, directoryName: string) => {
+    console.log("createDirectory");
+    const parentPath = info.node.key as string;
+    const newDirectoryPath = `${parentPath}${directoryName}/`;
+
+    setTreeData((prevTreeData: T.FileTreeType) =>
+      createDirectoryByPath(prevTreeData, parentPath, newDirectoryPath, directoryName),
+    );
+  };
+
+  const createDirectoryByPath = (
+    treeData: T.FileTreeType,
+    parentPath: string,
+    newDirectoryPath: string,
+    directoryName: string,
+  ): T.FileTreeType => {
+    console.log("newDirectoryPath", newDirectoryPath);
+    console.log("directoryName", directoryName);
+
+    return treeData.map((item) => {
+      if (item.key === parentPath) {
+        console.log("keyfind");
+        const newChildren = [
+          ...(item.children as T.FileTreeType),
+          {
+            key: newDirectoryPath,
+            title: directoryName,
+            children: [],
+          },
+        ];
+        return { ...item, children: newChildren };
+      } else if (item.children) {
+        const newChildren = createDirectoryByPath(
+          item.children,
+          parentPath,
+          newDirectoryPath,
+          directoryName,
+        );
         if (newChildren !== item.children) {
           return { ...item, children: newChildren };
         }
@@ -82,7 +128,7 @@ export const useFileManage = () => {
     setTreeData(newTreeData);
   };
 
-  function deleteByPath(treeData: T.FileTreeType, paths: string): T.FileTreeType {
+  const deleteByPath = (treeData: T.FileTreeType, paths: string): T.FileTreeType => {
     return treeData
       .filter((item) => item.key !== paths)
       .map((item) => {
@@ -94,7 +140,7 @@ export const useFileManage = () => {
         }
         return item;
       });
-  }
+  };
 
-  return { addFile, saveFile, deleteFile };
+  return { createFile, createDirectory, saveFile, deleteFile };
 };
