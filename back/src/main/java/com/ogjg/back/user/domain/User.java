@@ -1,7 +1,7 @@
 package com.ogjg.back.user.domain;
 
+import com.ogjg.back.user.dto.SignUpSaveDto;
 import com.ogjg.back.user.dto.request.PasswordUpdateRequest;
-import com.ogjg.back.user.dto.request.UserRequest;
 import com.ogjg.back.user.exception.InvalidCurrentPassword;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -31,10 +31,11 @@ public class User {
     @JoinColumn(name = "email_auth_id")
     private EmailAuth emailAuth;
 
-    public User(UserRequest userRequest) {
-        this.email = userRequest.getEmail();
-        this.password = userRequest.getPassword();
-        this.name = userRequest.getName();
+    public User(SignUpSaveDto signUpSaveDto) {
+        this.email = signUpSaveDto.getEmail();
+        this.password = signUpSaveDto.getPassword();
+        this.name = signUpSaveDto.getName();
+        this.emailAuth = signUpSaveDto.getEmailAuth();
     }
 
     @Builder

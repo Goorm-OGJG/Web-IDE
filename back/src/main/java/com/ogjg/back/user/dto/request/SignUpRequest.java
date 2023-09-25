@@ -11,7 +11,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class UserRequest {
+public class SignUpRequest {
 
     @Email(message = "이메일 형식이 잘못됐습니다")
     @NotBlank(message = "이메일을 입력해 주세요")
@@ -25,7 +25,7 @@ public class UserRequest {
     private String name;
 
     @Builder
-    public UserRequest(String email, String password, String name) {
+    public SignUpRequest(String email, String password, String name) {
         this.email = email;
         this.password = password;
         this.name = name;

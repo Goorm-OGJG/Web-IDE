@@ -2,7 +2,10 @@ package com.ogjg.back.user.controller;
 
 import com.ogjg.back.common.exception.ErrorCode;
 import com.ogjg.back.common.response.ApiResponse;
-import com.ogjg.back.user.dto.request.*;
+import com.ogjg.back.user.dto.request.EmailAuthRequest;
+import com.ogjg.back.user.dto.request.InfoUpdateRequest;
+import com.ogjg.back.user.dto.request.PasswordUpdateRequest;
+import com.ogjg.back.user.dto.request.SignUpRequest;
 import com.ogjg.back.user.dto.response.ImgUpdateResponse;
 import com.ogjg.back.user.service.EmailAuthService;
 import com.ogjg.back.user.service.UserService;
@@ -32,13 +35,14 @@ public class UserController {
      * */
     @PostMapping("/signup")
     public ApiResponse<?> signup(
-            @RequestBody @Valid UserRequest userRequest
+            @RequestBody @Valid SignUpRequest signUpRequest
     ) {
-        userService.signUp(userRequest);
+        userService.signUp(signUpRequest);
         return new ApiResponse<>(ErrorCode.SUCCESS.changeMessage("회원가입이 완료되었습니다"));
     }
 
     // todo : update 로직 응답 값 정의 및 추가 필요, 토큰 추가 시 email 정보 추가
+
     /**
      * 프로필 사진 업로드(변경 시 덮어씀)
      */

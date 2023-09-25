@@ -32,15 +32,18 @@ public class EmailAuth {
 
     private LocalDateTime authenticatedAt;
 
-    public void inPutEmailToken(String emailToken){
+    @OneToOne(mappedBy = "emailAuth")
+    private User user;
+
+    public void inPutEmailToken(String emailToken) {
         this.emailToken = emailToken;
     }
 
-    public void completeEmailAuth(){
+    public void completeEmailAuth() {
         this.status = true;
     }
 
-    public void completeEmailAuthTime(){
+    public void completeEmailAuthTime() {
         this.authenticatedAt = LocalDateTime.now();
     }
 
