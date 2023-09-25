@@ -4,6 +4,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import * as S from "./Main.style";
 import { isMSidebarOpenState, isSidebarOpenState } from "../../recoil/homeState";
 import { Desktop, Mobile } from "../../components/Responsive";
+import Body from "./Body/Body";
 function Main() {
   const isSidebarOpen = useRecoilValue(isSidebarOpenState);
   const isMSidebarOpen = useRecoilValue(isMSidebarOpenState);
@@ -13,12 +14,14 @@ function Main() {
       <Desktop>
         <S.TotalWrapper issidebaropen={isSidebarOpen}>
           <Header />
+          <Body />
         </S.TotalWrapper>
         <Sidebar />
       </Desktop>
       <Mobile>
         <S.MTotalWrapper ismsidebaropen={isMSidebarOpen}>
           <Header />
+          <Body />
         </S.MTotalWrapper>
         <Sidebar />
       </Mobile>

@@ -45,6 +45,10 @@ export const Trash = ({ size = DEFAULT }) => <Fa.FaTrashAlt size={size} />;
 export const Plus = ({ size = DEFAULT }) => <Ai.AiOutlinePlus size={size} />;
 export const Filter = ({ size = DEFAULT }) => <Fa.FaFilter size={size} />;
 export const SortRecent = ({ size = DEFAULT }) => <Bi.BiSolidSortAlt size={size} />;
+export const Dot = ({ size = DEFAULT }) => <Go.GoDotFill size={size} />;
+export const Edit = ({ size = DEFAULT }) => <Md.MdEdit size={size} />;
+export const EditCancel = ({ size = DEFAULT }) => <Md.MdEditOff size={size} />;
+export const Exit = ({ size = DEFAULT }) => <Hi2.HiOutlineXMark size={size} />;
 
 // 컨테이너 만들기
 export const Lock = ({ size = DEFAULT }) => <Bi.BiSolidLock size={size} />;
