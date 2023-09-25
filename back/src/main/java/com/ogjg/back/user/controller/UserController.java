@@ -2,10 +2,7 @@ package com.ogjg.back.user.controller;
 
 import com.ogjg.back.common.exception.ErrorCode;
 import com.ogjg.back.common.response.ApiResponse;
-import com.ogjg.back.user.dto.request.EmailAuthRequest;
-import com.ogjg.back.user.dto.request.InfoUpdateRequest;
-import com.ogjg.back.user.dto.request.PasswordUpdateRequest;
-import com.ogjg.back.user.dto.request.UserRequest;
+import com.ogjg.back.user.dto.request.*;
 import com.ogjg.back.user.dto.response.ImgUpdateResponse;
 import com.ogjg.back.user.service.EmailAuthService;
 import com.ogjg.back.user.service.UserService;
@@ -47,13 +44,13 @@ public class UserController {
      */
     @PatchMapping("/img")
     public ApiResponse<ImgUpdateResponse> updateImg(
-            @RequestParam("img") MultipartFile imgFile
+            @RequestParam("img") MultipartFile multipartFile
     ) {
         String loginEmail = "ogjg1234@naver.com";
 
         return new ApiResponse<>(
                 ErrorCode.SUCCESS,
-                userService.updateImg(imgFile, loginEmail)
+                userService.updateImg(multipartFile, loginEmail)
         );
     }
 

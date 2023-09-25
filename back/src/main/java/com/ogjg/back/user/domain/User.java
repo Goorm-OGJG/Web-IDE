@@ -47,12 +47,6 @@ public class User {
         this.emailAuth = emailAuth;
     }
 
-    public static User reference(String loginEmail) {
-        return User.builder()
-                .email(loginEmail)
-                .build();
-    }
-
     public User updateImg(String aws_url) {
         this.userImg = aws_url;
         return this;
