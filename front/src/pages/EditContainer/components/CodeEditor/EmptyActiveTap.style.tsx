@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components";
-import * as COLOR from "../../../../../constants/color";
+import * as COLOR from "../../../../constants/color";
 
 const circle = keyframes`
   0% {

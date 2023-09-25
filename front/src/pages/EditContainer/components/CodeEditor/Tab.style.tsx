@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import * as COLOR from "../../../../../constants/color";
-import * as FONT from "../../../../../constants/font";
+import * as COLOR from "../../../../constants/color";
+import * as FONT from "../../../../constants/font";
 
 type ActiveProps = {
   active: boolean;

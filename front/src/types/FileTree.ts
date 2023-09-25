@@ -31,3 +31,10 @@ export type OptionsType = {
   readOnly: boolean;
   addExtraSpaceOnTop: boolean;
 };
+
+export type ModeType =
+  | "EDIT"
+  | "CREATE_FILE"
+  | "CREATE_DIRECTORY"
+  | "RENAME_FILE"
+  | "RENAME_DIRECTORY";

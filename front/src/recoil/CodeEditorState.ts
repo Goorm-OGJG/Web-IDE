@@ -16,7 +16,6 @@ export const fileDataState = atom<T.FileData>({
   default: {},
 });
 
-
 export const tabsState = atom<T.TabsStateType>({
   key: "tabsState",
   default: {
@@ -24,6 +23,16 @@ export const tabsState = atom<T.TabsStateType>({
     files: [],
     codes: [],
   },
+});
+
+export const isContextModalOpenedState = atom<boolean>({
+  key: "isContextModalOpenedState",
+  default: false,
+});
+
+export const selectedInfoState = atom<T.InfoType | null>({
+  key: "selectedInfo",
+  default: null,
 });
 
 export const optionsState = atom<T.OptionsType>({
@@ -36,4 +45,9 @@ export const optionsState = atom<T.OptionsType>({
     readOnly: false,
     addExtraSpaceOnTop: true,
   },
+});
+
+export const modeState = atom<T.ModeType>({
+  key: "modeState",
+  default: "EDIT",
 });

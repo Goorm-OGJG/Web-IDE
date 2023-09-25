@@ -1,10 +1,10 @@
 import * as S from "./Tab.style";
-import * as Icon from "../../../../../components/Icon";
+import * as Icon from "../../../../components/Icon";
 import { useRecoilValue } from "recoil";
-import { fileDataState, tabsState } from "../../../../../recoil/CodeEditorState";
 import { ReactEventHandler } from "react";
-import { getIcon } from "../../../../../components/FileIcon";
-import { useTab } from "../../../../../hooks/CodeEditor/useTab";
+import { fileDataState, tabsState } from "../../../../recoil/CodeEditorState";
+import { useTab } from "../../../../hooks/CodeEditor/useTab";
+import { getIcon } from "../../../../components/FileIcon";
 
 type PropsType = {
   file: string;
@@ -21,14 +21,12 @@ function Tab({ file }: PropsType) {
   //탭 틀릭 이벤트 핸들러 함수
   const handleTabClick = (selectedFile: string) => {
     tabActive(selectedFile);
-    console.log(tabs);
   };
 
   // 탭 닫기 이벤트 핸들러 함수
   const handleClose: ReactEventHandler = (e) => {
     e.stopPropagation();
     tabClose(tabs, tabIndex);
-    console.log(tabs);
   };
 
   return (

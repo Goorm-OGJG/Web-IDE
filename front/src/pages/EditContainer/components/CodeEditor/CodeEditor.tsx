@@ -4,9 +4,9 @@ import React, { useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { optionsState, tabsState } from "../../../../recoil/CodeEditorState";
 import * as S from "./CodeEditor.style";
-import Tab from "./Components/Tab";
 import { Desktop, Mobile } from "../../../../components/Responsive";
-import EmptyActiveTap from "./Components/EmptyActiveTap";
+import EmptyActiveTap from "./EmptyActiveTap";
+import Tab from "./Tab";
 
 function CodeEditer() {
   const [tabs, setTabs] = useRecoilState(tabsState);

@@ -9,9 +9,10 @@ export const useTab = () => {
   const tabActive = (selectedFile: string) => {
     const selectedCode = fileData[selectedFile];
     const fileIndex = tabs.files.indexOf(selectedFile);
+
     let newTabs: T.TabsStateType;
 
-    if (!fileData[selectedFile]) return;
+    if (fileData[selectedFile] === undefined) return;
 
     if (fileIndex !== -1) {
       newTabs = {

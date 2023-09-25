@@ -1,6 +1,6 @@
 import React from "react";
-import { Desktop, Mobile } from "../../../../../components/Responsive";
 import * as S from "./EmptyActiveTap.style";
+import { Desktop, Mobile } from "../../../../components/Responsive";
 function EmptyActiveTap() {
   return (
     <React.Fragment>
