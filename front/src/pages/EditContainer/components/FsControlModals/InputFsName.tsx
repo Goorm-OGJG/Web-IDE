@@ -1,8 +1,12 @@
 import React, { ChangeEvent, forwardRef, useState } from "react";
 import * as S from "./InputFsName.style";
 
+type PropsType = {
+  placeholder?: string;
+};
+
 export const InputFsName = forwardRef(function (
-  _,
+  { placeholder }: PropsType,
   ref: React.ForwardedRef<HTMLInputElement>,
 ) {
   const [value, setValue] = useState("");
@@ -18,7 +22,7 @@ export const InputFsName = forwardRef(function (
         value={value}
         onChange={handleValue}
         autoFocus
-        placeholder="영어와 숫자만 지원합니다 (최대 255자)"
+        placeholder={placeholder}
       />
     </S.Container>
   );

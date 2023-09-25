@@ -55,7 +55,10 @@ function CreateFileModal() {
       <S.Explain>
         <S.Path>{path}</S.Path> 에 생성팔 파일명을 입력해주세요.
       </S.Explain>
-      <InputFsName ref={inputRef} />
+      <InputFsName
+        ref={inputRef}
+        placeholder="영어와 숫자만 지원, 확장자 필수 입력, 최대 255자"
+      />
       {isNotOK && <S.Warning>올바르지 않은 파일명 입니다.</S.Warning>}
       <S.ButtonWrapper>
         <S.Button onClick={handlerOK}>확인</S.Button>

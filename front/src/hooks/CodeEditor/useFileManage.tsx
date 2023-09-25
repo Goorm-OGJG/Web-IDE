@@ -112,6 +112,61 @@ export const useFileManage = () => {
     });
   };
 
+  const renameFile = (info: T.InfoType, newFileName: string) => {
+    // 대상 파일의 경로
+    const targetPath = info.node.key as string;
+    const parentPath = targetPath.substring(0, targetPath.lastIndexOf("/")); // 부모 디렉터리 경로 추출
+    const newFilePath = `${parentPath}/${newFileName}`;
+
+    // 1. 탭 이름 변경
+    setTabs((prevTabs: T.TabsStateType) => {
+      const newFiles = prevTabs.files.map((file) =>
+        file === targetPath ? newFilePath : file,
+      );
+      return {
+        ...prevTabs,
+        files: newFiles,
+      };
+    });
+
+    // 2. 로컬 데이터 이름 변경
+    setFileData((prevFileData: T.FileData) => {
+      const { [targetPath]: oldContent, ...rest } = prevFileData;
+      return {
+        ...rest,
+        [newFilePath]: oldContent,
+      };
+    });
+
+    // 3. 원격 데이터 이름 변경
+    setTreeData((prevTreeData: T.FileTreeType) =>
+      renameFileByPath(prevTreeData, targetPath, newFileName),
+    );
+  };
+
+  const renameFileByPath = (
+    treeData: T.FileTreeType,
+    targetPath: string,
+    newFileName: string,
+  ): T.FileTreeType => {
+    return treeData.map((item) => {
+      if (item.key === targetPath) {
+        const parentPath = targetPath.substring(0, targetPath.lastIndexOf("/"));
+        return {
+          ...item,
+          key: `${parentPath}/${newFileName}`,
+          title: newFileName,
+        };
+      } else if (item.children) {
+        const newChildren = renameFileByPath(item.children, targetPath, newFileName);
+        if (newChildren !== item.children) {
+          return { ...item, children: newChildren };
+        }
+      }
+      return item;
+    });
+  };
+
   const deleteFile = (info: T.InfoType) => {
     // 탭 삭제
     const filePath = info.node.key as string;
@@ -142,5 +197,5 @@ export const useFileManage = () => {
       });
   };
 
-  return { createFile, createDirectory, saveFile, deleteFile };
+  return { createFile, createDirectory, renameFile, saveFile, deleteFile };
 };

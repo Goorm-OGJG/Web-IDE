@@ -43,6 +43,7 @@ function ContextMenu() {
   const handleChangeFileName = (info: T.InfoType): void => {
     console.log(`${info.node.key} 파일 이름 변경`);
     setIsContextMenuOpened(false);
+    setMode("RENAME_FILE");
   };
 
   const handleDeleteFile = (info: T.InfoType): void => {

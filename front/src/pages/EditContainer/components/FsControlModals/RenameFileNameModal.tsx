@@ -5,21 +5,21 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { modeState, selectedInfoState } from "../../../../recoil/CodeEditorState";
 import { useFileManage } from "../../../../hooks/CodeEditor/useFileManage";
 import * as T from "../../../../types/FileTree";
-import { DIRECTORYNAME_REG } from "../../../../constants/regExp";
+import { FILENAME_REG } from "../../../../constants/regExp";
 
-function CreateDirectoryModal() {
+function RenameFileModal() {
   const setMode = useSetRecoilState(modeState);
   const selectedInfo = useRecoilValue(selectedInfoState);
   const path = selectedInfo?.node.key;
   const inputRef = useRef<HTMLInputElement | null>(null);
   const modalRef = useRef<HTMLInputElement | null>(null);
-  const { createDirectory } = useFileManage();
+  const { renameFile } = useFileManage();
   const [isNotOK, setIsNotOK] = useState(false);
 
   const handlerOK = () => {
-    if (DIRECTORYNAME_REG.test(inputRef.current!.value)) {
+    if (FILENAME_REG.test(inputRef.current!.value)) {
       setIsNotOK(false);
-      createDirectory(selectedInfo as T.InfoType, inputRef.current!.value);
+      renameFile(selectedInfo as T.InfoType, inputRef.current!.value);
       setMode("EDIT");
       return;
     }
@@ -51,12 +51,15 @@ function CreateDirectoryModal() {
 
   return (
     <S.Container ref={modalRef}>
-      <S.Title>폴더 추가</S.Title>
+      <S.Title>파일명 변경</S.Title>
       <S.Explain>
-        <S.Path>{path}</S.Path> 에 생성팔 폴더명을 입력해주세요.
+        <S.Path>{path}</S.Path> 에서 변경할 새로운 파일명을 입력해주세요.
       </S.Explain>
-      <InputFsName ref={inputRef} placeholder="영어와 숫자만 지원 (최대 255자)" />
-      {isNotOK && <S.Warning>올바르지 않은 폴더명 입니다.</S.Warning>}
+      <InputFsName
+        ref={inputRef}
+        placeholder="영어와 숫자만 지원, 확장자 필수 입력, 최대 255자"
+      />
+      {isNotOK && <S.Warning>올바르지 않은 파일명 입니다.</S.Warning>}
       <S.ButtonWrapper>
         <S.Button onClick={handlerOK}>확인</S.Button>
         <S.Button onClick={handlerCancel}>취소</S.Button>
@@ -65,4 +68,4 @@ function CreateDirectoryModal() {
   );
 }
 
-export default CreateDirectoryModal;
+export default RenameFileModal;
