@@ -35,7 +35,7 @@ public class UserController {
             @RequestBody @Valid UserRequest userRequest
     ) {
         userService.signUp(userRequest);
-        return new ApiResponse<>(ErrorCode.SUCCESS);
+        return new ApiResponse<>(ErrorCode.SUCCESS.changeMessage("회원가입이 완료되었습니다"));
     }
 
     // todo : update 로직 응답 값 정의 및 추가 필요, 토큰 추가 시 email 정보 추가
