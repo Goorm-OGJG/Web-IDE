@@ -22,6 +22,7 @@ export const EyeOff = ({ size = DEFAULT }) => <Ai.AiOutlineEyeInvisible size={si
 export const Build = ({ size = DEFAULT }) => <Hi2.HiOutlineBuildingOffice2 size={size} />;
 export const Menu = ({ size = DEFAULT }) => <Ai.AiOutlineMenu size={size} />;
 export const MenuHide = ({ size = DEFAULT }) => <Ai.AiOutlineDoubleLeft size={size} />;
+export const MenuOpen = ({ size = DEFAULT }) => <Ai.AiOutlineDoubleRight size={size} />;
 export const Bell = ({ size = DEFAULT }) => <Go.GoBellFill size={size} />;
 export const Space = ({ size = DEFAULT }) => <Md.MdOutlineSpaceDashboard size={size} />;
 export const LogOut = ({ size = DEFAULT }) => <Io.IoLogOutOutline size={size} />;

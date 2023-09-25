@@ -12,7 +12,10 @@ interface MSidebarProps {
 }
 
 export const SidebarWrapper = styled.div<SidebarProps>`
-  ${(props) => props.issidebaropen && "position: absolute; top: 0; left: 0;"}
+  ${(props) =>
+    props.issidebaropen
+      ? "position: absolute; top: 0; left: 0;"
+      : props.ismenuhover && "position: absolute; top: 45px; left: 0;"}
   width: 300px;
   height: ${(props) =>
     props.issidebaropen ? "100vh" : props.ismenuhover ? "85vh" : "85vh"};
@@ -94,7 +97,10 @@ export const LineDiv = styled.div`
 
 // Mobile
 export const MSidebarWrapper = styled.div<MSidebarProps>`
-  ${(props) => props.ismsidebaropen && "position: absolute; top: 0; left: 0;"}
+  ${(props) =>
+    props.ismsidebaropen
+      ? "position: absolute; top: 0; left: 0;"
+      : props.ismmenuhover && "position: absolute; top: 45px; left: 0;"}
   width: 300px;
   height: ${(props) =>
     props.ismsidebaropen ? "100vh" : props.ismmenuhover ? "85vh" : "85vh"};

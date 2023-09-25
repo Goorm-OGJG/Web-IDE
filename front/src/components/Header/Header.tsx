@@ -36,7 +36,7 @@ function Header() {
             }}
           >
             {!isSidebarOpen &&
-              (isMenuHover ? <Icon.RightArrow2 size={18} /> : <Icon.Menu size={18} />)}
+              (isMenuHover ? <Icon.MenuOpen size={18} /> : <Icon.Menu size={18} />)}
           </S.MenuIcon>
           <S.HeaderContentBox>{data.userName} / 모든 컨테이너 </S.HeaderContentBox>
         </S.HeaderWrapper>

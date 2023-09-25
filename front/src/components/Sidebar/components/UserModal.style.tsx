@@ -80,3 +80,25 @@ export const LogoutIcon = styled.div`
   margin-right: 10px;
 `;
 export const LogoutDiv = styled.div``;
+
+export const MUserModalBox = styled.div`
+  position: absolute;
+  left: 300px;
+  top: 95px;
+  width: 220px;
+  height: 190px;
+  background-color: ${COLOR.Gray1};
+  border: 1px solid ${COLOR.Gray3};
+  border-radius: 10px;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
+`;
+export const MUserImgBox = styled.div`
+  max-width: 30px;
+  min-height: 30px;
+  margin-right: 0.5rem;
+`;
+export const MUserImg = styled.img`
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+`;
