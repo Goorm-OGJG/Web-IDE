@@ -41,7 +41,7 @@ const Signup = () => {
 
         <S.LinkWrapper>
           <S.Logininfo>이미 계정이 있으세요?</S.Logininfo>
-          <S.LoginLink to="/Login"> 로그인 </S.LoginLink>
+          <S.LoginLink to="/Login">로그인</S.LoginLink>
         </S.LinkWrapper>
       </S.SingupForm>
     </S.BackGround>

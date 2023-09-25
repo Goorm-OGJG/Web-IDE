@@ -13,13 +13,21 @@ const PasswordInput = forwardRef(function PasswordInput(
   const [show, setShow] = useState(false);
   const [value, setValue] = useState("");
 
+  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  const handleShow = () => {
+    setShow(!show);
+  };
+
   return (
     <S.PasswordBox>
       {show ? (
         <S.ShowPassword
           placeholder={placeholder}
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={handlePassword}
           minLength={8}
           maxLength={30}
           ref={ref}
@@ -29,26 +37,25 @@ const PasswordInput = forwardRef(function PasswordInput(
           placeholder={placeholder}
           type="password"
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={handlePassword}
           minLength={8}
           maxLength={30}
           ref={ref}
         />
       )}
 
-      <S.IconWrapper>
+      <S.IconWrapper onClick={handleShow}>
         {show ? (
-          <S.IconBox onClick={() => setShow(false)}>
+          <S.IconBox>
             <Icon.EyeOn />
           </S.IconBox>
         ) : (
-          <S.IconBox onClick={() => setShow(true)}>
+          <S.IconBox>
             <Icon.EyeOff />
           </S.IconBox>
         )}
       </S.IconWrapper>
     </S.PasswordBox>
-
   );
 });
 export default PasswordInput;

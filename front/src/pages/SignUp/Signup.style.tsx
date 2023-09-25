@@ -75,7 +75,8 @@ export const AuthButton = styled.button`
   top: 40%;
   right: 10px;
   transform: translateY(-50%);
-  background-color: ${(props) => (props.disabled ? "#ccc" : "#525BFF")};
+  background-color: ${(props) =>
+    props.disabled ? `${COLOR.Gray1}` : `${COLOR.Purple1}`};
   padding: 5px 10px;
   color: white;
   border: none;
