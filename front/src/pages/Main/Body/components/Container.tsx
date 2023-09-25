@@ -66,38 +66,20 @@ function Container(props: BodyContainerPops) {
 
             {editInfo ? (
               <>
-                <S.SaveIconDiv
-                  onClick={() => {
-                    handleSave();
-                  }}
-                >
+                <S.SaveIconDiv onClick={handleSave}>
                   <Icon.Save />
                 </S.SaveIconDiv>
-                <S.EditCancelDiv
-                  onClick={() => {
-                    handleEditCancel();
-                  }}
-                >
+                <S.EditCancelDiv onClick={handleEditCancel}>
                   <Icon.EditCancel />
                 </S.EditCancelDiv>
               </>
             ) : (
-              <S.EditIconDiv
-                onClick={() => {
-                  handleEdit();
-                }}
-              >
+              <S.EditIconDiv onClick={handleEdit}>
                 <Icon.Edit />
               </S.EditIconDiv>
             )}
 
-            <S.SettingDiv
-              id={`${props.data.containerId}`}
-              onClick={() => {
-                // handleSettingModal(props.data.containerId);
-                handleSettingModal();
-              }}
-            >
+            <S.SettingDiv id={`${props.data.containerId}`} onClick={handleSettingModal}>
               <Icon.HorizontalDots />
               {containerSettingModal && (
                 <ContainerSettingModal

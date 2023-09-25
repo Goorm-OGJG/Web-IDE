@@ -19,7 +19,7 @@ function RecentUpdateModal() {
             handleUpdatedBtn();
           }}
         >
-          최근 수정순{" "}
+          최근 수정순
           {ordered === "updated" && (
             <S.DotIconDiv>
               <Icon.Dot />

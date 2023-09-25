@@ -12,11 +12,12 @@ export interface ContainerType {
   pinned: boolean;
   owner: string;
   privated: boolean;
-  usersImg: Array<{
-    id: number;
-    imgUrl: string;
-    userName: string;
-  }>;
+  usersImg: UserImage[];
+}
+export interface UserImage {
+  id: number;
+  imgUrl: string;
+  userName: string;
 }
 const containers: ContainerType[] = [
   {
