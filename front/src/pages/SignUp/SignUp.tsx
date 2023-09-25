@@ -5,6 +5,9 @@ import Password from "./components/Password/Password";
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [isEmailSent, setIsEmailSent] = useState(false);
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
 
   const handleSendEmailClick = () => {
     setIsEmailSent(!isEmailSent);
@@ -23,7 +26,7 @@ const Signup = () => {
             type="email"
             value={email}
             placeholder="이메일을 입력하세요"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
           />
           <S.AuthButton onClick={handleSendEmailClick} disabled={isButtonDisabled}>
             인증
