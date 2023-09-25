@@ -25,8 +25,8 @@ public class S3ProfileImageService {
         String prefix = email + "/image.";
         s3Repository.deleteObjectsWithPrefix(prefix);
 
-        String fileName = prefix + extractExtension(originalName);
-        String accessUrl = s3Repository.uploadFile(multipartFile, fileName)
+        String filename = prefix + extractExtension(originalName);
+        String accessUrl = s3Repository.uploadFile(multipartFile, filename)
                 .orElseThrow(() -> new S3ImageUploadException());
 
         return accessUrl;

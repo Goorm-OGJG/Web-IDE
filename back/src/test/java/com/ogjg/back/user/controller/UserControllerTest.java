@@ -27,8 +27,10 @@ public class UserControllerTest extends ControllerTest {
     @Test
     public void updateImg() throws Exception {
         //given
+        String originFilename = "filename.jpg";
         String loginEmail = "ogjg1234@naver.com";
-        String url = "temp_url : {bucket-name}.s3.{region-code}.amazonaws.com/" + loginEmail + "/{fileName}";
+        String url = "https://{bucket}.{region}.amazonaws.com/"+loginEmail+"/"+originFilename;
+        MockMultipartFile multipartFile = new MockMultipartFile("img", originFilename, "image/jpeg", "image content".getBytes());
 
         ImgUpdateResponse response = ImgUpdateResponse.builder()
                 .url(url)
@@ -37,12 +39,10 @@ public class UserControllerTest extends ControllerTest {
         given(userService.updateImg(any(MultipartFile.class), eq(loginEmail)))
                 .willReturn(response);
 
-        MockMultipartFile mockFile = new MockMultipartFile("img", "filename.jpg", "image/jpeg", "image content".getBytes());
-
         //when
         ResultActions result = this.mockMvc.perform(
                 multipart("/api/users/img")
-                        .file(mockFile)
+                        .file(multipartFile)
                         .with(request -> {
                             request.setMethod("PATCH");
                             return request;

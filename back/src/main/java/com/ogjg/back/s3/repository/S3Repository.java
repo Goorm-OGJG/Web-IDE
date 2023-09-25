@@ -38,16 +38,16 @@ public class S3Repository {
         } while (result.isTruncated()); // 객체가 더 있는지 확인
     }
 
-    public Optional<String> uploadFile(MultipartFile multipartFile, String fileName) {
+    public Optional<String> uploadFile(MultipartFile multipartFile, String filename) {
         String accessUrl = null;
         try {
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentType(multipartFile.getContentType());
             objectMetadata.setContentLength(multipartFile.getInputStream().available());
 
-            amazonS3Client.putObject(bucketName, fileName, multipartFile.getInputStream(), objectMetadata);
+            amazonS3Client.putObject(bucketName, filename, multipartFile.getInputStream(), objectMetadata);
 
-            accessUrl = amazonS3Client.getUrl(bucketName, fileName).toString();
+            accessUrl = amazonS3Client.getUrl(bucketName, filename).toString();
         } catch(Exception e) {
             log.info("error message={}",e.getMessage());
         }

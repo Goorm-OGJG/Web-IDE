@@ -29,7 +29,7 @@ public class UserServiceIntegrationTest {
                 .email("ogjg1234@naver.com")
                 .password("1q2w3e4r!")
                 .name("김회원")
-                .userImg("temp_url : {bucket-name}.s3.{region-code}.amazonaws.com/ogjg1234@naver.com/{fileName}")
+                .userImg("https://{bucket}.{region}.amazonaws.com/ogjg1234@naver.com/originFilename")
                 .userStatus(UserStatus.ACTIVE)
                 .build();
     }

@@ -3,6 +3,7 @@ package com.ogjg.back.common;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ogjg.back.container.controller.ContainerController;
 import com.ogjg.back.container.service.ContainerService;
+import com.ogjg.back.s3.service.S3ProfileImageService;
 import com.ogjg.back.user.controller.UserController;
 import com.ogjg.back.user.service.EmailAuthService;
 import com.ogjg.back.user.service.UserService;
@@ -52,4 +53,7 @@ public class ControllerTest {
 
     @MockBean
     protected EmailAuthService emailAuthService;
+
+    @MockBean
+    protected S3ProfileImageService s3ProfileImageService;
 }
