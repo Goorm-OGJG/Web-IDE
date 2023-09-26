@@ -11,6 +11,7 @@ public enum ErrorCode {
     LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "401", "아이디와 비밀번호를 확인 해주세요"),
     FAIL_SIGNUP(HttpStatus.BAD_REQUEST, "400", "회원가입에 실패 했습니다"),
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "404", "회원를 찾을 수 없습니다"),
+    NOT_FOUND_CONTAINER(HttpStatus.NOT_FOUND, "400", "컨테이너를 찾을 수 없습니다"),
     INVALID_FORMAT(HttpStatus.BAD_REQUEST, "400", "데이터 검증 실패"),
     AUTH_FAIL(HttpStatus.UNAUTHORIZED, "401", "인증에 실패 했습니다"),
     EMAIL_AUTH_FAIL(HttpStatus.UNAUTHORIZED, "401", "이메일 인증에 실패 했습니다"),
