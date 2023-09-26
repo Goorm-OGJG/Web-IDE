@@ -34,7 +34,6 @@ export const useTab = () => {
   const tabClose = (tabs: T.TabsStateType, tabIndex: number) => {
     const newTabs = getTabAfterClose(tabs, tabIndex);
     newTabs.active = getUpdatedActiveIndex(newTabs, tabIndex);
-    console.log("tabClose newTabs:", newTabs);
 
     setTabs(newTabs);
   };

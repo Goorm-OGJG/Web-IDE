@@ -20,7 +20,6 @@ export const useFileManage = () => {
   };
 
   const createFile = (info: T.InfoType, fileName: string) => {
-    // 부모 디렉터리의 경로
     const parentPath = info.node.key as string;
     const newFilePath = `${parentPath}${fileName}`;
 
@@ -29,16 +28,16 @@ export const useFileManage = () => {
       ...prevTabs,
       active: prevTabs.files.length,
       files: [...prevTabs.files, newFilePath],
-      codes: [...prevTabs.codes, ""], // 초기 코드는 빈 문자열
+      codes: [...prevTabs.codes, ""],
     }));
 
     // 2. 로컬 데이터 추가
     setFileData((prevFileData: T.FileData) => ({
       ...prevFileData,
-      [newFilePath]: "", // 빈 내용으로 초기화
+      [newFilePath]: "",
     }));
 
-    // 3. 원격 데이터 추가
+    // 3. 트리 데이터 변경
     setTreeData((prevTreeData: T.FileTreeType) =>
       createFileByPath(prevTreeData, parentPath, fileName),
     );
@@ -67,7 +66,6 @@ export const useFileManage = () => {
   };
 
   const createDirectory = (info: T.InfoType, directoryName: string) => {
-    console.log("createDirectory");
     const parentPath = info.node.key as string;
     const newDirectoryPath = `${parentPath}${directoryName}/`;
 
@@ -82,12 +80,8 @@ export const useFileManage = () => {
     newDirectoryPath: string,
     directoryName: string,
   ): T.FileTreeType => {
-    console.log("newDirectoryPath", newDirectoryPath);
-    console.log("directoryName", directoryName);
-
     return treeData.map((item) => {
       if (item.key === parentPath) {
-        console.log("keyfind");
         const newChildren = [
           ...(item.children as T.FileTreeType),
           {
@@ -113,7 +107,6 @@ export const useFileManage = () => {
   };
 
   const renameFile = (info: T.InfoType, newFileName: string) => {
-    // 대상 파일의 경로
     const targetPath = info.node.key as string;
     const parentPath = targetPath.substring(0, targetPath.lastIndexOf("/")); // 부모 디렉터리 경로 추출
     const newFilePath = `${parentPath}/${newFileName}`;
@@ -138,7 +131,7 @@ export const useFileManage = () => {
       };
     });
 
-    // 3. 원격 데이터 이름 변경
+    // 3. 트리 데이터 변경
     setTreeData((prevTreeData: T.FileTreeType) =>
       renameFileByPath(prevTreeData, targetPath, newFileName),
     );
@@ -164,6 +157,80 @@ export const useFileManage = () => {
         }
       }
       return item;
+    });
+  };
+
+  const renameDirectory = (info: T.InfoType, newDirectoryName: string) => {
+    const targetPath = `${info.node.key as string}`;
+    const parts = targetPath.split("/");
+
+    if (parts[parts.length - 1] !== "") parts.push("");
+
+    const parentPath = `${parts.slice(0, parts.length - 2).join("/")}/`;
+    const newDirectoryPath = `${parentPath}${newDirectoryName}/`;
+
+    // 1. 탭 이름 변경
+    setTabs((prevTabs: T.TabsStateType) => {
+      const newFiles = prevTabs.files.map((file) => {
+        if (file.startsWith(targetPath))
+          return file.replace(targetPath, newDirectoryPath);
+
+        return file;
+      });
+
+      return {
+        ...prevTabs,
+        files: newFiles,
+      };
+    });
+
+    // 2. 로컬 데이터 변경
+    const newFileData = { ...fileData };
+    for (const [filePath, code] of Object.entries(newFileData)) {
+      if (filePath.startsWith(targetPath)) {
+        const newFilePath = filePath.replace(targetPath, newDirectoryPath);
+        newFileData[newFilePath] = code;
+
+        delete newFileData[filePath];
+      }
+    }
+    setFileData(newFileData);
+
+    // 3. 트리 데이터 변경
+    setTreeData((prevTreeData) => {
+      return renameInTree(prevTreeData, targetPath, newDirectoryPath);
+    });
+  };
+
+  const renameInTree = (
+    tree: T.FileTreeType,
+    targetPath: string,
+    newDirectoryPath: string,
+  ): T.FileTreeType => {
+    return tree.map((item) => {
+      if (item.key.startsWith(targetPath)) {
+        const newKey = item.key.replace(targetPath, newDirectoryPath);
+        const newTitle =
+          newKey === newDirectoryPath
+            ? newDirectoryPath.split("/").slice(-2, -1)[0]
+            : item.title;
+
+        return {
+          ...item,
+          key: newKey,
+          title: newTitle,
+          children: renameInTree(item.children as T.FileTreeType, item.key, newKey),
+        };
+      } else {
+        return {
+          ...item,
+          children: renameInTree(
+            item.children as T.FileTreeType,
+            targetPath,
+            newDirectoryPath,
+          ),
+        };
+      }
     });
   };
 
@@ -197,5 +264,12 @@ export const useFileManage = () => {
       });
   };
 
-  return { createFile, createDirectory, renameFile, saveFile, deleteFile };
+  return {
+    createFile,
+    createDirectory,
+    renameFile,
+    renameDirectory,
+    saveFile,
+    deleteFile,
+  };
 };

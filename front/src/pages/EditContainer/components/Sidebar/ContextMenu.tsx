@@ -67,6 +67,7 @@ function ContextMenu() {
   const handleChangeDirectoryName = (info: T.InfoType): void => {
     console.log(`${info.node.key} 폴더 이름 변경`);
     setIsContextMenuOpened(false);
+    setMode("RENAME_DIRECTORY");
   };
 
   const handleDeleteDirectory = (info: T.InfoType): void => {

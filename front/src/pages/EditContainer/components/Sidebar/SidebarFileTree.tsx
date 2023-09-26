@@ -35,7 +35,6 @@ function SidebarFileTree() {
   const onSelect: TreeProps["onSelect"] = (_, info) => {
     const selectedFile = info.node.key as string;
     const selectedCode = fileData[selectedFile];
-    console.log(treeData);
     if (typeof fileData[selectedFile] === "undefined") return;
 
     const newTabs = getNewTabsState(selectedFile, selectedCode);
@@ -85,6 +84,11 @@ function SidebarFileTree() {
             children: [
               { key: "/hello/bird/bird1.png", title: "bird1.png" },
               { key: "/hello/bird/bird2.txt", title: "bird2.txt" },
+              {
+                key: "/hello/bird/minsu/",
+                title: "minsu",
+                children: [{ key: "/hello/bird/minsu/minsu1.tsx", title: "minsu1.tsx" }],
+              },
             ],
           },
           {
@@ -100,6 +104,7 @@ function SidebarFileTree() {
       "/hello/duck/duck1.css": "duck1.css 파일 내용",
       "/hello/bird/bird1.png": "bird1.png 파일 내용",
       "/hello/bird/bird2.txt": "bird2.txt 파일 내용",
+      "/hello/bird/minsu/minsu1.tsx": "minsu1.tsx 파일 내용",
     });
   }, []);
 
