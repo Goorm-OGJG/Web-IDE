@@ -25,11 +25,10 @@ public class S3ProfileImageService {
         String prefix = email + "/image.";
         s3Repository.deleteObjectsWithPrefix(prefix);
 
-        String filename = prefix + extractExtension(originalName);
-        String accessUrl = s3Repository.uploadFile(multipartFile, filename)
-                .orElseThrow(() -> new S3ImageUploadException());
+        String fileName = prefix + extractExtension(originalName);
 
-        return accessUrl;
+        return s3Repository.uploadFile(multipartFile, fileName)
+                .orElseThrow(() -> new S3ImageUploadException());
     }
 
     private String extractExtension(String originName) {
