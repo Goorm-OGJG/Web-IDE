@@ -2,6 +2,7 @@ package com.ogjg.back.container.dto.request;
 
 import com.ogjg.back.container.domain.Container;
 import com.ogjg.back.user.domain.User;
+import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,9 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 public class ContainerCreateRequest {
+
+    @Pattern(regexp = "^[a-zA-Z0-9\\-_]{1,20}$",
+            message = "컨테이너 이름에는 영문, 숫자가 포함가능하며, 특수문자는 '-', '_'만 포함될 수 있습니다.")
     private String name;
     private String description;
     private boolean isPrivate;

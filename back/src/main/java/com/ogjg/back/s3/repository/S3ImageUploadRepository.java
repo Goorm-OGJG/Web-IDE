@@ -14,7 +14,7 @@ import java.util.*;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class S3Repository {
+public class S3ImageUploadRepository {
 
     @Value("${cloud.aws.credentials.bucket-name}")
     private String bucketName;
@@ -23,12 +23,9 @@ public class S3Repository {
     public Optional<String> uploadFile(MultipartFile file, String filename) {
         String accessUrl = null;
         try {
-            Map<String, String> metadata = new HashMap<>();
-            metadata.put("x-amz-meta-myVal", "test");
             PutObjectRequest putObjRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(filename)
-                    .metadata(metadata)
                     .build();
 
             s3Client.putObject(putObjRequest,

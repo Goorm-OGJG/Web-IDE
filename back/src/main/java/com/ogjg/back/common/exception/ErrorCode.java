@@ -14,6 +14,7 @@ public enum ErrorCode {
     EMAIL_AUTH_FAIL(HttpStatus.UNAUTHORIZED, "401", "이메일 인증에 실패 했습니다"),
     DUPLICATED_CONTAINER_NAME(HttpStatus.BAD_REQUEST , "400", "이미 존재하는 컨테이너 이름입니다"),
     INVALID_CURRENT_PASSWORD(HttpStatus.BAD_REQUEST, "400", "현재 비밀번호 불일치"),
+    S3_FAIL_TO_UPLOAD_CONTAINER(HttpStatus.BAD_REQUEST, "400","S3에 프로필 이미지 업로드를 실패했습니다."),
     S3_FAIL_TO_UPLOAD_IMAGE(HttpStatus.BAD_REQUEST, "400","S3에 프로필 이미지 업로드를 실패했습니다.");
 
     @JsonIgnore
