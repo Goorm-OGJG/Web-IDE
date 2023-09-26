@@ -29,11 +29,9 @@ public class ContainerService {
         }
 
         Container container = request.toContainer(user);
-
-        // todo: s3에 컨테이너 생성
-        // todo: 필요하다면 디렉토리 구조 db에 반영
-
         containerRepository.save(container);
+
+        // todo: 필요하다면 디렉토리 구조 db에 반영
     }
 
     @Transactional(readOnly = true)
