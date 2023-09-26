@@ -1,17 +1,20 @@
 package com.ogjg.back.user.service;
 
+import com.ogjg.back.config.security.jwt.JwtUtils;
 import com.ogjg.back.s3.service.S3ProfileImageService;
 import com.ogjg.back.user.domain.EmailAuth;
 import com.ogjg.back.user.domain.User;
 import com.ogjg.back.user.dto.SignUpSaveDto;
-import com.ogjg.back.user.dto.request.InfoUpdateRequest;
-import com.ogjg.back.user.dto.request.PasswordUpdateRequest;
-import com.ogjg.back.user.dto.request.SignUpRequest;
+import com.ogjg.back.user.dto.request.*;
 import com.ogjg.back.user.dto.response.ImgUpdateResponse;
+import com.ogjg.back.user.exception.InvalidCurrentPassword;
+import com.ogjg.back.user.exception.LoginFailure;
 import com.ogjg.back.user.exception.NotFoundUser;
 import com.ogjg.back.user.exception.SignUpFailure;
 import com.ogjg.back.user.repository.EmailAuthRepository;
 import com.ogjg.back.user.repository.UserRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,7 @@ public class UserService {
     private final S3ProfileImageService s3ProfileImageService;
     private final EmailAuthRepository emailAuthRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtils jwtUtils;
 
     @Transactional
     public ImgUpdateResponse updateImg(MultipartFile multipartFile, String loginEmail) {
@@ -49,7 +53,13 @@ public class UserService {
     @Transactional
     public void updatePassword(PasswordUpdateRequest request, String loginEmail) {
         User findUser = findByEmail(loginEmail);
-        findUser.updatePassword(findUser.getPassword(), request);
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), findUser.getPassword())) {
+            throw new InvalidCurrentPassword();
+        }
+
+        String newPassword = passwordEncoder.encode(request.getNewPassword());
+        findUser.updatePassword(newPassword);
     }
 
     @Transactional
@@ -79,6 +89,9 @@ public class UserService {
     }
 
 
+    /*
+     * 회원가입시 로그인 중복 , 이메일 인증 확인
+     * */
     private EmailAuth emailAuthValid(SignUpRequest signUpRequest) {
         if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent()) {
             throw new SignUpFailure("이미 회원가입된 이메일 입니다");
@@ -100,6 +113,32 @@ public class UserService {
     private EmailAuth findEmailAuthByEmail(String email) {
         return emailAuthRepository.findByEmail(email)
                 .orElseThrow(() -> new SignUpFailure("이메일 인증을 진행해 주세요"));
+    }
+
+    /*
+     * 로그인
+     * */
+    public void login(LoginRequest loginRequest, HttpServletResponse response) {
+        User user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(LoginFailure::new);
+
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            throw new LoginFailure();
+        }
+
+        JwtUserClaimsDto jwtUserClaimsDto = new JwtUserClaimsDto(user.getEmail());
+
+        String accessToken = jwtUtils.generateAccessToken(jwtUserClaimsDto);
+        String refreshToken = jwtUtils.generateRefreshToken(jwtUserClaimsDto);
+
+        response.addHeader("Authorization", "Bearer " + accessToken);
+
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(true);
+        refreshTokenCookie.setDomain("ogjg.site");
+        refreshTokenCookie.setPath("/");
+        response.addCookie(refreshTokenCookie);
     }
 
 }

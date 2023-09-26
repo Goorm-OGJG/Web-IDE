@@ -64,7 +64,8 @@ public class UserTest {
                 .build();
 
         //when
-        User updatedUser = user.updatePassword(storedPassword, request);
+        //todo 테스트 잘되는지 확인해보기 암호화된 String 문자열이 들어가야함니다 고쳐주세요
+        User updatedUser = user.updatePassword("request");
 
         //then
         assertThat(updatedUser.getPassword()).isEqualTo(newPassword);
@@ -84,7 +85,8 @@ public class UserTest {
                 .build();
 
         //whe, then
-        assertThatThrownBy(() -> user.updatePassword(storedPassword, request))
+        //todo 테스트 잘되는지 확인해보기 고쳐주세요 암호화된 String 문자열이 들어가야합니다
+        assertThatThrownBy(() -> user.updatePassword("request"))
                 .isInstanceOf(InvalidCurrentPassword.class);
     }
 

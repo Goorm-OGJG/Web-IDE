@@ -1,8 +1,6 @@
 package com.ogjg.back.user.domain;
 
 import com.ogjg.back.user.dto.SignUpSaveDto;
-import com.ogjg.back.user.dto.request.PasswordUpdateRequest;
-import com.ogjg.back.user.exception.InvalidCurrentPassword;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -58,12 +56,9 @@ public class User {
         return this;
     }
 
-    public User updatePassword(String storedPassword, PasswordUpdateRequest request) {
-        if (storedPassword.equals(request.getCurrentPassword())) {
-            this.password = request.getNewPassword();
-            return this;
-        }
-        throw new InvalidCurrentPassword();
+    public User updatePassword(String newPassword) {
+        this.password = newPassword;
+        return this;
     }
 
     public User deactivate() {
