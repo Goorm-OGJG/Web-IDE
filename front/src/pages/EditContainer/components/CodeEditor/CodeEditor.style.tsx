@@ -14,6 +14,12 @@ export const Header = styled.div`
   justify-content: space-between;
 `;
 
+export const MHeader = styled.div`
+  display: flex;
+  height: 30px;
+  background-color: ${COLOR.Gray10};
+`;
+
 export const Tabs = styled.div`
   display: flex;
 `;

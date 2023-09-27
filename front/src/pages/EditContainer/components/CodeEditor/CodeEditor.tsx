@@ -90,11 +90,11 @@ function CodeEditer() {
       <Mobile>
         <S.MContainer>
           {tabs.active != -1 && (
-            <S.Header>
+            <S.MHeader>
               {tabs.files.map((file) => (
                 <Tab key={file} file={file} />
               ))}
-            </S.Header>
+            </S.MHeader>
           )}
 
           {tabs.active !== -1 && (
