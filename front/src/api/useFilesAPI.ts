@@ -82,7 +82,11 @@ export function useFilesAPI() {
       deleteFile(info);
     });
   };
-  const requestDeleteDirectory = () => {};
+  const requestDeleteDirectory = (payload: T.DirectoryPathPayload, info: InfoType) => {
+    axios.delete(`/api/directories/${payload.directoryPath}`).then(() => {
+      deleteFile(info);
+    });
+  };
   const requestSave = () => {};
 
   return {
