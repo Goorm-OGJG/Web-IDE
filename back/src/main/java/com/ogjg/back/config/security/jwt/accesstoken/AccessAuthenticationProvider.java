@@ -1,6 +1,8 @@
-package com.ogjg.back.config.security.jwt;
+package com.ogjg.back.config.security.jwt.accesstoken;
 
 import com.ogjg.back.config.security.exception.JwtAuthFailure;
+import com.ogjg.back.config.security.jwt.JwtUserDetails;
+import com.ogjg.back.config.security.jwt.JwtUtils;
 import com.ogjg.back.user.dto.request.JwtUserClaimsDto;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +13,7 @@ import org.springframework.security.core.AuthenticationException;
 import java.util.Collections;
 
 @RequiredArgsConstructor
-public class JwtAuthenticationProvider implements AuthenticationProvider {
+public class AccessAuthenticationProvider implements AuthenticationProvider {
 
     private final JwtUtils jwtUtils;
 
@@ -19,18 +21,18 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(
             Authentication authentication
     ) throws AuthenticationException {
-        String jwt = String.valueOf(authentication.getCredentials());
+        String accessToken = String.valueOf(authentication.getCredentials());
 
-        if (!jwtUtils.isValidToken(jwt)) {
-            throw new JwtAuthFailure();
+        if (!jwtUtils.isValidToken(accessToken)) {
+            throw new JwtAuthFailure("AccessToken 인증 실패");
         }
-        JwtUserDetails jwtUserDetails = getJwtUserDetails(jwt);
+        JwtUserDetails jwtUserDetails = getJwtUserDetails(accessToken);
 
-        return new JwtAuthenticationToken(jwtUserDetails, jwt, Collections.emptyList());
+        return new AccessAuthenticationToken(jwtUserDetails, accessToken, Collections.emptyList());
     }
 
-    private JwtUserDetails getJwtUserDetails(String jwt) {
-        Claims claims = jwtUtils.getClaims(jwt);
+    private JwtUserDetails getJwtUserDetails(String accessToken) {
+        Claims claims = jwtUtils.getClaims(accessToken);
 
         JwtUserClaimsDto userClaimsDto = JwtUserClaimsDto.builder()
                 .email((String) claims.get("email"))
@@ -41,6 +43,6 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return authentication.equals(JwtAuthenticationToken.class);
+        return authentication.equals(AccessAuthenticationToken.class);
     }
 }

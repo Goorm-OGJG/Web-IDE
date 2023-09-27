@@ -1,14 +1,13 @@
-package com.ogjg.back.config.security.jwt;
+package com.ogjg.back.config.security.jwt.accesstoken;
 
 import com.ogjg.back.config.security.exception.JwtAuthFailure;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -16,19 +15,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+@RequiredArgsConstructor
+public class AccessAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
     private final List<String> permitUrlList;
-
-
-    public JwtAuthenticationFilter(
-            @Qualifier("jwtAuthenticationManager") AuthenticationManager authenticationManager,
-            List<String> permitUrlList
-    ) {
-        this.authenticationManager = authenticationManager;
-        this.permitUrlList = permitUrlList;
-    }
 
     private final String PREFIX = "Bearer ";
 
@@ -45,14 +36,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
-            String jwt = getJwt(request);
-            JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(jwt);
+            String accessToken = getAccessToken(request);
+            AccessAuthenticationToken accessAuthenticationToken = new AccessAuthenticationToken(accessToken);
 
-            Authentication authenticate = authenticationManager.authenticate(jwtAuthenticationToken);
+            Authentication authenticate = authenticationManager.authenticate(accessAuthenticationToken);
 
             SecurityContextHolder.getContext().setAuthentication(authenticate);
         } catch (Exception e) {
-            throw new JwtAuthFailure();
+            throw new JwtAuthFailure("AccessToken 인증 실패");
         }
     }
 
@@ -71,7 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     /*
      * 헤더에서 토큰값 가져오기
      * */
-    private String getJwt(HttpServletRequest request) {
+    private String getAccessToken(HttpServletRequest request) {
         String jwt = request.getHeader("Authorization");
 
         if (jwt != null && jwt.startsWith(PREFIX)) {

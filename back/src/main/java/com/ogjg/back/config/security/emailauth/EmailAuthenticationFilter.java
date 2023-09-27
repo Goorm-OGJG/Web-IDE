@@ -1,12 +1,13 @@
 package com.ogjg.back.config.security.emailauth;
 
+import com.ogjg.back.config.security.exception.EmailAuthFailure;
 import com.ogjg.back.user.service.EmailAuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -14,19 +15,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Slf4j
+@RequiredArgsConstructor
 public class EmailAuthenticationFilter extends OncePerRequestFilter {
 
 
     private final AuthenticationManager authenticationManager;
     private final EmailAuthService emailAuthService;
-
-    public EmailAuthenticationFilter(
-            @Qualifier("emailAuthenticationManager") AuthenticationManager authenticationManager,
-            EmailAuthService emailAuthService
-    ) {
-        this.authenticationManager = authenticationManager;
-        this.emailAuthService = emailAuthService;
-    }
 
     @Override
     protected void doFilterInternal(
@@ -57,6 +51,7 @@ public class EmailAuthenticationFilter extends OncePerRequestFilter {
 
         } catch (Exception e) {
             log.error("이메일 인증도중 에러발생 = {}", e.getMessage());
+            throw new EmailAuthFailure("이메일 인증 실패");
         }
 
         EmailAuthUserDetails principal = (EmailAuthUserDetails) authenticate.getPrincipal();

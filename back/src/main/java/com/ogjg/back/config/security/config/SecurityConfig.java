@@ -2,9 +2,11 @@ package com.ogjg.back.config.security.config;
 
 import com.ogjg.back.config.security.emailauth.EmailAuthenticationFilter;
 import com.ogjg.back.config.security.emailauth.EmailAuthenticationProvider;
-import com.ogjg.back.config.security.jwt.JwtAuthenticationFilter;
-import com.ogjg.back.config.security.jwt.JwtAuthenticationProvider;
 import com.ogjg.back.config.security.jwt.JwtUtils;
+import com.ogjg.back.config.security.jwt.accesstoken.AccessAuthenticationFilter;
+import com.ogjg.back.config.security.jwt.accesstoken.AccessAuthenticationProvider;
+import com.ogjg.back.config.security.jwt.refreshtoken.RefreshAuthenticationProvider;
+import com.ogjg.back.config.security.jwt.refreshtoken.RefreshTokenAuthenticationFilter;
 import com.ogjg.back.user.service.EmailAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -34,7 +36,8 @@ public class SecurityConfig {
 
 
     private final List<String> permitUrlList = new ArrayList<>(
-            List.of("/api/users/email-auth/.*",
+            List.of(
+                    "/api/users/email-auth/.*",
                     "/api/users/signup",
                     "/api/users/login",
                     "/health"
@@ -51,6 +54,12 @@ public class SecurityConfig {
                 .addFilterBefore(
                         emailAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class
                 )
+                .addFilterAfter(
+                        refreshTokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class
+                )
+                .addFilterAfter(
+                        accessAuthenticationFilter(), RefreshTokenAuthenticationFilter.class
+                )
                 .authorizeHttpRequests(
                         authorize -> authorize
                                 .anyRequest().permitAll())
@@ -64,13 +73,23 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        return new JwtAuthenticationFilter(new ProviderManager(Collections.singletonList(jwtAuthenticationProvider())), permitUrlList);
+    public AccessAuthenticationFilter accessAuthenticationFilter() throws Exception {
+        return new AccessAuthenticationFilter(new ProviderManager(Collections.singletonList(accessAuthenticationProvider())), permitUrlList);
     }
 
     @Bean
-    public JwtAuthenticationProvider jwtAuthenticationProvider() {
-        return new JwtAuthenticationProvider(jwtUtils);
+    public RefreshTokenAuthenticationFilter refreshTokenAuthenticationFilter() throws Exception {
+        return new RefreshTokenAuthenticationFilter(new ProviderManager(Collections.singletonList(refreshAuthenticationProvider())), jwtUtils);
+    }
+
+    @Bean
+    public AccessAuthenticationProvider accessAuthenticationProvider() {
+        return new AccessAuthenticationProvider(jwtUtils);
+    }
+
+    @Bean
+    public RefreshAuthenticationProvider refreshAuthenticationProvider() {
+        return new RefreshAuthenticationProvider(jwtUtils);
     }
 
     @Bean

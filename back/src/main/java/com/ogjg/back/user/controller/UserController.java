@@ -6,6 +6,7 @@ import com.ogjg.back.user.dto.request.*;
 import com.ogjg.back.user.dto.response.ImgUpdateResponse;
 import com.ogjg.back.user.service.EmailAuthService;
 import com.ogjg.back.user.service.UserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -137,4 +138,22 @@ public class UserController {
 
         return emitter;
     }
+
+    /*
+     * 로그아웃
+     * */
+    @PostMapping("/logout")
+    public ApiResponse<?> logout(HttpServletResponse response) {
+
+        Cookie refreshTokenCookie = new Cookie("refreshToken", null);
+        refreshTokenCookie.setMaxAge(0);
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(true);
+        refreshTokenCookie.setDomain("ogjg.site");
+        refreshTokenCookie.setPath("/");
+        response.addCookie(refreshTokenCookie);
+
+        return new ApiResponse<>(ErrorCode.SUCCESS.changeMessage("로그아웃 성공"));
+    }
+
 }
