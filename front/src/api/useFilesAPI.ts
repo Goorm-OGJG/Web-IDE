@@ -12,7 +12,8 @@ import { useFileManage } from "../hooks/CodeEditor/useFileManage";
 
 export function useFilesAPI() {
   const axios = useAxios();
-  const { createFile, createDirectory, renameFile, renameDirectory } = useFileManage();
+  const { createFile, createDirectory, renameFile, renameDirectory, deleteFile } =
+    useFileManage();
   const [tabs, setTabs] = useRecoilState(tabsState);
   const [treeData, setTreeData] = useRecoilState(treeDataState);
   const [fileData, setFileData] = useRecoilState(fileDataState);
@@ -76,7 +77,11 @@ export function useFilesAPI() {
       renameDirectory(info, newDirectoryName);
     });
   };
-  const requestDeleteFile = () => {};
+  const requestDeleteFile = (payload: T.FilePathPayload, info: InfoType) => {
+    axios.delete(`/api/files/${payload.filePath}`).then(() => {
+      deleteFile(info);
+    });
+  };
   const requestDeleteDirectory = () => {};
   const requestSave = () => {};
 
