@@ -7,6 +7,7 @@ import * as S from "./CodeEditor.style";
 import { Desktop, Mobile } from "../../../../components/Responsive";
 import EmptyActiveTap from "./EmptyActiveTap";
 import Tab from "./Tab";
+import * as Icons from "../../../../components/Icon";
 
 function CodeEditer() {
   const [tabs, setTabs] = useRecoilState(tabsState);
@@ -24,6 +25,12 @@ function CodeEditer() {
     });
   };
 
+  const handleShare = () => {
+    const webAddress = window.location.href;
+
+    navigator.clipboard.writeText(webAddress);
+  };
+
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
   const handleEditorDidMount: OnMount = (editor) => {
@@ -39,9 +46,16 @@ function CodeEditer() {
       <Desktop>
         {tabs.active != -1 && (
           <S.Header>
-            {tabs.files.map((file) => (
-              <Tab key={file} file={file} />
-            ))}
+            <S.Tabs>
+              {tabs.files.map((file) => (
+                <Tab key={file} file={file} />
+              ))}
+            </S.Tabs>
+            <S.Icons>
+              <S.IconsWrapper onClick={handleShare}>
+                <Icons.Share size={16} />
+              </S.IconsWrapper>
+            </S.Icons>
           </S.Header>
         )}
 

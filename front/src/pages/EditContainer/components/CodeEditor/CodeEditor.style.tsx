@@ -11,10 +11,21 @@ export const Header = styled.div`
   display: flex;
   height: 30px;
   background-color: ${COLOR.Gray10};
+  justify-content: space-between;
 `;
 
 export const Tabs = styled.div`
   display: flex;
 `;
 
-export const Icons = styled.div``;
+export const Icons = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  color: ${COLOR.White};
+`;
+
+export const IconsWrapper = styled.div`
+  cursor: pointer;
+`;
