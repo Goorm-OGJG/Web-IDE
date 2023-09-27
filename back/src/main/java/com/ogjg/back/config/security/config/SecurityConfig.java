@@ -40,6 +40,7 @@ public class SecurityConfig {
                     "/api/users/email-auth/.*",
                     "/api/users/signup",
                     "/api/users/login",
+                    "/api/users/find-password/.*",
                     "/health"
             ));
 

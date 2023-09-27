@@ -156,4 +156,16 @@ public class UserController {
         return new ApiResponse<>(ErrorCode.SUCCESS.changeMessage("로그아웃 성공"));
     }
 
+    /*
+     * 비밀번호 찾기
+     * */
+    @PostMapping("/find-password/{email}")
+    public ApiResponse<?> findPassword(
+            @PathVariable("email") String email
+    ) {
+        userService.findPassword(email);
+
+        return new ApiResponse<>(ErrorCode.SUCCESS.changeMessage("임시 비밀번호가 메일로 발송 되었습니다"));
+    }
+
 }

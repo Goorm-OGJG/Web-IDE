@@ -13,16 +13,26 @@ import com.ogjg.back.user.exception.NotFoundUser;
 import com.ogjg.back.user.exception.SignUpFailure;
 import com.ogjg.back.user.repository.EmailAuthRepository;
 import com.ogjg.back.user.repository.UserRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +43,7 @@ public class UserService {
     private final EmailAuthRepository emailAuthRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
+    private final JavaMailSender mailSender;
 
     @Transactional
     public ImgUpdateResponse updateImg(MultipartFile multipartFile, String loginEmail) {
@@ -139,6 +150,47 @@ public class UserService {
         refreshTokenCookie.setDomain("ogjg.site");
         refreshTokenCookie.setPath("/");
         response.addCookie(refreshTokenCookie);
+    }
+
+    @Transactional
+    public void findPassword(String email) {
+        User user = findByEmail(email);
+        String randomPassword = UUID.randomUUID().toString().substring(0, 26);
+        String password = randomPassword + "1L!";
+        String temporaryPassword = passwordEncoder.encode(password);
+        user.updatePassword(temporaryPassword);
+        sendPassWordEmail(email, password);
+    }
+
+    /*
+     * 임시 비밀번호 발송
+     * */
+    private void sendPassWordEmail(String email, String temporaryPassword) {
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+
+            String htmlContent = passwordFindTemplate();
+            htmlContent = htmlContent.replace("temporary_pwd_here", temporaryPassword);
+
+            helper.setTo(email);
+            helper.setSubject("임시 비밀번호");
+            helper.setText(htmlContent, true);
+
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new IllegalArgumentException("임시 비밀번호를 발송하는데 오류가 발생했습니다");
+        }
+    }
+
+    private String passwordFindTemplate() {
+        try {
+            ClassPathResource resource = new ClassPathResource("email_pwd_find.html");
+            byte[] encoded = Files.readAllBytes(Paths.get(resource.getURI()));
+            return new String(encoded, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("임시 비밀번호 템플릿을 불러올 수 없습니다");
+        }
     }
 
 }
