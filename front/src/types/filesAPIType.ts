@@ -12,9 +12,9 @@ export interface DirectoryPathPayload {
 
 export type ResponseFileData = File[];
 
-export type ResponseDirectoryData = string[];
-
 export interface File {
   filePath: string;
   content: string;
 }
+
+export type ResponseDirectoryData = string[];

@@ -7,10 +7,12 @@ import {
   tabsState,
   treeDataState,
 } from "../recoil/CodeEditorState";
-import { FileData, DirectoryDataType } from "../types/FileTree";
+import { FileData, DirectoryDataType, InfoType } from "../types/FileTree";
+import { useFileManage } from "../hooks/CodeEditor/useFileManage";
 
 export function useFilesAPI() {
   const axios = useAxios();
+  const { createFile } = useFileManage();
   const [tabs, setTabs] = useRecoilState(tabsState);
   const [treeData, setTreeData] = useRecoilState(treeDataState);
   const [fileData, setFileData] = useRecoilState(fileDataState);
@@ -38,7 +40,15 @@ export function useFilesAPI() {
     }, new Set());
   };
 
-  const requestCreateFile = () => {};
+  const requestCreateFile = (
+    payload: T.FilePathPayload,
+    info: InfoType,
+    fileName: string,
+  ) => {
+    axios.post(`/api/files/${payload.filePath}`, payload).then(() => {
+      createFile(info, fileName);
+    });
+  };
   const requestCreateDirectory = () => {};
   const requestRenameFile = () => {};
   const requestRenameDirectory = () => {};
