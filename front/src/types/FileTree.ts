@@ -12,6 +12,8 @@ export type FileData = {
   [key: string]: string;
 };
 
+export type DirectoryDataType = Set<string>;
+
 export type InfoType = {
   event: React.MouseEvent<Element, MouseEvent>;
   node: EventDataNode<DataNode>;

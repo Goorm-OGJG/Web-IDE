@@ -16,6 +16,11 @@ export const fileDataState = atom<T.FileData>({
   default: {},
 });
 
+export const directoryDataState = atom<T.DirectoryData>({
+  key: "directoryDataState",
+  default: new Set(),
+});
+
 export const tabsState = atom<T.TabsStateType>({
   key: "tabsState",
   default: {
