@@ -7,7 +7,7 @@ export interface FilePathPayload {
 }
 
 export interface DirectoryPathPayload {
-  filePath: string;
+  directoryPath: string;
 }
 
 export type ResponseFileData = File[];
