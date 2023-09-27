@@ -22,6 +22,7 @@ export const Icons = styled.div`
 `;
 
 export const IconWrapper = styled.div`
+  position: relative;
   &:hover {
     cursor: pointer;
   }

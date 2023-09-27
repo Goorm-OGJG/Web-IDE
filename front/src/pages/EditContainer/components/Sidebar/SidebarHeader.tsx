@@ -3,8 +3,12 @@ import * as Icon from "../../../../components/Icon";
 import { useRecoilState } from "recoil";
 
 import { isExtandAllFilesState } from "../../../../recoil/CodeEditorState";
+// import CreateModal from "./CreateModal";
+// import { useState } from "react";
 
 function SidebarHeader() {
+  // const [isModalOpened, setIsModalOpened] = useState(false);
+
   const [isExtandAllFiles, setIsExtandAllFilesState] =
     useRecoilState(isExtandAllFilesState);
 
@@ -12,13 +16,18 @@ function SidebarHeader() {
     setIsExtandAllFilesState(isExtandAllFiles + 1);
   };
 
+  // const handleModal = () => {
+  //   setIsModalOpened((prev) => !prev);
+  // };
+
   return (
     <S.Header>
       <S.ProjectText>프로젝트</S.ProjectText>
       <S.Icons>
-        <S.IconWrapper>
+        {/* <S.IconWrapper onClick={handleModal}>
           <Icon.Plus />
-        </S.IconWrapper>
+          {isModalOpened && <CreateModal setIsModalOpened={setIsModalOpened} />}
+        </S.IconWrapper> */}
 
         <S.IconWrapper onClick={handleCloseFileTree}>
           <Icon.FolderClose />

@@ -24,8 +24,9 @@ export const Icons = styled.div`
   justify-content: center;
   padding: 0 10px;
   color: ${COLOR.White};
+  gap: 7px;
 `;
 
-export const IconsWrapper = styled.div`
+export const IconWrapper = styled.div`
   cursor: pointer;
 `;

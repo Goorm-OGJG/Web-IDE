@@ -7,12 +7,13 @@ import * as S from "./CodeEditor.style";
 import { Desktop, Mobile } from "../../../../components/Responsive";
 import EmptyActiveTap from "./EmptyActiveTap";
 import Tab from "./Tab";
-import * as Icons from "../../../../components/Icon";
+import * as Icon from "../../../../components/Icon";
+import { useFileManage } from "../../../../hooks/CodeEditor/useFileManage";
 
 function CodeEditer() {
   const [tabs, setTabs] = useRecoilState(tabsState);
   const options = useRecoilValue(optionsState);
-
+  const { saveActiveTabFile } = useFileManage();
   const handleCode = () => {
     const newCode = editorRef.current?.getValue() as string;
     setTabs((prevTabs) => {
@@ -23,6 +24,10 @@ function CodeEditer() {
         ),
       };
     });
+  };
+
+  const handleSave = () => {
+    saveActiveTabFile();
   };
 
   const handleShare = () => {
@@ -52,9 +57,17 @@ function CodeEditer() {
               ))}
             </S.Tabs>
             <S.Icons>
-              <S.IconsWrapper onClick={handleShare}>
-                <Icons.Share size={16} />
-              </S.IconsWrapper>
+              <S.IconWrapper onClick={handleSave}>
+                <Icon.Save size={16} />
+              </S.IconWrapper>
+
+              <S.IconWrapper onClick={handleShare}>
+                <Icon.Share size={16} />
+              </S.IconWrapper>
+
+              <S.IconWrapper>
+                <Icon.Chat size={14} />
+              </S.IconWrapper>
             </S.Icons>
           </S.Header>
         )}

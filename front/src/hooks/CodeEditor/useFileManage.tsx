@@ -19,6 +19,16 @@ export const useFileManage = () => {
     }));
   };
 
+  const saveActiveTabFile = () => {
+    const filePath = tabs.files[tabs.active];
+    const fileIndex = tabs.active;
+
+    setFileData((prevFileData) => ({
+      ...prevFileData,
+      [filePath]: tabs.codes[fileIndex],
+    }));
+  };
+
   const createFile = (info: T.InfoType, fileName: string) => {
     const parentPath = info.node.key as string;
     const newFilePath = `${parentPath}${fileName}`;
@@ -161,7 +171,7 @@ export const useFileManage = () => {
   };
 
   const renameDirectory = (info: T.InfoType, newDirectoryName: string) => {
-    const targetPath = `${info.node.key as string}`;
+    const targetPath = info.node.key as string;
     const parts = targetPath.split("/");
 
     if (parts[parts.length - 1] !== "") parts.push("");
@@ -219,18 +229,17 @@ export const useFileManage = () => {
           ...item,
           key: newKey,
           title: newTitle,
-          children: renameInTree(item.children as T.FileTreeType, item.key, newKey),
+          children: item.children
+            ? renameInTree(item.children, item.key, newKey)
+            : undefined,
         };
-      } else {
+      } else if (item.children) {
         return {
           ...item,
-          children: renameInTree(
-            item.children as T.FileTreeType,
-            targetPath,
-            newDirectoryPath,
-          ),
+          children: renameInTree(item.children, targetPath, newDirectoryPath),
         };
       }
+      return item;
     });
   };
 
@@ -270,6 +279,7 @@ export const useFileManage = () => {
     renameFile,
     renameDirectory,
     saveFile,
+    saveActiveTabFile,
     deleteFile,
   };
 };
