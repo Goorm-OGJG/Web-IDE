@@ -8,16 +8,16 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class ContainerNameCheckResponse {
+public class ContainerCheckNameResponse {
     boolean isDuplicated;
 
     @Builder
-    public ContainerNameCheckResponse(boolean isDuplicated) {
+    public ContainerCheckNameResponse(boolean isDuplicated) {
         this.isDuplicated = isDuplicated;
     }
 
-    public static ContainerNameCheckResponse of(boolean isDuplicated) {
-        return ContainerNameCheckResponse.builder()
+    public static ContainerCheckNameResponse of(boolean isDuplicated) {
+        return ContainerCheckNameResponse.builder()
                 .isDuplicated(isDuplicated)
                 .build();
     }

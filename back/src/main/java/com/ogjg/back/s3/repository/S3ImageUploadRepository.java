@@ -23,12 +23,12 @@ public class S3ImageUploadRepository {
     public Optional<String> uploadFile(MultipartFile file, String filename) {
         String accessUrl = null;
         try {
-            PutObjectRequest putObjRequest = PutObjectRequest.builder()
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(filename)
                     .build();
 
-            s3Client.putObject(putObjRequest,
+            s3Client.putObject(putObjectRequest,
                     RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
             accessUrl = getUrl(filename);
