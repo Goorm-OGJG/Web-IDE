@@ -22,6 +22,7 @@ export function useFilesAPI() {
     renameDirectory,
     deleteFile,
     saveFile,
+    saveActiveTabFile,
   } = useFileManage();
 
   const requestFilesData = (containerId: string): void => {
@@ -107,6 +108,12 @@ export function useFilesAPI() {
     });
   };
 
+  const requestSaveActiveTabFile = (filePath: string, payload: T.RequestSavePayload) => {
+    axios.put(`/api/files/${filePath}}`, payload).then(() => {
+      saveActiveTabFile();
+    });
+  };
+
   return {
     requestFilesData,
     requestCreateFile,
@@ -116,5 +123,6 @@ export function useFilesAPI() {
     requestDeleteFile,
     requestDeleteDirectory,
     requestSave,
+    requestSaveActiveTabFile,
   };
 }
