@@ -1,17 +1,20 @@
 import { useAxios } from "./useAxios";
 import * as T from "../types/filesAPIType";
-import { useRecoilState } from "recoil";
+import { FileData, DirectoryDataType, InfoType } from "../types/FileTree";
+import { useFileManage } from "../hooks/CodeEditor/useFileManage";
+import { useSetRecoilState } from "recoil";
 import {
   directoryDataState,
   fileDataState,
-  tabsState,
   treeDataState,
 } from "../recoil/CodeEditorState";
-import { FileData, DirectoryDataType, InfoType } from "../types/FileTree";
-import { useFileManage } from "../hooks/CodeEditor/useFileManage";
 
 export function useFilesAPI() {
   const axios = useAxios();
+  const setTreeData = useSetRecoilState(treeDataState);
+  const setFileData = useSetRecoilState(fileDataState);
+  const setDirectoryData = useSetRecoilState(directoryDataState);
+
   const {
     createFile,
     createDirectory,
@@ -20,12 +23,8 @@ export function useFilesAPI() {
     deleteFile,
     saveFile,
   } = useFileManage();
-  const [tabs, setTabs] = useRecoilState(tabsState);
-  const [treeData, setTreeData] = useRecoilState(treeDataState);
-  const [fileData, setFileData] = useRecoilState(fileDataState);
-  const [directoryData, setDirectoryData] = useRecoilState(directoryDataState);
 
-  const requestFilesData = ({ containerId }: T.RequestFilesDataPayload) => {
+  const requestFilesData = (containerId: string): void => {
     axios.get(`/api/container/${containerId}`).then((response) => {
       setTreeData(response.data.data.treeData);
       setFileData(getFileMap(response.data.data.fileData));
@@ -34,13 +33,13 @@ export function useFilesAPI() {
   };
 
   const getFileMap = (fileData: T.ResponseFileData): FileData => {
-    return fileData.reduce((result: FileData, data: T.File) => {
+    return fileData.reduce((result: FileData, data: T.ResponseFileType) => {
       result[data.filePath] = data.content;
       return result;
     }, {});
   };
 
-  const getDirectorySet = (directoryData: T.ResponseDirectoryData) => {
+  const getDirectorySet = (directoryData: T.ResponseDirectoryData): DirectoryDataType => {
     return directoryData.reduce((result: DirectoryDataType, data: string) => {
       result.add(data);
       return result;
@@ -48,59 +47,64 @@ export function useFilesAPI() {
   };
 
   const requestCreateFile = (
-    payload: T.FilePathPayload,
+    filePath: string,
     info: InfoType,
     fileName: string,
-  ) => {
-    axios.post(`/api/files/${payload.filePath}`).then(() => {
+  ): void => {
+    axios.post(`/api/files/${filePath}`).then(() => {
       createFile(info, fileName);
     });
   };
+
   const requestCreateDirectory = (
-    payload: T.DirectoryPathPayload,
+    directoryPath: string,
     info: InfoType,
     directoryName: string,
-  ) => {
-    axios.post(`/api/directories/${payload.directoryPath}`).then(() => {
+  ): void => {
+    axios.post(`/api/directories/${directoryPath}`).then(() => {
       createDirectory(info, directoryName);
     });
   };
+
   const requestRenameFile = (
-    payload: T.FilePathPayload,
+    filePath: string,
     info: InfoType,
-    newFileName: string,
-  ) => {
-    axios.put(`/api/directories/${payload.filePath}/rename`, { newFileName }).then(() => {
-      renameFile(info, newFileName);
+    payload: T.RequestRenameFilePayload,
+  ): void => {
+    axios.put(`/api/directories/${filePath}/rename`, payload).then(() => {
+      renameFile(info, payload.newFileName);
     });
   };
   const requestRenameDirectory = (
-    payload: T.DirectoryPathPayload,
+    directoryPath: string,
     info: InfoType,
-    newDirectoryName: string,
-  ) => {
-    axios
-      .put(`/api/directories/${payload.directoryPath}/rename`, { newDirectoryName })
-      .then(() => {
-        renameDirectory(info, newDirectoryName);
-      });
+    payload: T.RequestRenameDirectoryPayload,
+  ): void => {
+    axios.put(`/api/directories/${directoryPath}/rename`, payload).then(() => {
+      renameDirectory(info, payload.newDirectoryName);
+    });
   };
-  const requestDeleteFile = (payload: T.FilePathPayload, info: InfoType) => {
-    axios.delete(`/api/files/${payload.filePath}`).then(() => {
+
+  const requestDeleteFile = (filePath: string, info: InfoType): void => {
+    axios.delete(`/api/files/${filePath}`).then(() => {
       deleteFile(info);
     });
   };
-  const requestDeleteDirectory = (payload: T.DirectoryPathPayload, info: InfoType) => {
-    axios.delete(`/api/directories/${payload.directoryPath}`).then(() => {
+
+  const requestDeleteDirectory = (directoryPath: string, info: InfoType): void => {
+    axios.delete(`/api/directories/${directoryPath}`).then(() => {
       deleteFile(info);
     });
   };
-  const requestSave = (payload: T.FilePathPayload, info: InfoType) => {
-    axios
-      .put(`/api/files/${payload.filePath}}`, { content: tabs.codes[tabs.active] })
-      .then(() => {
-        saveFile(info);
-      });
+
+  const requestSave = (
+    filePath: string,
+    info: InfoType,
+    payload: T.RequestSavePayload,
+  ): void => {
+    axios.put(`/api/files/${filePath}}`, payload).then(() => {
+      saveFile(info);
+    });
   };
 
   return {

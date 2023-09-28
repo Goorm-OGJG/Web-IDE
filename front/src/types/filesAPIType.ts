@@ -1,20 +1,20 @@
-export interface RequestFilesDataPayload {
-  containerId: string;
-}
+export type ResponseFileData = ResponseFileType[];
 
-export interface FilePathPayload {
-  filePath: string;
-}
-
-export interface DirectoryPathPayload {
-  directoryPath: string;
-}
-
-export type ResponseFileData = File[];
-
-export interface File {
+export interface ResponseFileType {
   filePath: string;
   content: string;
 }
 
 export type ResponseDirectoryData = string[];
+
+export interface RequestRenameFilePayload {
+  newFileName: string;
+}
+
+export interface RequestRenameDirectoryPayload {
+  newDirectoryName: string;
+}
+
+export interface RequestSavePayload {
+  content: string;
+}
