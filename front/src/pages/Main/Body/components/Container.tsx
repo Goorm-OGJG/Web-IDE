@@ -14,12 +14,19 @@ function Container(props: BodyContainerPops) {
 
   const [containerSettingModal, setContainerSettingModal] = useState(false);
   const [editInfo, setEditInfo] = useState<boolean>(false);
-  const [infoText, setInfoText] = useState<string>("");
+  // 🔥 PUT 요청시 api로 받아온 데이터의 값을 컨테이너 마다 반영이 필요해서 상태관리가 필요
+  const [privated, setPrivated] = useState<boolean>(props.data.privated);
+  const [infoText, setInfoText] = useState<string>(props.data.containerInfo);
+  const [pinned, setPinned] = useState<boolean>(props.data.pinned);
+
   const handleEdit = () => {
     setEditInfo(true);
   };
   const handleSave = () => {
-    // containerInfo 글 저장
+    // 🔥 containerInfo 글 저장 -> 이전의 받아온 데이터와 달라졌다면 request요청보냄
+    // if (props.data.containerInfo !== infoText) {
+    //   requestPutContainerInfo(props.data.containerId, infoText, setInfoText);
+    // }
     setEditInfo(false);
   };
 
@@ -41,7 +48,7 @@ function Container(props: BodyContainerPops) {
   const handleNavigate = (containerUrl: string) => {
     navigate(`/${containerUrl}`);
   };
-  // 이미지에 호버시
+
   useEffect(() => {
     if (props.data.containerInfo) {
       setInfoText(props.data.containerInfo);
@@ -58,7 +65,7 @@ function Container(props: BodyContainerPops) {
             {props.data.containerName}
           </S.ContTitle>
           <S.IconsBox>
-            {props.data.pinned && (
+            {pinned && (
               <S.PinIconDiv>
                 <Icon.Pin />
               </S.PinIconDiv>
@@ -85,7 +92,11 @@ function Container(props: BodyContainerPops) {
                 <ContainerSettingModal
                   containerData={props.data}
                   containerSettingModal={containerSettingModal}
+                  privated={privated}
+                  pinned={pinned}
                   setContainerSettingModal={setContainerSettingModal}
+                  setPrivated={setPrivated}
+                  setPinned={setPinned}
                 />
               )}
             </S.SettingDiv>
@@ -99,8 +110,8 @@ function Container(props: BodyContainerPops) {
             </S.VolumeIconDiv>
           </S.ContainerLanguage>
           <S.ContainerPrivate>
-            <S.PrivateDiv privated={props.data.privated}>
-              {props.data.privated ? (
+            <S.PrivateDiv privated={privated}>
+              {privated ? (
                 <>
                   <Icon.Lock size={10} />
                   pri

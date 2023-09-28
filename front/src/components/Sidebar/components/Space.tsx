@@ -3,33 +3,52 @@ import * as Icon from "../../Icon";
 import * as S from "./Space.style";
 import { isSpaceOpenState } from "../../../recoil/homeState";
 import { useState } from "react";
-const spaceList = [
-  {
-    id: 1,
-    spaceName: "모든 컨테이너",
-    spaceCount: 3,
-  },
-  {
-    id: 2,
-    spaceName: "내 컨테이너",
-    spaceCount: 2,
-  },
-  {
-    id: 3,
-    spaceName: "공유된 컨테이너",
-    spaceCount: 1,
-  },
-];
-function Space() {
-  const [isSpaceOpen, setIsSpaceOpen] = useRecoilState(isSpaceOpenState);
+import { isSpaceItemId } from "../../../recoil/SidebarState";
 
-  const [isItemId, setIsItemId] = useState<number>(1);
+function Space() {
+  // const user ="jamesjoe" // recoil로 선언된 유저네임
+  const [isSpaceOpen, setIsSpaceOpen] = useRecoilState(isSpaceOpenState);
+  const [spaceItemId, setSpaceItemId] = useRecoilState(isSpaceItemId);
+  // 🔥API를 받아와서 컨테이너를 뿌려주는 데이터
+  // const containers = useRecoileValue();
+
+  // 🔥container 별 개수
+  // const allContainerCnt = containers.length;
+  // const myContainerCnt = containers.filter((containers) => {
+  //   containers.owner === user;
+  // }).length;
+  // const shareContainerCnt = containers.filter((containers) => {
+  //   containers.owner !== user;
+  // }).length;
+
   const handleSpaceOpen = () => {
     setIsSpaceOpen((prev) => !prev);
   };
   const handleItemActive = (id: number) => {
-    setIsItemId(id);
+    setSpaceItemId(id);
+    ScrollTop();
   };
+  const ScrollTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  const spaceList = [
+    {
+      id: 1,
+      spaceName: "모든 컨테이너",
+      spaceCount: 3,
+    },
+    {
+      id: 2,
+      spaceName: "내 컨테이너",
+      spaceCount: 2,
+      //
+    },
+    {
+      id: 3,
+      spaceName: "공유된 컨테이너",
+      spaceCount: 1,
+    },
+  ];
 
   return (
     <div>
@@ -54,7 +73,7 @@ function Space() {
                   onClick={() => {
                     handleItemActive(list.id);
                   }}
-                  isid={isItemId}
+                  isid={spaceItemId}
                   islistid={list.id}
                 >
                   <S.ItemWrapper>

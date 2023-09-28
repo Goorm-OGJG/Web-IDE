@@ -1,4 +1,5 @@
 import { atom } from "recoil";
+import { containerDataType } from "../types/containers";
 
 // Desktop
 export const isSidebarOpenState = atom<boolean>({
@@ -15,6 +16,7 @@ export const isMenuHoverState = atom<boolean>({
   key: "isMenuHoverState",
   default: false,
 });
+
 // - Body
 export const isContainerId = atom<number>({
   key: "isContainerId",
@@ -38,6 +40,29 @@ export const isEditInfo = atom<boolean>({
 export const isUpdateModal = atom<boolean>({
   key: "isUpdateModal",
   default: false,
+});
+// 검색 관련
+export const isSearchContainer = atom<string>({
+  key: "isSearchContainer",
+  default: "",
+});
+
+export const containersState = atom<containerDataType>({
+  key: "containersState",
+  default: {
+    containerId: -1,
+    containerName: "",
+    containerUrl: "",
+    containerLanguage: "",
+    availableStorage: "",
+    containerInfo: "",
+    updatedDate: new Date(),
+    createdDate: new Date(),
+    pinned: false,
+    owner: "",
+    privated: false,
+    userImg: [],
+  },
 });
 export const isOrdered = atom<string>({
   key: "isOrdered",

@@ -1,19 +1,24 @@
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import * as S from "./ContainerDeleteModal.style";
-import { isDeleteModal } from "../../../../recoil/homeState";
+import { isDeleteModal, isSearchContainer } from "../../../../recoil/homeState";
 import { Desktop, Mobile } from "../../../../components/Responsive";
 import { Dispatch } from "react";
 interface PropsType {
+  containerId: number;
   containerName: string;
   containerSettingModal: boolean;
   setContainerSettingModal: Dispatch<React.SetStateAction<boolean>>;
 }
 function ContainerDeleteModal({
+  containerId,
   containerName,
   containerSettingModal,
   setContainerSettingModal,
 }: PropsType) {
   const setDeleteModal = useSetRecoilState(isDeleteModal);
+  // const searchContainer = useRecoilValue(isSearchContainer);
+  // const setContainers = useSetRecoilState(containersState);
+  // const ordered = useRecoilValue(isOrdered);
   const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setDeleteModal(false);
@@ -23,8 +28,20 @@ function ContainerDeleteModal({
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setDeleteModal(false);
+    // 🔥 API 삭제 요청
+    // handlerequestDelete();
     setContainerSettingModal(false);
   };
+  // const handlerequestDelete = async () => {
+  //   try {
+  //     await requestDeleteContainer(containerId);
+  //     // 🔥 삭제 요청 날리고 API containerData 요청
+  //     requestContainerData(searchContainer, ordered, setContainers);
+  //   } catch (error) {
+  //     alert(error);
+  //   }
+  // };
+
   return (
     <div>
       <Desktop>

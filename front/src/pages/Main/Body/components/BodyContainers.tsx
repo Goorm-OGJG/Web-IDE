@@ -1,5 +1,7 @@
 import Container from "./Container";
 import * as S from "./BodyCotainers.style";
+import { useRecoilValue } from "recoil";
+import { isSpaceItemId } from "../../../../recoil/SidebarState";
 export interface ContainerType {
   containerId: number;
   containerName: string;
@@ -75,7 +77,7 @@ const containers: ContainerType[] = [
     updatedDate: "3일 전에 수정됨", // 수정된 날짜
     createdDate: "3일 전에 수정됨", // 생성 날짜
     pinned: true, // 고정 유무
-    owner: "jamesjoe", //소유자 (공유, 내 컨테이너)
+    owner: "jamesjo", //소유자 (공유, 내 컨테이너)
     privated: true, //공개 유무
     usersImg: [
       {
@@ -172,12 +174,22 @@ const containers: ContainerType[] = [
   },
 ];
 function BodyContainers() {
+  // 🔥API를 받아와서 컨테이너를 뿌려주는 데이터
+  // const containers = useRecoileValue();
+  const user = "jamesjoe"; // 로그인된 user의 nickName값을 받아온다. App.tsx에서 recoile로 선언되는 것
+  const spaceItemId = useRecoilValue(isSpaceItemId);
   return (
     <>
       <S.ContainersWrapper>
-        {containers.map((container) => {
-          return <Container data={container} key={container.containerId} />;
-        })}
+        {containers.length > 0 &&
+          (spaceItemId === 1
+            ? containers
+            : spaceItemId === 2
+            ? containers.filter((containers) => containers.owner === user)
+            : containers.filter((containers) => containers.owner !== user)
+          ).map((container) => {
+            return <Container data={container} key={container.containerId} />;
+          })}
       </S.ContainersWrapper>
     </>
   );
