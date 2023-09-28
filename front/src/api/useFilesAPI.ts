@@ -12,8 +12,14 @@ import { useFileManage } from "../hooks/CodeEditor/useFileManage";
 
 export function useFilesAPI() {
   const axios = useAxios();
-  const { createFile, createDirectory, renameFile, renameDirectory, deleteFile } =
-    useFileManage();
+  const {
+    createFile,
+    createDirectory,
+    renameFile,
+    renameDirectory,
+    deleteFile,
+    saveFile,
+  } = useFileManage();
   const [tabs, setTabs] = useRecoilState(tabsState);
   const [treeData, setTreeData] = useRecoilState(treeDataState);
   const [fileData, setFileData] = useRecoilState(fileDataState);
@@ -46,7 +52,7 @@ export function useFilesAPI() {
     info: InfoType,
     fileName: string,
   ) => {
-    axios.post(`/api/files/${payload.filePath}`, payload).then(() => {
+    axios.post(`/api/files/${payload.filePath}`).then(() => {
       createFile(info, fileName);
     });
   };
@@ -55,7 +61,7 @@ export function useFilesAPI() {
     info: InfoType,
     directoryName: string,
   ) => {
-    axios.post(`/api/directories/${payload.directoryPath}`, payload).then(() => {
+    axios.post(`/api/directories/${payload.directoryPath}`).then(() => {
       createDirectory(info, directoryName);
     });
   };
@@ -64,7 +70,7 @@ export function useFilesAPI() {
     info: InfoType,
     newFileName: string,
   ) => {
-    axios.put(`/api/directories/${payload.filePath}/rename`, payload).then(() => {
+    axios.put(`/api/directories/${payload.filePath}/rename`, { newFileName }).then(() => {
       renameFile(info, newFileName);
     });
   };
@@ -73,9 +79,11 @@ export function useFilesAPI() {
     info: InfoType,
     newDirectoryName: string,
   ) => {
-    axios.put(`/api/directories/${payload.directoryPath}/rename`, payload).then(() => {
-      renameDirectory(info, newDirectoryName);
-    });
+    axios
+      .put(`/api/directories/${payload.directoryPath}/rename`, { newDirectoryName })
+      .then(() => {
+        renameDirectory(info, newDirectoryName);
+      });
   };
   const requestDeleteFile = (payload: T.FilePathPayload, info: InfoType) => {
     axios.delete(`/api/files/${payload.filePath}`).then(() => {
@@ -87,7 +95,13 @@ export function useFilesAPI() {
       deleteFile(info);
     });
   };
-  const requestSave = () => {};
+  const requestSave = (payload: T.FilePathPayload, info: InfoType) => {
+    axios
+      .put(`/api/files/${payload.filePath}}`, { content: tabs.codes[tabs.active] })
+      .then(() => {
+        saveFile(info);
+      });
+  };
 
   return {
     requestFilesData,
