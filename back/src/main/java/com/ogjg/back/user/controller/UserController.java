@@ -2,8 +2,10 @@ package com.ogjg.back.user.controller;
 
 import com.ogjg.back.common.exception.ErrorCode;
 import com.ogjg.back.common.response.ApiResponse;
+import com.ogjg.back.config.security.jwt.JwtUserDetails;
 import com.ogjg.back.user.dto.request.*;
 import com.ogjg.back.user.dto.response.ImgUpdateResponse;
+import com.ogjg.back.user.dto.response.UserResponse;
 import com.ogjg.back.user.service.EmailAuthService;
 import com.ogjg.back.user.service.UserService;
 import jakarta.servlet.http.Cookie;
@@ -11,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -38,6 +41,17 @@ public class UserController {
     ) {
         userService.signUp(signUpRequest);
         return new ApiResponse<>(ErrorCode.SUCCESS.changeMessage("회원가입이 완료되었습니다"));
+    }
+
+    /*
+     * 회원 정보 조회
+     * */
+    @GetMapping
+    public ApiResponse<?> userInfo(
+            @AuthenticationPrincipal JwtUserDetails user
+    ) {
+        UserResponse userResponse = userService.userInfo(user.getEmail());
+        return new ApiResponse<>(ErrorCode.SUCCESS, userResponse);
     }
 
     /*

@@ -7,6 +7,7 @@ import com.ogjg.back.user.domain.User;
 import com.ogjg.back.user.dto.SignUpSaveDto;
 import com.ogjg.back.user.dto.request.*;
 import com.ogjg.back.user.dto.response.ImgUpdateResponse;
+import com.ogjg.back.user.dto.response.UserResponse;
 import com.ogjg.back.user.exception.InvalidCurrentPassword;
 import com.ogjg.back.user.exception.LoginFailure;
 import com.ogjg.back.user.exception.NotFoundUser;
@@ -191,6 +192,12 @@ public class UserService {
         } catch (IOException e) {
             throw new IllegalArgumentException("임시 비밀번호 템플릿을 불러올 수 없습니다");
         }
+    }
+
+    public UserResponse userInfo(String email){
+        return userRepository.findByEmail(email)
+                .map(UserResponse::new)
+                .orElseThrow(NotFoundUser::new);
     }
 
 }
