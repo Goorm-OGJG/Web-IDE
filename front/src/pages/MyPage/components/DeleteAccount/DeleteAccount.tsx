@@ -1,12 +1,20 @@
 import React, { useRef, useState } from "react";
 import * as S from "./DeleteAccount.style";
 import PasswordInput from "../PasswordInput/PasswordInput";
+import { useMyAPI } from "../../../../api/useMyAPI";
 
 function DeleteAccount() {
   const [isOpen, setOpen] = useState(false);
 
   const ref = useRef<HTMLInputElement>(null);
 
+  const { requestDeleteUser } = useMyAPI();
+  const cancelHandler = () => {
+    setOpen(!isOpen);
+  };
+  const deleteUserHandler = () => {
+    requestDeleteUser(ref.current!.value);
+  };
   return (
     <React.Fragment>
       <S.Button onClick={() => setOpen(true)}>회원 탈퇴</S.Button>
@@ -34,8 +42,8 @@ function DeleteAccount() {
                 <PasswordInput placeholder="비밀번호" ref={ref} />
               </S.InfoWrapper>
               <S.EndWrapper>
-                <S.CancelButton onClick={() => setOpen(false)}>취소</S.CancelButton>
-                <S.DeleteButton>탈퇴하기</S.DeleteButton>
+                <S.CancelButton onClick={cancelHandler}>취소</S.CancelButton>
+                <S.DeleteButton onClick={deleteUserHandler}>탈퇴하기</S.DeleteButton>
               </S.EndWrapper>
             </S.Content>
           </S.Modal>

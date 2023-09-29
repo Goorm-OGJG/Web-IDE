@@ -1,17 +1,23 @@
 import { useRef } from "react";
 import * as S from "./PasswordChange.style";
 import PasswordInput from "../PasswordInput/PasswordInput";
+import { useMyAPI } from "../../../../api/useMyAPI";
 
 function PasswordChange() {
   const nowRef = useRef<HTMLInputElement>(null);
   const newRef = useRef<HTMLInputElement>(null);
   const newConfirmRef = useRef<HTMLInputElement>(null);
+  const { requestPwChange } = useMyAPI();
 
   const changePasswordHandler = () => {
     const nowValue = nowRef.current!.value;
     const newValue = newRef.current!.value;
     const newConfirmValue = newConfirmRef.current!.value;
-    console.log(nowValue, newValue, newConfirmValue);
+
+    if (newConfirmValue === newValue) {
+      requestPwChange(nowValue, newValue);
+    }
+    // console.log(nowValue, newValue, newConfirmValue);
   };
 
   return (
