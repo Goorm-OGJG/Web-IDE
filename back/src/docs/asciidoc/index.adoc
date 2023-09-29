@@ -59,3 +59,10 @@ include::{snippets}/container/check/http-request.adoc[]
 include::{snippets}/container/check/query-parameters.adoc[]
 
 include::{snippets}/container/check/http-response.adoc[]
+
+=== 컨테이너 모든 구조 가져오기
+include::{snippets}/container/get/http-request.adoc[]
+include::{snippets}/container/get/path-parameters.adoc[]
+
+include::{snippets}/container/get/http-response.adoc[]
+include::{snippets}/container/get/response-fields.adoc[]

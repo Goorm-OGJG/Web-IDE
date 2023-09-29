@@ -2,9 +2,10 @@ package com.ogjg.back.container.service;
 
 import com.ogjg.back.container.domain.Container;
 import com.ogjg.back.container.dto.request.ContainerCreateRequest;
-import com.ogjg.back.container.dto.response.ContainerNameCheckResponse;
+import com.ogjg.back.container.dto.response.ContainerCheckNameResponse;
 import com.ogjg.back.container.exception.DuplicatedContainerName;
 import com.ogjg.back.container.repository.ContainerRepository;
+import com.ogjg.back.s3.service.S3ContainerService;
 import com.ogjg.back.user.domain.User;
 import com.ogjg.back.user.domain.UserStatus;
 import com.ogjg.back.user.exception.NotFoundUser;
@@ -34,6 +35,9 @@ public class ContainerServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private S3ContainerService s3ContainerService;
 
     private User user;
 
@@ -134,7 +138,7 @@ public class ContainerServiceTest {
                 .willReturn(Optional.of(container));
 
         // when
-        ContainerNameCheckResponse response = containerService.checkDuplication(containerName, loginEmail);
+        ContainerCheckNameResponse response = containerService.checkDuplication(containerName, loginEmail);
 
         // then
         assertThat(response.isDuplicated()).isTrue();
@@ -155,7 +159,7 @@ public class ContainerServiceTest {
                 .willReturn(Optional.empty());
 
         // when
-        ContainerNameCheckResponse response = containerService.checkDuplication(containerName, loginEmail);
+        ContainerCheckNameResponse response = containerService.checkDuplication(containerName, loginEmail);
 
         // then
         assertThat(response.isDuplicated()).isFalse();

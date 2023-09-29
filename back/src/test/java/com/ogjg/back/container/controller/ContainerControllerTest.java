@@ -2,11 +2,17 @@ package com.ogjg.back.container.controller;
 
 import com.ogjg.back.common.ControllerTest;
 import com.ogjg.back.container.dto.request.ContainerCreateRequest;
-import com.ogjg.back.container.dto.response.ContainerNameCheckResponse;
+import com.ogjg.back.container.dto.response.ContainerGetFileResponse;
+import com.ogjg.back.container.dto.response.ContainerCheckNameResponse;
+import com.ogjg.back.container.dto.response.ContainerGetNodeResponse;
+import com.ogjg.back.container.dto.response.ContainerGetResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -14,8 +20,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ContainerControllerTest extends ControllerTest {
@@ -60,7 +65,7 @@ public class ContainerControllerTest extends ControllerTest {
     @Test
     public void checkDuplication() throws Exception {
         //given
-        ContainerNameCheckResponse response = ContainerNameCheckResponse.builder()
+        ContainerCheckNameResponse response = ContainerCheckNameResponse.builder().build().builder()
                 .isDuplicated(true)
                 .build();
 
@@ -88,4 +93,81 @@ public class ContainerControllerTest extends ControllerTest {
                 )
         )).andExpect(status().isOk());
     }
+
+    @DisplayName("컨테이너 모든 구조 가져오기")
+    @Test
+    public void getContainer() throws Exception {
+        //given
+        List<String> fileKeys = List.of(
+                "/containerName/hello01.md", "/containerName/hello02.md",
+                "/containerName/h1/hello1.txt", "/containerName/h1/hello2.txt",
+                "/containerName/h1/h2/hello11.txt", "/containerName/h1/h3/hello13.txt"
+        );
+
+        List<String> directories = List.of("/containerName/",
+                "/containerName/h1/", "/containerName/h2/",
+                "/containerName/h3/", "/containerName/h4/",
+                "/containerName/h1/h2/", "/containerName/h1/h3/"
+        );
+
+        List<String> parsedKeys = new ArrayList<>();
+        parsedKeys.addAll(fileKeys);
+        parsedKeys.addAll(directories);
+
+        ContainerGetNodeResponse treeData = ContainerGetNodeResponse.buildTreeFromKeys(parsedKeys);
+        List<ContainerGetFileResponse> fileData = fileKeys.stream()
+                .map((key) -> ContainerGetFileResponse.builder()
+                        .filePath(key)
+                        .content("temp data")
+                        .build())
+                .toList();
+
+        ContainerGetResponse response = ContainerGetResponse.builder()
+                .language("Java")
+                .treeData(treeData)
+                .fileData(fileData)
+                .directories(directories)
+                .build();
+
+        given(containerService.getAllFilesAndDirectories(any(Long.class), any(String.class)))
+                .willReturn(response);
+
+        //when
+        ResultActions result = this.mockMvc.perform(
+                get("/api/containers/{containerId}", 1L)
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        result.andDo(
+                document("container/get",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("containerId").description("컨테이너 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.code").description("응답 코드"),
+                                fieldWithPath("status.message").description("응답 메시지"),
+
+                                fieldWithPath("data.language").description("프로그래밍 언어"),
+                                fieldWithPath("data.treeData.key").description("전체 경로"),
+                                fieldWithPath("data.treeData.title").description("해당 디렉토리 혹은 파일의 이름"),
+                                fieldWithPath("data.treeData.children[]").description("하위 디렉토리 및 파일들 정보").optional(),
+                                fieldWithPath("data.treeData.children[].key").description("하위 항목의 전체 경로").optional(),
+                                fieldWithPath("data.treeData.children[].title").description("하위 항목의 이름").optional(),
+                                fieldWithPath("data.treeData.children[].children[]").description("...").optional(),
+                                fieldWithPath("data.treeData.children[].children[].key").description("...").optional(),
+                                fieldWithPath("data.treeData.children[].children[].title").description("...").optional(),
+                                fieldWithPath("data.treeData.children[].children[].children[]").description("...").optional(),
+                                fieldWithPath("data.treeData.children[].children[].children[].key").description("...").optional(),
+                                fieldWithPath("data.treeData.children[].children[].children[].title").description("...").optional(),
+                                fieldWithPath("data.fileData[]").description("모든 파일 데이터"),
+                                fieldWithPath("data.fileData[].filePath").description("파일 경로"),
+                                fieldWithPath("data.fileData[].content").description("파일 내용"),
+                                fieldWithPath("data.directories").description("모든 디렉토리 경로")
+                        )
+                )
+        ).andExpect(status().isOk());
+     }
 }

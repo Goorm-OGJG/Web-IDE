@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
 
+import static com.ogjg.back.common.util.S3PathUtil.isFile;
+
 public class ContainerNodeResponseSerializer extends JsonSerializer<ContainerGetNodeResponse> {
 
     @Override
@@ -16,7 +18,7 @@ public class ContainerNodeResponseSerializer extends JsonSerializer<ContainerGet
         gen.writeStringField("title", value.getTitle());
 
         // children 필드 값의 조건에 따라 직렬화 로직 변경
-        if (!isFile(value.getKey())) {
+        if (!isFile(value.getTitle())) {
             gen.writeFieldName("children");
             gen.writeStartArray();
 
@@ -27,11 +29,6 @@ public class ContainerNodeResponseSerializer extends JsonSerializer<ContainerGet
         }
 
         gen.writeEndObject();
-    }
-
-    private static boolean isFile(String key) {
-        String[] split = key.split("/");
-        return split[split.length-1].contains(".");
     }
 }
 

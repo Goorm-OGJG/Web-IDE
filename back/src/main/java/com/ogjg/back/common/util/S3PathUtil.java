@@ -22,4 +22,8 @@ public class S3PathUtil {
     public static String createEmailRemovedKey(String key, String email) {
         return key.substring(email.length() + 1); // "/이메일" 을 제외한 디렉토리
     }
+
+    public static boolean isFile(String path) {
+        return path.contains(".");
+    }
 }

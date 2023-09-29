@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.ogjg.back.common.util.S3PathUtil.createEmailRemovedKey;
+import static com.ogjg.back.common.util.S3PathUtil.isFile;
 
 @Slf4j
 @Service
@@ -56,10 +57,6 @@ public class S3ContainerService {
         // s3에서 키에 해당하는 모든 [파일이름-데이터] 받아오기
         List<ContainerGetFileResponse> fileData = createFileResponse(fileKeys, email);
         return fileData;
-    }
-
-    private static boolean isFile(String key) {
-        return key.contains(".");
     }
 
     // todo: 병렬처리 등 요청수 줄일 방법 고려하기

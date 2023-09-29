@@ -71,7 +71,7 @@ public class ContainerService {
         List<String> allKeys = s3ContainerService.getAllKeysByPrefix(prefix);
 
         for (String key : allKeys) {
-            log.debug("key ={}", key);
+            log.debug("key = {}", key);
         }
 
         // 맨 앞에 이메일 부분이 절삭된 key 목록을 만든다.

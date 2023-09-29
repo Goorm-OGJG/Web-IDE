@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ogjg.back.common.util.S3PathUtil.isFile;
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
@@ -42,12 +43,13 @@ public class ContainerGetNodeResponse {
             String[] parts = fullKey.split(DELIMITER);
             ContainerGetNodeResponse currentNode = root;
 
-            // email, continerId 부분을 제외하고 파싱하기 위해 2부터 시작
-            for (int i = 2; i < parts.length; i++) {
+            // 빈 부분을 제외하고 파싱하기 위해 1부터 시작
+            for (int i = 1; i < parts.length; i++) {
                 String part = parts[i];
                 if (part.isEmpty()) continue;
 
-                String accumulatedKey = DELIMITER + String.join(DELIMITER, java.util.Arrays.copyOfRange(parts, 2, i + 1)) + DELIMITER;
+                String accumulatedKey = DELIMITER + String.join(DELIMITER, java.util.Arrays.copyOfRange(parts, 1, i + 1));
+                if (!isFile(accumulatedKey)) accumulatedKey += DELIMITER;
 
                 currentNode = currentNode.findOrCreateChild(accumulatedKey, part);
             }
