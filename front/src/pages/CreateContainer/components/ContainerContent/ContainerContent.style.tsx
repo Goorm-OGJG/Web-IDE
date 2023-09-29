@@ -7,10 +7,11 @@ export const Wrapper = styled.div`
   padding: 25px;
   border-bottom: 1px solid ${COLOR.Gray2};
   position: relative;
-
+  flex-wrap: wrap;
   &:last-child {
     border-bottom: none;
   }
+  gap: 15px;
 `;
 
 export const MWrapper = styled(Wrapper)`
@@ -22,7 +23,7 @@ export const Name = styled.h3`
   top: 5px;
   font-size: ${FONT.M};
   color: ${COLOR.Gray12};
-  width: 200px;
+  flex-basis: 200px;
 `;
 
 export const MName = styled(Name)`
@@ -30,5 +31,6 @@ export const MName = styled(Name)`
   padding-bottom: 10px;
 `;
 export const Content = styled.div`
-  flex: 1;
+  flex-basis: 300px;
+  flex-grow: 1;
 `;

@@ -15,21 +15,36 @@ const languages: Language[] = [
   { src: "c++", title: "C/C++" },
 ];
 
-function LanguageStacks() {
-  const [lang, setLang] = useState(languages[0]);
+interface Props {
+  language: React.MutableRefObject<string>;
+}
+
+function LanguageStacks({ language }: Props) {
+  const index = languages.findIndex((lang) => lang.src === language.current);
+  const [idx, setIdx] = useState(index);
+  const [lang, setLang] = useState(languages[index]);
   const [isOpen, setOpen] = useState(false);
   const optionHandler = (src: string, title: string) => {
     const newLang = { src: src, title: title };
+    const newIndex = languages.findIndex((lang) => lang.src === src);
     setLang(newLang);
     setOpen(false);
+    setIdx(newIndex);
+    language.current = newLang.src;
   };
 
   return (
     <S.Wrapper>
       <Desktop>
-        {languages.map(({ src, title }) => (
+        {languages.map(({ src, title }, i) => (
           <React.Fragment>
-            <S.Input type="radio" name="language" id={`${src}`} />
+            <S.Input
+              checked={idx === i}
+              type="radio"
+              name="language"
+              id={`${src}`}
+              key={src}
+            />
             <S.Grid htmlFor={`${src}`} onClick={() => optionHandler(src, title)}>
               <S.Img src={`/images/languages/${src}.png`} />
               <S.Title>{`${title}`}</S.Title>
@@ -49,10 +64,13 @@ function LanguageStacks() {
           {isOpen && (
             <S.MOptionBox>
               {languages.map(({ src, title }) => (
-                <S.MOption onClick={() => optionHandler(src, title)} key={src}>
-                  <S.MImg src={`/public/images/languages/${src}.png`} />
-                  {title}
-                </S.MOption>
+                <React.Fragment>
+                  <S.Input type="radio" name="language" id={`${src}`} key={src} />
+                  <S.MOption onClick={() => optionHandler(src, title)} key={src}>
+                    <S.MImg src={`/public/images/languages/${src}.png`} />
+                    {title}
+                  </S.MOption>
+                </React.Fragment>
               ))}
             </S.MOptionBox>
           )}

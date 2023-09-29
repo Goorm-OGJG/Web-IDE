@@ -3,18 +3,32 @@ import * as S from "./Share.style";
 import * as Icon from "../../../../components/Icon";
 import { Desktop, Mobile } from "../../../../components/Responsive";
 
-function Share() {
-  const [share, setShare] = useState("private");
+interface Props {
+  isPrivate: React.MutableRefObject<boolean>;
+}
+
+function Share({ isPrivate }: Props) {
+  const [share, setShare] = useState(isPrivate ? "private" : "public");
+
+  const publicHandler = () => {
+    setShare("public");
+    isPrivate.current = false;
+  };
+
+  const privateHandler = () => {
+    setShare("private");
+    isPrivate.current = true;
+  };
 
   return (
     <S.ShareWrapper>
       <Desktop>
         <S.RadioWrapper>
-          <S.CheckBox onClick={() => setShare("public")}>
+          <S.CheckBox onClick={publicHandler}>
             {share == "public" ? <S.Check /> : <S.Radio />}
             <span>Public</span>
           </S.CheckBox>
-          <S.CheckBox onClick={() => setShare("private")}>
+          <S.CheckBox onClick={privateHandler}>
             {share == "private" ? <S.Check /> : <S.Radio />}
             <span>Private</span>
           </S.CheckBox>
@@ -22,11 +36,11 @@ function Share() {
       </Desktop>
       <Mobile>
         <S.MRadioWrapper>
-          <S.MPublicBox onClick={() => setShare("public")} share={share}>
+          <S.MPublicBox onClick={publicHandler} share={share}>
             <Icon.Global />
             <span>Public</span>
           </S.MPublicBox>
-          <S.MPrivateBox onClick={() => setShare("private")} share={share}>
+          <S.MPrivateBox onClick={privateHandler} share={share}>
             <Icon.Lock />
             <span>Private</span>
           </S.MPrivateBox>

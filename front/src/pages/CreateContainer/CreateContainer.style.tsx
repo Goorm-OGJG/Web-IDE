@@ -13,9 +13,11 @@ export const BackGround = styled.div`
 `;
 
 export const Wrapper = styled.div`
-  width: 80%;
+  width: 90%;
   position: relative;
   background-color: ${COLOR.White};
+  min-width: 320px;
+  max-width: 1100px;
 `;
 
 export const Button = styled.button`
@@ -50,11 +52,6 @@ export const IconBox = styled.div`
   &:hover {
     transform: rotate(90deg) translateY(5px) translateX(2px);
   }
-`;
-
-export const MWrapper = styled(Wrapper)`
-  width: 90%;
-  min-width: 320px;
 `;
 
 export const MButton = styled(Button)`

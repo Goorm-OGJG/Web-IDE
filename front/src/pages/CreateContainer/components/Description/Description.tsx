@@ -1,6 +1,9 @@
 import * as S from "./Description.style";
-import { useState } from "react";
-function Description() {
+import React, { forwardRef, useState } from "react";
+const Description = forwardRef(function Description(
+  _,
+  ref: React.ForwardedRef<HTMLTextAreaElement>,
+) {
   const [value, setValue] = useState("");
 
   return (
@@ -11,10 +14,11 @@ function Description() {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         maxLength={99}
+        ref={ref}
       />
       <S.Count>{`${value.length}/100`}</S.Count>
     </S.Wrapper>
   );
-}
+});
 
 export default Description;
