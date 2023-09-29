@@ -1,7 +1,10 @@
 import { useAxios } from "./useAxios";
+import { useSetRecoilState } from "recoil";
+import { userInfoState } from "../recoil/userState";
 
 export function useMyAPI() {
   const axios = useAxios();
+  const setUserInfo = useSetRecoilState(userInfoState);
 
   const requestEditProfile = (img: File) => {
     const formData = new FormData();
@@ -58,10 +61,22 @@ export function useMyAPI() {
       });
   };
 
+  const requestUserInfo = () => {
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/api/users`)
+      .then((response) => {
+        if (response) {
+          setUserInfo(response.data);
+        }
+      })
+      .catch((error) => console.error(error));
+  };
+
   return {
     requestEditProfile,
     requestEditUserName,
     requestPwChange,
     requestDeleteUser,
+    requestUserInfo,
   };
 }
