@@ -9,9 +9,18 @@ public class S3PathUtil {
      * email을 s3 prefix로 사용하기 위해 특수문자를 '-'로 대체한다.
      */
     public static String createS3Directory(String loginEmail, String containerName) {
-        return (DELIMITER + loginEmail + DELIMITER + containerName + DELIMITER)
+        loginEmail = loginEmail
                 .replace('.', S3_DELIMETER)
                 .replace('@', S3_DELIMETER);
+        return (DELIMITER + loginEmail + DELIMITER + containerName + DELIMITER);
+
+    }
+
+    public static String createS3PathWithFilePath(String loginEmail, String filePath) {
+        loginEmail = loginEmail
+                .replace('.', S3_DELIMETER)
+                .replace('@', S3_DELIMETER);
+        return (DELIMITER + loginEmail + filePath);
     }
 
     /**
@@ -21,6 +30,10 @@ public class S3PathUtil {
      */
     public static String createEmailRemovedKey(String key, String email) {
         return key.substring(email.length() + 1); // "/이메일" 을 제외한 디렉토리
+    }
+
+    public static String extractContainerName(String filePath) {
+        return filePath.split(DELIMITER)[1]; // 경로 시작이 / 이므로 배열 첫 요소는 비어있다.
     }
 
     public static boolean isFile(String path) {

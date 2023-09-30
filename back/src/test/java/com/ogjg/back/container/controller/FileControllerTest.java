@@ -1,0 +1,52 @@
+package com.ogjg.back.container.controller;
+
+import com.ogjg.back.common.ControllerTest;
+import com.ogjg.back.file.dto.request.CreateFileRequest;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.doNothing;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+public class FileControllerTest extends ControllerTest {
+
+    @DisplayName("파일 생성")
+    @Test
+    public void createFile() throws Exception {
+        //given
+        CreateFileRequest request = CreateFileRequest.builder()
+                .filePath("/my-container1/hello.txt")
+                .build();
+
+        doNothing().when(fileService).createFile(any(String.class), any(CreateFileRequest.class));
+
+        //when
+        ResultActions result = this.mockMvc.perform(
+                post("/api/files")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+//                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        result.andDo(document("file/create",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                        fieldWithPath("filePath").description("생성할 파일 전체 경로")
+                ),
+                responseFields(
+                        fieldWithPath("status.code").description("응답 코드"),
+                        fieldWithPath("status.message").description("응답 메시지"),
+                        fieldWithPath("data").description("응답 데이터")
+                )
+        )).andExpect(status().isOk());
+     }
+}

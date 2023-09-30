@@ -39,22 +39,28 @@ include::{snippets}/user/deactivate/http-response.adoc[]
 
 == 컨테이너 API
 
-=== API1
-api1
+=== 컨테이너 모든 구조 가져오기
+컨테이너(프로젝트)에 접근할때, 전체 디렉토리와 파일 정보를 모두 전달합니다.
 
-=== API2
-api2
+include::{snippets}/container/get/http-request.adoc[]
+include::{snippets}/container/get/path-parameters.adoc[]
 
+include::{snippets}/container/get/http-response.adoc[]
+include::{snippets}/container/get/response-fields.adoc[]
 
 == 컨테이너 생성 API
 
 === 컨테이너 생성
+컨테이너를 생성하면, 해당 디렉토리를 저장합니다.
+
 include::{snippets}/container/create/http-request.adoc[]
 include::{snippets}/container/create/request-fields.adoc[]
 
 include::{snippets}/container/create/http-response.adoc[]
 
 === 컨테이너 이름 중복체크
+컨테이너 생성 시에 중복되는 컨테이너 이름이 없는지 검사합니다.
+
 include::{snippets}/container/check/http-request.adoc[]
 include::{snippets}/container/check/query-parameters.adoc[]
 
@@ -66,3 +72,15 @@ include::{snippets}/container/get/path-parameters.adoc[]
 
 include::{snippets}/container/get/http-response.adoc[]
 include::{snippets}/container/get/response-fields.adoc[]
+include::{snippets}/container/check/http-response.adoc[]
+
+== 파일 API
+
+=== 파일 생성
+해당 경로의 파일을 생성합니다.
+
+include::{snippets}/file/create/http-request.adoc[]
+include::{snippets}/file/create/request-fields.adoc[]
+
+include::{snippets}/file/create/http-response.adoc[]
+
