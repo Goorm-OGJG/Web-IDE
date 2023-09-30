@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.CopyObjectRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
@@ -17,6 +18,7 @@ import java.net.URLConnection;
 @RequiredArgsConstructor
 public class S3FileRepository {
 
+    public static final String EMPTY = "";
     @Value("${cloud.aws.credentials.bucket-name}")
     private String bucketName;
 
@@ -37,7 +39,7 @@ public class S3FileRepository {
                     .contentType(mimeType)
                     .build();
 
-            s3Client.putObject(putObjectRequest, RequestBody.fromString(filePath));
+            s3Client.putObject(putObjectRequest, RequestBody.fromString(EMPTY));
 
         } catch (Exception e) {
             log.error("error message={}", e.getMessage());
@@ -65,6 +67,27 @@ public class S3FileRepository {
                     .build();
 
             s3Client.putObject(putObjectRequest, RequestBody.fromString(content));
+        } catch (Exception e) {
+            log.error("error message={}", e.getMessage());
+        }
+    }
+
+    public void rename(String filePath, String newFilePath) {
+        log.info("nowFilePath={}", filePath);
+        log.info("newFilePath={}", newFilePath);
+        try {
+            CopyObjectRequest copyObjectRequest = CopyObjectRequest.builder()
+                    .sourceBucket(bucketName)
+                    .sourceKey(filePath)
+                    .destinationBucket(bucketName)
+                    .destinationKey(newFilePath)
+                    .build();
+
+            s3Client.copyObject(copyObjectRequest);
+
+            // 기존 파일 삭
+            deleteFile(filePath);
+
         } catch (Exception e) {
             log.error("error message={}", e.getMessage());
         }

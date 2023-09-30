@@ -4,11 +4,13 @@ import com.ogjg.back.common.ControllerTest;
 import com.ogjg.back.file.dto.request.CreateFileRequest;
 import com.ogjg.back.file.dto.request.DeleteFileRequest;
 import com.ogjg.back.file.dto.request.UpdateFileRequest;
+import com.ogjg.back.file.dto.request.UpdateFilenameRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static com.ogjg.back.common.util.S3PathUtil.createNewFilePath;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.doNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -111,8 +113,43 @@ public class FileControllerTest extends ControllerTest {
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 requestFields(
-                        fieldWithPath("filePath").description("수정할 파일 전체 경로"),
-                        fieldWithPath("content").description("수정한 파일 전체 내용")
+                        fieldWithPath("filePath").description("수정할 파일의 전체 경로"),
+                        fieldWithPath("content").description("수정할 파일의 전체 내용")
+                ),
+                responseFields(
+                        fieldWithPath("status.code").description("응답 코드"),
+                        fieldWithPath("status.message").description("응답 메시지"),
+                        fieldWithPath("data").description("응답 데이터")
+                )
+        )).andExpect(status().isOk());
+    }
+
+    @DisplayName("파일 이름 수정")
+    @Test
+    public void updateFilename() throws Exception {
+        //given
+        UpdateFilenameRequest request = UpdateFilenameRequest.builder()
+                .filePath("/my-container1/hello.txt")
+                .newFilename(createNewFilePath("/my-container1/hello.txt", "hi.txt"))
+                .build();
+
+        doNothing().when(fileService).updateFilename(any(String.class), any(UpdateFilenameRequest.class));
+
+        //when
+        ResultActions result = this.mockMvc.perform(
+                delete("/api/files")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        result.andDo(document("file/rename",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                        fieldWithPath("filePath").description("수정할 파일의 기존 전체 경로"),
+                        fieldWithPath("newFilename").description("새로 지정할 파일 이름")
                 ),
                 responseFields(
                         fieldWithPath("status.code").description("응답 코드"),

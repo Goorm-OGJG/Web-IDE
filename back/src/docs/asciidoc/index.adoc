@@ -101,3 +101,10 @@ include::{snippets}/file/update/request-fields.adoc[]
 
 include::{snippets}/file/update/http-response.adoc[]
 
+=== 파일 이름 수정
+해당 경로의 파일의 이름을 수정합니다.
+
+include::{snippets}/file/rename/http-request.adoc[]
+include::{snippets}/file/rename/request-fields.adoc[]
+
+include::{snippets}/file/rename/http-response.adoc[]

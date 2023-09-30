@@ -3,23 +3,23 @@ package com.ogjg.back.common.util;
 public class S3PathUtil {
 
     public static final String DELIMITER = "/";
-    public static final char S3_DELIMETER = '-';
+    public static final char S3_EMAIL_DELIMETER = '-';
 
     /**
      * email을 s3 prefix로 사용하기 위해 특수문자를 '-'로 대체한다.
      */
     public static String createS3Directory(String loginEmail, String containerName) {
         loginEmail = loginEmail
-                .replace('.', S3_DELIMETER)
-                .replace('@', S3_DELIMETER);
+                .replace('.', S3_EMAIL_DELIMETER)
+                .replace('@', S3_EMAIL_DELIMETER);
         return (DELIMITER + loginEmail + DELIMITER + containerName + DELIMITER);
 
     }
 
     public static String createS3PathWithFilePath(String loginEmail, String filePath) {
         loginEmail = loginEmail
-                .replace('.', S3_DELIMETER)
-                .replace('@', S3_DELIMETER);
+                .replace('.', S3_EMAIL_DELIMETER)
+                .replace('@', S3_EMAIL_DELIMETER);
         return (DELIMITER + loginEmail + filePath);
     }
 
@@ -38,5 +38,10 @@ public class S3PathUtil {
 
     public static boolean isFile(String path) {
         return path.contains(".");
+    }
+
+    public static String createNewFilePath(String originPath, String newFilename) {
+        int lastDelimiterIndex = originPath.lastIndexOf(DELIMITER);
+        return originPath.substring(0, lastDelimiterIndex) + DELIMITER + newFilename;
     }
 }

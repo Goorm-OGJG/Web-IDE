@@ -33,4 +33,12 @@ public class S3FileService {
                 content
         );
     }
+
+    @Transactional
+    public void updateFilename(String email, String filePath, String newFilePath) {
+        s3FileRepository.rename(
+                createS3PathWithFilePath(email, filePath),
+                createS3PathWithFilePath(email, newFilePath)
+        );
+    }
 }
