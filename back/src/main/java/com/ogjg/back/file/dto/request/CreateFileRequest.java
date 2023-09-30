@@ -9,7 +9,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 public class CreateFileRequest {
-    String filePath;
+    private String filePath;
 
     @Builder
     public CreateFileRequest(String filePath) {

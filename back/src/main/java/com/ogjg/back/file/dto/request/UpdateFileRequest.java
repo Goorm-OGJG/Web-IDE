@@ -9,7 +9,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 public class DeleteFileRequest {
-    private String filePath;
+    String filePath;
 
     @Builder
     public DeleteFileRequest(String filePath) {
