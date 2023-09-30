@@ -4,6 +4,7 @@ import com.ogjg.back.container.exception.NotFoundContainer;
 import com.ogjg.back.container.repository.ContainerRepository;
 import com.ogjg.back.file.dto.request.CreateFileRequest;
 import com.ogjg.back.file.dto.request.DeleteFileRequest;
+import com.ogjg.back.file.dto.request.UpdateFileRequest;
 import com.ogjg.back.s3.service.S3FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,17 +21,29 @@ public class FileService {
     @Transactional
     public void createFile(String loginEmail, CreateFileRequest request) {
         String filePath = request.getFilePath();
-        containerRepository.findByNameAndEmail(extractContainerName(filePath), loginEmail)
-                .orElseThrow(NotFoundContainer::new);
+        if (!isContainerExist(loginEmail, extractContainerName(filePath))) throw new NotFoundContainer();
 
         s3FileService.createFile(loginEmail, filePath);
     }
 
+    @Transactional
     public void deleteFile(String loginEmail, DeleteFileRequest request) {
         String filePath = request.getFilePath();
-        containerRepository.findByNameAndEmail(extractContainerName(filePath), loginEmail)
-                .orElseThrow(NotFoundContainer::new);
+        if (!isContainerExist(loginEmail, extractContainerName(filePath))) throw new NotFoundContainer();
 
         s3FileService.deleteFile(loginEmail, filePath);
+    }
+
+    @Transactional
+    public void updateFile(String loginEmail, UpdateFileRequest request) {
+        String filePath = request.getFilePath();
+        if (!isContainerExist(loginEmail, extractContainerName(filePath))) throw new NotFoundContainer();
+
+        s3FileService.updateFile(loginEmail, filePath, request.getContent());
+    }
+
+    private boolean isContainerExist(String loginEmail, String containerName) {
+        return containerRepository.findByNameAndEmail(containerName, loginEmail)
+                .isPresent();
     }
 }

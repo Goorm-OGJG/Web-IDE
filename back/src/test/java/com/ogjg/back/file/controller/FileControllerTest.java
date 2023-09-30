@@ -1,8 +1,9 @@
-package com.ogjg.back.container.controller;
+package com.ogjg.back.file.controller;
 
 import com.ogjg.back.common.ControllerTest;
 import com.ogjg.back.file.dto.request.CreateFileRequest;
 import com.ogjg.back.file.dto.request.DeleteFileRequest;
+import com.ogjg.back.file.dto.request.UpdateFileRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -76,6 +77,42 @@ public class FileControllerTest extends ControllerTest {
                 preprocessResponse(prettyPrint()),
                 requestFields(
                         fieldWithPath("filePath").description("삭제할 파일 전체 경로")
+                ),
+                responseFields(
+                        fieldWithPath("status.code").description("응답 코드"),
+                        fieldWithPath("status.message").description("응답 메시지"),
+                        fieldWithPath("data").description("응답 데이터")
+                )
+        )).andExpect(status().isOk());
+    }
+
+    @DisplayName("파일 수정")
+    @Test
+    public void updateFile() throws Exception {
+        //given
+        UpdateFileRequest request = UpdateFileRequest.builder()
+                .content("content...\n I'am a cbum. muscle king.\n" +
+                        "do you know?")
+                .filePath("/my-container1/hello")
+                .build();
+
+        doNothing().when(fileService).updateFile(any(String.class), any(UpdateFileRequest.class));
+
+        //when
+        ResultActions result = this.mockMvc.perform(
+                delete("/api/files")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        result.andDo(document("file/update",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                        fieldWithPath("filePath").description("수정할 파일 전체 경로"),
+                        fieldWithPath("content").description("수정한 파일 전체 내용")
                 ),
                 responseFields(
                         fieldWithPath("status.code").description("응답 코드"),

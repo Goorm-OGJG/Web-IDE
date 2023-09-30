@@ -56,4 +56,17 @@ public class S3FileRepository {
             log.error("error message={}", e.getMessage());
         }
     }
+
+    public void putFile(String filePath, String content) {
+        try {
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(filePath)
+                    .build();
+
+            s3Client.putObject(putObjectRequest, RequestBody.fromString(content));
+        } catch (Exception e) {
+            log.error("error message={}", e.getMessage());
+        }
+    }
 }

@@ -91,3 +91,13 @@ include::{snippets}/file/delete/http-request.adoc[]
 include::{snippets}/file/delete/request-fields.adoc[]
 
 include::{snippets}/file/delete/http-response.adoc[]
+include::{snippets}/file/delete/http-response.adoc[]
+
+=== 파일 수정
+해당 경로의 파일을 수정합니다.
+
+include::{snippets}/file/update/http-request.adoc[]
+include::{snippets}/file/update/request-fields.adoc[]
+
+include::{snippets}/file/update/http-response.adoc[]
+

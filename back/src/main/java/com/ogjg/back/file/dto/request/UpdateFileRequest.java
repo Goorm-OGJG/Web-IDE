@@ -8,11 +8,14 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class DeleteFileRequest {
-    String filePath;
+public class UpdateFileRequest {
+    private String filePath;
+    private String content;
 
     @Builder
-    public DeleteFileRequest(String filePath) {
+    public UpdateFileRequest(String filePath, String content) {
         this.filePath = filePath;
+        this.content = content;
     }
+
 }
