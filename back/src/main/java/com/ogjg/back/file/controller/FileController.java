@@ -3,6 +3,7 @@ package com.ogjg.back.file.controller;
 import com.ogjg.back.common.exception.ErrorCode;
 import com.ogjg.back.common.response.ApiResponse;
 import com.ogjg.back.file.dto.request.CreateFileRequest;
+import com.ogjg.back.file.dto.request.DeleteFileRequest;
 import com.ogjg.back.file.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,15 @@ public class FileController {
     ) {
         String loginEmail = "ogjg1234@naver.com";
         fileService.createFile(loginEmail, request);
+        return new ApiResponse<>(ErrorCode.SUCCESS);
+    }
+
+    @DeleteMapping("")
+    public ApiResponse<Void> createFile(
+            @RequestBody DeleteFileRequest request
+    ) {
+        String loginEmail = "ogjg1234@naver.com";
+        fileService.deleteFile(loginEmail, request);
         return new ApiResponse<>(ErrorCode.SUCCESS);
     }
 }

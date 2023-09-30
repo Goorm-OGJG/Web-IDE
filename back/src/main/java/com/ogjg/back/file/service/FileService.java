@@ -3,6 +3,7 @@ package com.ogjg.back.file.service;
 import com.ogjg.back.container.exception.NotFoundContainer;
 import com.ogjg.back.container.repository.ContainerRepository;
 import com.ogjg.back.file.dto.request.CreateFileRequest;
+import com.ogjg.back.file.dto.request.DeleteFileRequest;
 import com.ogjg.back.s3.service.S3FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,5 +24,13 @@ public class FileService {
                 .orElseThrow(NotFoundContainer::new);
 
         s3FileService.createFile(loginEmail, filePath);
+    }
+
+    public void deleteFile(String loginEmail, DeleteFileRequest request) {
+        String filePath = request.getFilePath();
+        containerRepository.findByNameAndEmail(extractContainerName(filePath), loginEmail)
+                .orElseThrow(NotFoundContainer::new);
+
+        s3FileService.deleteFile(loginEmail, filePath);
     }
 }

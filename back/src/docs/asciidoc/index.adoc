@@ -84,3 +84,10 @@ include::{snippets}/file/create/request-fields.adoc[]
 
 include::{snippets}/file/create/http-response.adoc[]
 
+=== 파일 삭제
+해당 경로의 파일을 삭제합니다.
+
+include::{snippets}/file/delete/http-request.adoc[]
+include::{snippets}/file/delete/request-fields.adoc[]
+
+include::{snippets}/file/delete/http-response.adoc[]

@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.net.URLConnection;
@@ -43,4 +44,16 @@ public class S3FileRepository {
         }
     }
 
+    public void deleteFile(String filePath) {
+        try {
+            DeleteObjectRequest request = DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(filePath)
+                    .build();
+
+            s3Client.deleteObject(request);
+        } catch (Exception e) {
+            log.error("error message={}", e.getMessage());
+        }
+    }
 }

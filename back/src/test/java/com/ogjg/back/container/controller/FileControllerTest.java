@@ -2,6 +2,7 @@ package com.ogjg.back.container.controller;
 
 import com.ogjg.back.common.ControllerTest;
 import com.ogjg.back.file.dto.request.CreateFileRequest;
+import com.ogjg.back.file.dto.request.DeleteFileRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -10,6 +11,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.doNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -32,7 +34,7 @@ public class FileControllerTest extends ControllerTest {
                 post("/api/files")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
         );
 
         //then
@@ -49,4 +51,37 @@ public class FileControllerTest extends ControllerTest {
                 )
         )).andExpect(status().isOk());
      }
+
+    @DisplayName("파일 삭제")
+    @Test
+    public void deleteFile() throws Exception {
+        //given
+        DeleteFileRequest request = DeleteFileRequest.builder()
+                .filePath("/my-container1/hello")
+                .build();
+
+        doNothing().when(fileService).deleteFile(any(String.class), any(DeleteFileRequest.class));
+
+        //when
+        ResultActions result = this.mockMvc.perform(
+                delete("/api/files")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        result.andDo(document("file/delete",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                        fieldWithPath("filePath").description("삭제할 파일 전체 경로")
+                ),
+                responseFields(
+                        fieldWithPath("status.code").description("응답 코드"),
+                        fieldWithPath("status.message").description("응답 메시지"),
+                        fieldWithPath("data").description("응답 데이터")
+                )
+        )).andExpect(status().isOk());
+    }
 }

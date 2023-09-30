@@ -16,4 +16,10 @@ public class S3FileService {
                 createS3PathWithFilePath(email, filePath)
         );
     }
+
+    public void deleteFile(String email, String filePath) {
+        s3FileRepository.deleteFile(
+                createS3PathWithFilePath(email, filePath)
+        );
+    }
 }
