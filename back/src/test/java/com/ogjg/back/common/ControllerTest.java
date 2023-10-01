@@ -3,8 +3,11 @@ package com.ogjg.back.common;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ogjg.back.container.controller.ContainerController;
 import com.ogjg.back.container.service.ContainerService;
+import com.ogjg.back.directory.controller.DirectoryController;
+import com.ogjg.back.directory.service.DirectoryService;
 import com.ogjg.back.file.controller.FileController;
 import com.ogjg.back.file.service.FileService;
+import com.ogjg.back.s3.service.S3DirectoryService;
 import com.ogjg.back.s3.service.S3ProfileImageService;
 import com.ogjg.back.user.controller.UserController;
 import com.ogjg.back.user.service.EmailAuthService;
@@ -27,7 +30,8 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 @WebMvcTest({
         UserController.class,
         ContainerController.class,
-        FileController.class
+        FileController.class,
+        DirectoryController.class
 })
 public class ControllerTest {
 
@@ -62,4 +66,10 @@ public class ControllerTest {
 
     @MockBean
     protected FileService fileService;
+
+    @MockBean
+    protected DirectoryService directoryService;
+
+    @MockBean
+    protected S3DirectoryService s3DirectoryService;
 }

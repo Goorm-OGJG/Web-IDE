@@ -16,7 +16,7 @@ public class S3PathUtil {
 
     }
 
-    public static String createS3PathWithFilePath(String loginEmail, String filePath) {
+    public static String givenPathToS3Path(String loginEmail, String filePath) {
         loginEmail = loginEmail
                 .replace('.', S3_EMAIL_DELIMETER)
                 .replace('@', S3_EMAIL_DELIMETER);

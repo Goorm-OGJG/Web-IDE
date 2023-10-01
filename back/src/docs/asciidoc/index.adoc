@@ -108,3 +108,13 @@ include::{snippets}/file/rename/http-request.adoc[]
 include::{snippets}/file/rename/request-fields.adoc[]
 
 include::{snippets}/file/rename/http-response.adoc[]
+
+== 디렉토리 API
+
+=== 디렉토리 생성
+해당 경로의 파일을 생성합니다.
+
+include::{snippets}/directory/create/http-request.adoc[]
+include::{snippets}/directory/create/request-fields.adoc[]
+
+include::{snippets}/directory/create/http-response.adoc[]

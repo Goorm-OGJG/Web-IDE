@@ -28,7 +28,7 @@ public class FileService {
     @Transactional
     public void createFile(String loginEmail, CreateFileRequest request) {
         String filePath = request.getFilePath();
-        String s3Path = createS3PathWithFilePath(loginEmail, filePath);
+        String s3Path = givenPathToS3Path(loginEmail, filePath);
 
         if (!isContainerExist(loginEmail, extractContainerName(filePath))) throw new NotFoundContainer();
         if (s3FileService.isFileAlreadyExist(s3Path)) throw new FileAlreadyExists();
@@ -39,7 +39,7 @@ public class FileService {
     @Transactional
     public void deleteFile(String loginEmail, DeleteFileRequest request) {
         String filePath = request.getFilePath();
-        String s3Path = createS3PathWithFilePath(loginEmail, filePath);
+        String s3Path = givenPathToS3Path(loginEmail, filePath);
 
         if (!isContainerExist(loginEmail, extractContainerName(filePath))) throw new NotFoundContainer();
         if (!s3FileService.isFileAlreadyExist(s3Path)) throw new NotFoundFile();
@@ -50,7 +50,7 @@ public class FileService {
     @Transactional
     public void updateFile(String loginEmail, UpdateFileRequest request) {
         String filePath = request.getFilePath();
-        String s3Path = createS3PathWithFilePath(loginEmail, filePath);
+        String s3Path = givenPathToS3Path(loginEmail, filePath);
 
         if (!isContainerExist(loginEmail, extractContainerName(filePath))) throw new NotFoundContainer();
         if (!s3FileService.isFileAlreadyExist(s3Path)) throw new NotFoundFile();
@@ -62,7 +62,7 @@ public class FileService {
     public void updateFilename(String loginEmail, UpdateFilenameRequest request) {
         String filePath = request.getFilePath();
         String newFilename = request.getNewFilename();
-        String s3Path = createS3PathWithFilePath(loginEmail, filePath);
+        String s3Path = givenPathToS3Path(loginEmail, filePath);
 
         String newFilePath = createNewFilePath(filePath, newFilename);
         log.info("newPath={}", newFilePath);
