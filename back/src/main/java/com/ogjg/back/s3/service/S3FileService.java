@@ -41,4 +41,9 @@ public class S3FileService {
                 createS3PathWithFilePath(email, newFilePath)
         );
     }
+
+    @Transactional(readOnly = true)
+    public boolean isFileAlreadyExist(String filePath) {
+        return s3FileRepository.isFileExist(filePath);
+    }
 }
