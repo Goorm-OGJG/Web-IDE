@@ -18,6 +18,7 @@ public enum ErrorCode {
     DUPLICATED_CONTAINER_NAME(HttpStatus.BAD_REQUEST, "400", "이미 존재하는 컨테이너 이름입니다"),
     INVALID_CURRENT_PASSWORD(HttpStatus.BAD_REQUEST, "400", "현재 비밀번호 불일치"),
     S3_NOT_FOUND_FILE(HttpStatus.NOT_FOUND, "400", "S3에 존재하지 않는 파일입니다."),
+    S3_NOT_FOUND_DIRECTORY(HttpStatus.NOT_FOUND, "400", "S3에 존재하지 않는 디렉토리입니다."),
     S3_FILE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "400", "S3에 이미 존재하는 파일입니다."),
     S3_DIRECTORY_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "400", "S3에 이미 존재하는 디렉토리입니다."),
     S3_FAIL_TO_UPLOAD_CONTAINER(HttpStatus.BAD_REQUEST, "400", "S3에 컨테이너 초기파일 업로드를 실패했습니다."),

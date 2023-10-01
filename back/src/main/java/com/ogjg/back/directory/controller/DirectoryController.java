@@ -3,13 +3,11 @@ package com.ogjg.back.directory.controller;
 import com.ogjg.back.common.exception.ErrorCode;
 import com.ogjg.back.common.response.ApiResponse;
 import com.ogjg.back.directory.dto.request.CreateDirectoryRequest;
+import com.ogjg.back.directory.dto.request.DeleteDirectoryRequest;
 import com.ogjg.back.directory.service.DirectoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,4 +28,17 @@ public class DirectoryController {
         directoryService.createDirectory(loginEmail, request);
         return new ApiResponse<>(ErrorCode.SUCCESS);
     }
+
+    /**
+     * 디렉토리 삭제
+     */
+    @DeleteMapping("")
+    public ApiResponse<Void> deleteDirectory(
+            @RequestBody DeleteDirectoryRequest request
+    ) {
+        String loginEmail = "ogjg1234@naver.com";
+        directoryService.deleteDirectory(loginEmail, request);
+        return new ApiResponse<>(ErrorCode.SUCCESS);
+    }
+
 }

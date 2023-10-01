@@ -118,3 +118,11 @@ include::{snippets}/directory/create/http-request.adoc[]
 include::{snippets}/directory/create/request-fields.adoc[]
 
 include::{snippets}/directory/create/http-response.adoc[]
+
+=== 디렉토리 삭제
+해당 경로의 파일을 생성합니다.
+
+include::{snippets}/directory/delete/http-request.adoc[]
+include::{snippets}/directory/delete/request-fields.adoc[]
+
+include::{snippets}/directory/delete/http-response.adoc[]

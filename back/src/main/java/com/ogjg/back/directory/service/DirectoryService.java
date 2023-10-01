@@ -3,7 +3,9 @@ package com.ogjg.back.directory.service;
 import com.ogjg.back.container.exception.NotFoundContainer;
 import com.ogjg.back.container.repository.ContainerRepository;
 import com.ogjg.back.directory.dto.request.CreateDirectoryRequest;
+import com.ogjg.back.directory.dto.request.DeleteDirectoryRequest;
 import com.ogjg.back.directory.exception.DirectoryAlreadyExists;
+import com.ogjg.back.directory.exception.NotFoundDirectory;
 import com.ogjg.back.s3.service.S3DirectoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,19 @@ public class DirectoryService {
         if (s3DirectoryService.isDirectoryAlreadyExist(s3Path)) throw new DirectoryAlreadyExists();
 
         s3DirectoryService.createDirectory(loginEmail, directoryPath);
+    }
+
+    @Transactional
+    public void deleteDirectory(String loginEmail, DeleteDirectoryRequest request) {
+        String directoryPath = request.getDirectoryPath();
+        String s3Path = givenPathToS3Path(loginEmail, directoryPath);
+
+        log.info("directory s3Path={}", s3Path);
+
+        if (!isContainerExist(loginEmail, extractContainerName(directoryPath))) throw new NotFoundContainer();
+        if (!s3DirectoryService.isDirectoryAlreadyExist(s3Path)) throw new NotFoundDirectory();
+
+        s3DirectoryService.deleteDirectory(loginEmail, directoryPath);
     }
 
     private boolean isContainerExist(String loginEmail, String containerName) {

@@ -20,8 +20,15 @@ public class S3DirectoryService {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public boolean isDirectoryAlreadyExist(String s3Path) {
         return s3DirectoryRepository.isDirectoryExist(s3Path);
+    }
+
+    @Transactional
+    public void deleteDirectory(String email, String directoryPath) {
+        s3DirectoryRepository.deleteObjectsWithPrefix(
+                givenPathToS3Path(email, directoryPath)
+        );
     }
 }
