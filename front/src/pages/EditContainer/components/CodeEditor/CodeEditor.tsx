@@ -1,30 +1,17 @@
-import Editor, { OnMount } from "@monaco-editor/react";
-import { editor } from "monaco-editor";
-import React, { useRef } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { optionsState, tabsState } from "../../../../recoil/CodeEditorState";
+import React from "react";
+import { useRecoilValue } from "recoil";
+import { tabsState } from "../../../../recoil/CodeEditorState";
 import * as S from "./CodeEditor.style";
 import { Desktop, Mobile } from "../../../../components/Responsive";
 import EmptyActiveTap from "./EmptyActiveTap";
 import Tab from "./Tab";
 import * as Icon from "../../../../components/Icon";
 import { useFileManage } from "../../../../hooks/CodeEditor/useFileManage";
+import CodeMirror from "./CodeMirror";
 
 function CodeEditer() {
-  const [tabs, setTabs] = useRecoilState(tabsState);
-  const options = useRecoilValue(optionsState);
+  const tabs = useRecoilValue(tabsState);
   const { saveActiveTabFile } = useFileManage();
-  const handleCode = () => {
-    const newCode = editorRef.current?.getValue() as string;
-    setTabs((prevTabs) => {
-      return {
-        ...prevTabs,
-        codes: prevTabs.codes.map((code, index) =>
-          index === prevTabs.active ? newCode : code,
-        ),
-      };
-    });
-  };
 
   const handleSave = () => {
     saveActiveTabFile();
@@ -35,16 +22,6 @@ function CodeEditer() {
 
     navigator.clipboard.writeText(webAddress);
   };
-
-  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
-
-  const handleEditorDidMount: OnMount = (editor) => {
-    editorRef.current = editor;
-  };
-
-  // function showValue() {
-  //   alert(editorRef.current?.getValue());
-  // }
 
   return (
     <React.Fragment>
@@ -72,19 +49,8 @@ function CodeEditer() {
           </S.Header>
         )}
 
-        {tabs.active !== -1 && (
-          <Editor
-            height="calc(100vh - 30px)"
-            defaultLanguage="javascript"
-            onMount={handleEditorDidMount}
-            theme="vs-dark"
-            options={options}
-            value={tabs.codes[tabs.active]}
-            onChange={handleCode}
-          />
-        )}
+        {tabs.active !== -1 && <CodeMirror />}
         {tabs.active == -1 && <EmptyActiveTap />}
-        {/* <div onClick={showValue}>Show value</div> */}
       </Desktop>
 
       <Mobile>
@@ -97,19 +63,8 @@ function CodeEditer() {
             </S.MHeader>
           )}
 
-          {tabs.active !== -1 && (
-            <Editor
-              height="100vh"
-              defaultLanguage="javascript"
-              onMount={handleEditorDidMount}
-              theme="vs-dark"
-              options={options}
-              value={tabs.codes[tabs.active]}
-              onChange={handleCode}
-            />
-          )}
+          {tabs.active !== -1 && <CodeMirror />}
           {tabs.active == -1 && <EmptyActiveTap />}
-          {/* <div onClick={showValue}>Show value</div> */}
         </S.MContainer>
       </Mobile>
     </React.Fragment>

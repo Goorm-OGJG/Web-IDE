@@ -24,6 +24,10 @@ function EmptyActiveTap() {
                 <S.Label>파일 저장</S.Label>
                 <S.Shortcut>⌘S</S.Shortcut>
               </S.ShortcutWrapper>
+              <S.ShortcutWrapper>
+                <S.Label>Zoom</S.Label>
+                <S.Shortcut>⌘Wheel</S.Shortcut>
+              </S.ShortcutWrapper>
             </S.Shortcuts>
           </S.CircleWrapper>
         </S.Container>
