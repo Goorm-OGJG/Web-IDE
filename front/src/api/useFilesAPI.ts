@@ -26,16 +26,21 @@ export function useFilesAPI() {
   } = useFileManage();
 
   const requestFilesData = (containerId: string): void => {
-    axios.get(`/api/container/${containerId}`).then((response) => {
-      setTreeData(response.data.data.treeData);
-      setFileData(getFileMap(response.data.data.fileData));
-      setDirectoryData(getDirectorySet(response.data.data.dirdirectories));
-    });
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/api/container/${containerId}`)
+      .then((response) => {
+        setTreeData(response.data.data.treeData);
+        setFileData(getFileMap(response.data.data.fileData));
+        setDirectoryData(getDirectorySet(response.data.data.directories));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const getFileMap = (fileData: T.ResponseFileData): FileData => {
     return fileData.reduce((result: FileData, data: T.ResponseFileType) => {
-      result[data.filePath] = data.content;
+      result[data.filePath] = data.content; // content -> uuid 수정 필요
       return result;
     }, {});
   };
@@ -48,54 +53,96 @@ export function useFilesAPI() {
   };
 
   const requestCreateFile = (
-    filePath: string,
+    payload: T.RequestCreateFilePayload,
     info: InfoType,
     fileName: string,
   ): void => {
-    axios.post(`/api/files/${filePath}`).then(() => {
-      createFile(info, fileName);
-    });
+    axios
+      .post(`${import.meta.env.VITE_API_URL}/api/files?filePath=${payload.filePath}`, {
+        uuid: payload.uuid,
+      })
+      .then(() => {
+        createFile(info, fileName);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const requestCreateDirectory = (
-    directoryPath: string,
+    payload: T.RequestCreateDirectoryPayload,
     info: InfoType,
     directoryName: string,
   ): void => {
-    axios.post(`/api/directories/${directoryPath}`).then(() => {
-      createDirectory(info, directoryName);
-    });
+    axios
+      .post(
+        `${import.meta.env.VITE_API_URL}/api/directories?directoryPath=${
+          payload.directoryPath
+        }`,
+      )
+      .then(() => {
+        createDirectory(info, directoryName);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const requestRenameFile = (
-    filePath: string,
     info: InfoType,
     payload: T.RequestRenameFilePayload,
   ): void => {
-    axios.put(`/api/directories/${filePath}/rename`, payload).then(() => {
-      renameFile(info, payload.newFileName);
-    });
+    axios
+      .put(
+        `${import.meta.env.VITE_API_URL}/api/files/rename?filePath=${
+          payload.filePath
+        }&newFilename=${payload.newFileName}`,
+      )
+      .then(() => {
+        renameFile(info, payload.newFileName);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   const requestRenameDirectory = (
-    directoryPath: string,
     info: InfoType,
     payload: T.RequestRenameDirectoryPayload,
   ): void => {
-    axios.put(`/api/directories/${directoryPath}/rename`, payload).then(() => {
-      renameDirectory(info, payload.newDirectoryName);
-    });
+    axios
+      .put(
+        `/api/directories/rename?directoryPath=${payload.directoryPath}&newDirectoryName=${payload.newDirectoryName}`,
+      )
+      .then(() => {
+        renameDirectory(info, payload.newDirectoryName);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const requestDeleteFile = (filePath: string, info: InfoType): void => {
-    axios.delete(`/api/files/${filePath}`).then(() => {
-      deleteFile(info);
-    });
+    axios
+      .delete(`${import.meta.env.VITE_API_URL}/api/files?filePath=${filePath}`, {})
+      .then(() => {
+        deleteFile(info);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const requestDeleteDirectory = (directoryPath: string, info: InfoType): void => {
-    axios.delete(`/api/directories/${directoryPath}`).then(() => {
-      deleteFile(info);
-    });
+    axios
+      .delete(
+        `${import.meta.env.VITE_API_URL}/api/directories?directoryPath=${directoryPath}`,
+      )
+      .then(() => {
+        deleteFile(info);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const requestSave = (
@@ -103,15 +150,25 @@ export function useFilesAPI() {
     info: InfoType,
     payload: T.RequestSavePayload,
   ): void => {
-    axios.put(`/api/files/${filePath}}`, payload).then(() => {
-      saveFile(info);
-    });
+    axios
+      .put(`${import.meta.env.VITE_API_URL}/api/files?filePath=${filePath}}`, payload)
+      .then(() => {
+        saveFile(info);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const requestSaveActiveTabFile = (filePath: string, payload: T.RequestSavePayload) => {
-    axios.put(`/api/files/${filePath}}`, payload).then(() => {
-      saveActiveTabFile();
-    });
+    axios
+      .put(`${import.meta.env.VITE_API_URL}/api/files?filePath=${filePath}}`, payload)
+      .then(() => {
+        saveActiveTabFile();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return {
