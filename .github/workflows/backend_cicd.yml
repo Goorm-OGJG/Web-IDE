@@ -25,8 +25,8 @@ jobs:
 
       - name: Create application.properties
         run: |
-          echo "${{ secrets.APPLICATION }}" > ./back/src/main/resources/application.yml
-          echo "${{ secrets.APPLICATION_DEV }}" > ./back/src/main/resources/application-dev.yml
+          echo "${{ secrets.APPLICATION }}" | base64 --decode > ./back/src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_DEV }}" | base64 --decode > ./back/src/main/resources/application-dev.yml
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./back/gradlew
