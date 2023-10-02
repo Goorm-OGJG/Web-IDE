@@ -1,5 +1,7 @@
 package com.ogjg.back.common.util;
 
+import software.amazon.awssdk.services.s3.model.S3Object;
+
 public class S3PathUtil {
 
     public static final String DELIMITER = "/";
@@ -43,5 +45,16 @@ public class S3PathUtil {
     public static String createNewFilePath(String originPath, String newFilename) {
         int lastDelimiterIndex = originPath.lastIndexOf(DELIMITER);
         return originPath.substring(0, lastDelimiterIndex) + DELIMITER + newFilename;
+    }
+
+    public static String createNewDirectoryPath(String originPath, String newFilename) {
+        String temp = originPath.substring(0, originPath.length() - 1);
+        int secondLastDelimiterIndex = temp.lastIndexOf(DELIMITER);
+
+        return originPath.substring(0, secondLastDelimiterIndex) + DELIMITER + newFilename + DELIMITER;
+    }
+
+    public static String createNewKey(String originPrefix, String newS3Path, S3Object s3Object) {
+        return newS3Path + s3Object.key().substring(originPrefix.length());
     }
 }

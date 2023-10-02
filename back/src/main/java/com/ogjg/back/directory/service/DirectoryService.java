@@ -4,6 +4,7 @@ import com.ogjg.back.container.exception.NotFoundContainer;
 import com.ogjg.back.container.repository.ContainerRepository;
 import com.ogjg.back.directory.dto.request.CreateDirectoryRequest;
 import com.ogjg.back.directory.dto.request.DeleteDirectoryRequest;
+import com.ogjg.back.directory.dto.request.UpdateDirectoryNameRequest;
 import com.ogjg.back.directory.exception.DirectoryAlreadyExists;
 import com.ogjg.back.directory.exception.NotFoundDirectory;
 import com.ogjg.back.s3.service.S3DirectoryService;
@@ -12,8 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.ogjg.back.common.util.S3PathUtil.extractContainerName;
-import static com.ogjg.back.common.util.S3PathUtil.givenPathToS3Path;
+import static com.ogjg.back.common.util.S3PathUtil.*;
 
 @Slf4j
 @Service
@@ -39,12 +39,24 @@ public class DirectoryService {
         String directoryPath = request.getDirectoryPath();
         String s3Path = givenPathToS3Path(loginEmail, directoryPath);
 
-        log.info("directory s3Path={}", s3Path);
-
         if (!isContainerExist(loginEmail, extractContainerName(directoryPath))) throw new NotFoundContainer();
         if (!s3DirectoryService.isDirectoryAlreadyExist(s3Path)) throw new NotFoundDirectory();
 
         s3DirectoryService.deleteDirectory(loginEmail, directoryPath);
+    }
+
+    @Transactional
+    public void updateDirectoryName(String loginEmail, UpdateDirectoryNameRequest request) {
+        String originPath = request.getDirectoryPath();
+        String name = request.getNewDirectoryName();
+
+        String originS3Path = givenPathToS3Path(loginEmail, originPath);
+        String newS3Path = createNewDirectoryPath(originS3Path, name);
+
+        if (!isContainerExist(loginEmail, extractContainerName(originPath))) throw new NotFoundContainer();
+        if (!s3DirectoryService.isDirectoryAlreadyExist(originS3Path)) throw new NotFoundDirectory();
+
+        s3DirectoryService.updateDirectoryName(originS3Path, newS3Path);
     }
 
     private boolean isContainerExist(String loginEmail, String containerName) {

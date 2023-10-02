@@ -8,6 +8,10 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
+import java.util.List;
+
+import static com.ogjg.back.common.util.S3PathUtil.createNewKey;
+
 @Slf4j
 @Repository
 @RequiredArgsConstructor
@@ -68,5 +72,44 @@ public class S3DirectoryRepository {
                 .bucket(bucketName)
                 .key(content.key())
                 .build();
+    }
+
+    public List<S3Object> getObjectsBy(String s3Path) {
+        ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
+                .bucket(bucketName)
+                .prefix(s3Path)
+                .build();
+
+        ListObjectsV2Response listResponse = s3Client.listObjectsV2(listRequest);
+        return listResponse.contents();
+    }
+
+    public void copyAndPasteObjects(List<S3Object> objects, String originPrefix, String newS3Prefix) {
+        for (S3Object s3Object : objects) {
+            String newKey = createNewKey(originPrefix, newS3Prefix, s3Object);
+
+            log.info("newKey={}", newKey);
+
+            copyObject(s3Object, newKey);
+            deleteObject(s3Object);
+        }
+    }
+
+    public void deleteObject(S3Object s3Object) {
+        DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(s3Object.key())
+                .build();
+        s3Client.deleteObject(deleteRequest);
+    }
+
+    public void copyObject(S3Object s3Object, String newKey) {
+        CopyObjectRequest copyRequest = CopyObjectRequest.builder()
+                .sourceBucket(bucketName)
+                .sourceKey(s3Object.key())
+                .destinationBucket(bucketName)
+                .destinationKey(newKey)
+                .build();
+        s3Client.copyObject(copyRequest);
     }
 }

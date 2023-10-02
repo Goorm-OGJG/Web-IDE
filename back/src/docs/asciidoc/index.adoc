@@ -126,3 +126,11 @@ include::{snippets}/directory/delete/http-request.adoc[]
 include::{snippets}/directory/delete/request-fields.adoc[]
 
 include::{snippets}/directory/delete/http-response.adoc[]
+
+=== 디렉토리 이름 수정
+해당 경로의 파일을 생성합니다.
+
+include::{snippets}/directory/rename/http-request.adoc[]
+include::{snippets}/directory/rename/request-fields.adoc[]
+
+include::{snippets}/directory/rename/http-response.adoc[]
