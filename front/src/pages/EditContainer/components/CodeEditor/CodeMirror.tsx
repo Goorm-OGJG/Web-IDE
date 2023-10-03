@@ -17,7 +17,7 @@ import { python } from "@codemirror/lang-python";
 
 function CodeMirror() {
   const [tabs, setTabs] = useRecoilState(tabsState);
-  const [fontSize, setFontSize] = useState(14);
+  const [fontSize, setFontSize] = useState(12);
   const { saveActiveTabFile } = useFileManage();
   const editorRef = useRef<HTMLDivElement>(null);
   const cmViewRef = useRef<EditorView | null>(null);
