@@ -1,6 +1,8 @@
 package com.ogjg.back.container.domain;
 
 import com.ogjg.back.chat.domain.Room;
+import com.ogjg.back.file.domain.File;
+import com.ogjg.back.file.exception.NotFoundFile;
 import com.ogjg.back.user.domain.User;
 import com.ogjg.back.user.exception.UnauthorizedUserAccessException;
 import jakarta.persistence.*;
@@ -10,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -30,6 +34,9 @@ public class Container {
     @OneToOne
     @JoinColumn(name = "room_id")
     private Room room;
+
+    @OneToMany(mappedBy = "container")
+    private List<File> files = new ArrayList<>();
 
     @Pattern(regexp = "^[a-zA-Z0-9\\-_]{1,20}$",
             message = "컨테이너 이름에는 영문, 숫자가 포함가능하며, 특수문자는 '-', '_'만 포함될 수 있습니다.")
@@ -58,9 +65,11 @@ public class Container {
     private LocalDateTime createdAt;
 
     @Builder
-    public Container(Long containerId, User user, String name, String description, String language, String containerUrl, Boolean isPrivate, Long availableStorage, Boolean isPinned, LocalDateTime modifiedAt, LocalDateTime createdAt) {
+    public Container(Long containerId, User user, Room room, List<File> files, String name, String description, String language, String containerUrl, Boolean isPrivate, Long availableStorage, Boolean isPinned, LocalDateTime modifiedAt, LocalDateTime createdAt) {
         this.containerId = containerId;
         this.user = user;
+        this.room = room;
+        this.files = files;
         this.name = name;
         this.description = description;
         this.language = language;
@@ -91,5 +100,14 @@ public class Container {
         if (!email.equals(user.getEmail())) {
             throw new UnauthorizedUserAccessException();
         }
+    }
+
+    public File findFileByPrefix(String filePath) {
+        // todo: 1) s3와 구분되는 에러코드 고려하기
+        //       2) 쿼리문 활용 최적화 필요
+        return files.stream()
+                .filter((file -> file.getPath().equals(filePath)))
+                .findAny()
+                .orElseThrow(() -> new NotFoundFile("DB에 존재하지 않는 파일입니다."));
     }
 }

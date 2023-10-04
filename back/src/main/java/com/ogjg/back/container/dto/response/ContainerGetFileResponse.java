@@ -11,10 +11,12 @@ import static lombok.AccessLevel.PROTECTED;
 public class ContainerGetFileResponse {
     private String filePath;
     private String content;
+    private String uuid;
 
     @Builder
-    public ContainerGetFileResponse(String filePath, String content) {
+    public ContainerGetFileResponse(String filePath, String content, String uuid) {
         this.filePath = filePath;
         this.content = content;
+        this.uuid = uuid;
     }
 }

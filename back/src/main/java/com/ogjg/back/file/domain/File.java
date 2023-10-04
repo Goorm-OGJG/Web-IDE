@@ -35,4 +35,9 @@ public class File {
         this.name = name;
         this.path = path;
     }
+
+    public File rename(String newFilename) {
+        this.name = newFilename;
+        return this;
+    }
 }
