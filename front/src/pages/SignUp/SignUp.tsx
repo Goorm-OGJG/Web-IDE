@@ -5,8 +5,6 @@ import { EMAIL_REG, NAME_REG, PASSWORD_REG } from "../../constants/regExp";
 import useRegTest from "../../hooks/useRegTest";
 import { useUserAPI } from "../../api/useUserAPI";
 import * as T from "../../types/userAPIType";
-import { v4 as uuidv4 } from "uuid";
-uuidv4();
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -24,7 +22,7 @@ const Signup = () => {
   };
 
   const handleSendEmailClick = () => {
-    const clientId = uuidv4();
+    const clientId = crypto.randomUUID();
     const payload: T.SendEmail = {
       clientId,
     };
