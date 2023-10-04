@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { useRecoilState } from "recoil";
-import { tabsState } from "../../../../recoil/CodeEditorState";
+import { useRecoilValue } from "recoil";
+import { fileDataState, tabsState } from "../../../../recoil/CodeEditorState";
 import { useFileManage } from "../../../../hooks/CodeEditor/useFileManage";
 import { basicSetup, EditorView } from "codemirror";
 import { keymap } from "@codemirror/view";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
-import { EditorState, Transaction } from "@codemirror/state";
+import { Transaction } from "@codemirror/state";
 import { autocompletion, startCompletion } from "@codemirror/autocomplete";
 import { searchKeymap } from "@codemirror/search";
 import { html } from "@codemirror/lang-html";
@@ -14,11 +14,12 @@ import { javascript } from "@codemirror/lang-javascript";
 import { json } from "@codemirror/lang-json";
 import { java } from "@codemirror/lang-java";
 import { python } from "@codemirror/lang-python";
-import yorkie, { OperationInfo } from "yorkie-js-sdk";
+import yorkie, { OperationInfo, EditOpInfo } from "yorkie-js-sdk";
 import { YorkieDoc } from "../../../../types/yorkieType";
 
 function CodeMirror() {
-  const [tabs, setTabs] = useRecoilState(tabsState);
+  const tabs = useRecoilValue(tabsState);
+  const fileData = useRecoilValue(fileDataState);
   const [fontSize, setFontSize] = useState(12);
   const { saveActiveTabFile } = useFileManage();
   const editorRef = useRef<HTMLDivElement>(null);
@@ -39,18 +40,18 @@ function CodeMirror() {
     return undefined;
   };
 
-  const handleCode = (transaction: Transaction) => {
-    const newContent = transaction.newDoc.toString();
+  // const handleCode = (transaction: Transaction) => {
+  //   const newContent = transaction.newDoc.toString();
 
-    setTabs((prevTabs) => {
-      return {
-        ...prevTabs,
-        codes: prevTabs.codes.map((code, index) =>
-          index === prevTabs.active ? newContent : code,
-        ),
-      };
-    });
-  };
+  //   setTabs((prevTabs) => {
+  //     return {
+  //       ...prevTabs,
+  //       codes: prevTabs.codes.map((code, index) =>
+  //         index === prevTabs.active ? newContent : code,
+  //       ),
+  //     };
+  //   });
+  // };
 
   useEffect(() => {
     saveActiveTabFileRef.current = saveActiveTabFile;
@@ -68,7 +69,7 @@ function CodeMirror() {
 
         // 02-1. create a document then attach it into the client.
         const doc = new yorkie.Document<YorkieDoc>(
-          `narcoker${tabs.files[tabs.active].replace(/\//g, "-")}`, //          narcoker-root-duck-duck1.css
+          `${fileData[tabs.files[tabs.active]]}`, //          narcoker-root-duck-duck1.css
         );
 
         await client.attach(doc);
@@ -134,12 +135,12 @@ function CodeMirror() {
               { key: isMac ? "Cmd-Space" : "Ctrl-Space", run: startCompletion },
               ...searchKeymap,
             ]),
-            EditorState.transactionFilter.of((transaction) => {
-              if (transaction.docChanged) {
-                handleCode(transaction);
-              }
-              return transaction;
-            }),
+            // EditorState.transactionFilter.of((transaction) => {
+            //   if (transaction.docChanged) {
+            //     handleCode(transaction);
+            //   }
+            //   return transaction;
+            // }),
             updateListener,
           ],
         });
@@ -156,7 +157,7 @@ function CodeMirror() {
             }
           });
         };
-        const handleEditOp = (op: any) => {
+        const handleEditOp = (op: EditOpInfo) => {
           const changes = [
             {
               from: Math.max(0, op.from),
