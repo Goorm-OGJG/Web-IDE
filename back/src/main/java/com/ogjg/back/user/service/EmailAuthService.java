@@ -23,10 +23,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Map;
 
 @Service
@@ -124,8 +124,18 @@ public class EmailAuthService {
     public String emailAuthTemplate(String emailTemplate) {
         try {
             ClassPathResource resource = new ClassPathResource(emailTemplate);
-            byte[] encoded = Files.readAllBytes(Paths.get(resource.getURI()));
-            return new String(encoded, StandardCharsets.UTF_8);
+            InputStream inputStream = resource.getInputStream();
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+            int nRead;
+            byte[] data = new byte[1024];
+            while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+
+            buffer.flush();
+
+            return buffer.toString(StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new EmailAuthFailure("이메일 인증 템플릿을 불러올 수 없습니다");
         }
