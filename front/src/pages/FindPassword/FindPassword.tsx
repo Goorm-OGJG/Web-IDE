@@ -1,30 +1,21 @@
 import { useState } from "react";
 import * as S from "./FindPassword.styled";
+import { useUserAPI } from "../../api/useUserAPI";
+import * as T from "../../types/userAPIType";
 
 const FindPassword = () => {
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [isSent, setIsSent] = useState(false);
-  const [isEmailLocked, setIsEmailLocked] = useState(false);
-  const [showAlternateMessage, setShowAlternateMessage] = useState(false);
+  const { requestFindPassword } = useUserAPI();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
   const handleFindPassword = async () => {
-    if (isEmailLocked) {
-      return; // 이메일 입력 잠금 상태
-    }
-    try {
-      setIsSent(true);
-      setMessage("비밀번호 재설정 메일을 보냈습니다. 이메일을 확인해주세요.");
-      setIsEmailLocked(true);
-      setShowAlternateMessage(true);
-    } catch (error) {
-      console.error(error);
-      setMessage("비밀번호 재설정 메일을 보내는 중 오류가 발생했습니다.");
-    }
+    const payload: T.FindPassword = {
+      email,
+    };
+    requestFindPassword(payload);
   };
 
   return (
@@ -40,29 +31,16 @@ const FindPassword = () => {
           placeholder="이메일"
           value={email}
           onChange={handleEmailChange}
-          disabled={isEmailLocked}
         />
 
-        {isSent ? (
-          <S.StyledButton>로그인</S.StyledButton>
-        ) : (
-          <S.StyledButton onClick={handleFindPassword}>인증 메일 전송</S.StyledButton>
-        )}
+        <S.StyledButton onClick={handleFindPassword}>인증 메일 전송</S.StyledButton>
 
-        {message && <div>{message}</div>}
-        {isSent && (
+        <S.LinkWrapper>
           <S.LinkWrapper>
-            {showAlternateMessage ? (
-              <S.LinkWrapper>
-                <S.Helpinfo>이미 계정이 있으세요?</S.Helpinfo>
-                <S.HelpLink to="/Login"> 로그인 </S.HelpLink>
-              </S.LinkWrapper>
-            ) : (
-              <S.LoginLink to="/Login"> 로그인으로 돌아가기 </S.LoginLink>
-            )}
+            <S.Helpinfo>이미 계정이 있으세요?</S.Helpinfo>
+            <S.HelpLink to="/Login"> 로그인 </S.HelpLink>
           </S.LinkWrapper>
-        )}
-        {!isSent && <S.LoginLink to="/Login"> 로그인으로 돌아가기 </S.LoginLink>}
+        </S.LinkWrapper>
       </S.FindPasswordForm>
     </S.BackGround>
   );

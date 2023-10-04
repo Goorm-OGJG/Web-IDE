@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import * as S from "./LoginForm.style";
 import * as Icon from "../../../../components/Icon";
 import { Desktop, Mobile } from "../../../../components/Responsive";
+import { useUserAPI } from "../../../../api/useUserAPI";
+import * as T from "../../../../types/userAPIType";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [remember, setRemeber] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [value, setValue] = useState("");
+  const { requestLogin } = useUserAPI();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -25,8 +28,31 @@ export default function LoginForm() {
     setShowPassword(!showPassword);
   };
 
+  const handleLogin = () => {
+    // 이메일과 비밀번호 유효성 검사 진행
+    if (email.trim() === "") {
+      // 이메일 폼이 비어있는 경우 처리
+      alert("이메일을 입력하세요.");
+      return;
+    }
+
+    if (value.trim() === "") {
+      // 비밀번호 폼이 비어있는 경우
+      alert("비밀번호를 입력하세요.");
+      return;
+    }
+
+    // 유효성 검사 통과 시 로그인 요청
+    const payload: T.LoginType = {
+      email,
+      password: value,
+    };
+    requestLogin(payload);
+  };
+
   return (
     <React.Fragment>
+      {/* 데스크탑 버전 */}
       <Desktop>
         <S.RightBackground>
           <S.Rightwrapper>
@@ -73,7 +99,7 @@ export default function LoginForm() {
               </S.IconWrapper>
             </S.PasswordBox>
 
-            <S.StyledButton>로그인</S.StyledButton>
+            <S.StyledButton onClick={handleLogin}>로그인</S.StyledButton>
 
             <S.Wrapper>
               <S.Rememberbox>
@@ -93,8 +119,7 @@ export default function LoginForm() {
         </S.RightBackground>
       </Desktop>
 
-      {/* MOBILE */}
-
+      {/* 모바일 버전 */}
       <Mobile>
         <S.MRightBackground>
           <S.Rightwrapper>
@@ -141,11 +166,11 @@ export default function LoginForm() {
               </S.IconWrapper>
             </S.PasswordBox>
 
-            <S.StyledButton>로그인</S.StyledButton>
+            <S.StyledButton onClick={handleLogin}>로그인</S.StyledButton>
 
             <S.Wrapper>
               <S.Rememberbox>
-                <input type="checkbox" onChange={handleEmailChange} />
+                <input type="checkbox" onChange={handleRemeber} />
                 로그인 상태 유지
               </S.Rememberbox>
 

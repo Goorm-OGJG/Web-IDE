@@ -5,6 +5,7 @@ import * as FONT from "../../../../constants/font";
 export const PasswordBox = styled.div`
   position: relative;
   width: 100%;
+  margin-bottom: 25px;
 `;
 
 export const Password = styled.input`
@@ -17,7 +18,6 @@ export const Password = styled.input`
   border-radius: 5px;
   padding-right: 40px;
   transition: 0.3s;
-  margin-bottom: 15px;
 
   &::placeholder {
     color: ${COLOR.Gray12};
@@ -46,5 +46,16 @@ export const IconWrapper = styled.div`
   transform: translateY(-50%);
 `;
 export const IconBox = styled.div`
+  position: absolute;
+`;
+
+export const AlertP = styled.p`
+  position: absolute;
+  color: ${COLOR.Red1};
+  font-size: ${FONT.XS};
+`;
+
+export const CorrectP = styled(AlertP)`
+  color: ${COLOR.Green1};
   position: absolute;
 `;

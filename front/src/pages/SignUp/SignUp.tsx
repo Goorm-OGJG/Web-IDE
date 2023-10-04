@@ -1,19 +1,60 @@
-import { useState } from "react";
+import React, { useRef, useState } from "react";
 import * as S from "./Signup.style";
-import Password from "./components/Password/Password";
+import PasswordInput from "./components/PasswordInput/PasswordInput";
+import { EMAIL_REG, NAME_REG, PASSWORD_REG } from "../../constants/regExp";
+import useRegTest from "../../hooks/useRegTest";
+import { useUserAPI } from "../../api/useUserAPI";
+import * as T from "../../types/userAPIType";
+import { v4 as uuidv4 } from "uuid";
+uuidv4();
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [isEmailSent, setIsEmailSent] = useState(false);
+  const [emailOk, setEmailOk] = useRegTest();
+  const [nameOk, setNameOk] = useRegTest();
+  const [name, setName] = useState("");
+  const { requestSignUp, requestSendEmail } = useUserAPI();
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const passwordConfirmRef = useRef<HTMLInputElement>(null);
+
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
+    setEmailOk(EMAIL_REG, e.target.value);
   };
 
   const handleSendEmailClick = () => {
-    setIsEmailSent(!isEmailSent);
+    const clientId = uuidv4();
+    const payload: T.SendEmail = {
+      clientId,
+    };
+    requestSendEmail(payload, setIsEmailSent);
   };
 
-  const isButtonDisabled = email === "";
+  const changeNameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const nameValue = e.target.value;
+    setName(nameValue);
+    setNameOk(NAME_REG, nameValue);
+  };
+
+  const isButtonDisabled = emailOk !== 1;
+
+  const handleSignup = () => {
+    if (
+      emailOk === 1 &&
+      nameOk === 1 &&
+      PASSWORD_REG.test(passwordRef.current!.value) &&
+      passwordRef.current!.value === passwordConfirmRef.current!.value &&
+      isEmailSent
+    ) {
+      const payload: T.SignUpType = {
+        email,
+        password: passwordRef.current!.value,
+        name,
+      };
+      requestSignUp(payload);
+    }
+  };
 
   return (
     <S.BackGround>
@@ -32,12 +73,27 @@ const Signup = () => {
             인증
           </S.AuthButton>
         </S.EmailInputWrapper>
-        {isEmailSent && <S.Error>인증 메일이 발송되었습니다.</S.Error>}
 
-        <Password />
+        <S.Wrapper>
+          <PasswordInput
+            placeholder="비밀번호(영문, 숫자, 특수문자 혼합하여 8~30자)"
+            ref={passwordRef}
+          />
+          <PasswordInput placeholder="비밀번호 확인" ref={passwordConfirmRef} />
+        </S.Wrapper>
 
-        <S.StyledInputBox type="text" id="username" placeholder="이름 (2~30자)" />
-        <S.StyledButton>회원가입</S.StyledButton>
+        <React.Fragment>
+          <S.StyledInputBox
+            placeholder="이름"
+            minLength={2}
+            maxLength={30}
+            onChange={changeNameHandler}
+          />
+          {nameOk === 1 && <S.CorrectP>사용 가능한 이름입니다.</S.CorrectP>}
+          {nameOk === 0 && <S.AlertP>이름 형식이 올바르지 않습니다.</S.AlertP>}
+        </React.Fragment>
+
+        <S.StyledButton onClick={handleSignup}>회원가입</S.StyledButton>
 
         <S.LinkWrapper>
           <S.Logininfo>이미 계정이 있으세요?</S.Logininfo>

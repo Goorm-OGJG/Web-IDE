@@ -68,11 +68,12 @@ export const StyledInputBox = styled.input`
 
 export const EmailInput = styled(StyledInputBox)`
   width: 340px;
+  margin-bottom: 25px;
 `;
 
 export const AuthButton = styled.button`
   position: absolute;
-  top: 40%;
+  top: 31%;
   right: 10px;
   transform: translateY(-50%);
   background-color: ${(props) =>
@@ -99,7 +100,7 @@ export const StyledButton = styled.button`
   font-size: ${FONT.M};
   cursor: pointer;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 25px;
 
   &:hover {
     background-color: ${COLOR.Purple2};
@@ -123,4 +124,41 @@ export const LoginLink = styled(Link)`
 export const Logininfo = styled.div`
   font-size: ${FONT.M};
   margin-left: 20px;
+`;
+
+export const AlertP = styled.p`
+  position: absolute;
+  color: ${COLOR.Red1};
+  font-size: ${FONT.XS};
+`;
+
+export const CorrectP = styled(AlertP)`
+  color: ${COLOR.Green1};
+`;
+
+export const Wrapper = styled.div``;
+
+export const Input = styled.input`
+  width: 100%;
+  border: 1px solid ${COLOR.Gray2};
+  font-size: ${FONT.M};
+  outline: none;
+  line-height: 1em;
+  padding: 10px;
+  border-radius: 5px;
+  padding-right: 40px;
+  transition: 0.3s;
+
+  &::placeholder {
+    color: ${COLOR.Gray12};
+    font-size: ${FONT.S};
+  }
+
+  &:focus {
+    border: 1px solid ${COLOR.Purple1};
+  }
+  &::-ms-reveal,
+  ::-ms-clear {
+    display: none;
+  }
 `;

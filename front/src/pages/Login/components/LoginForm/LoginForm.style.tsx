@@ -32,8 +32,8 @@ export const StyledInputBox = styled.input`
   border-radius: 5px;
   padding-right: 40px;
   transition: 0.3s;
-  margin-bottom: 10px;
-  
+  margin-bottom: 20px;
+
   &::placeholder {
     color: ${COLOR.Gray12};
     font-size: ${FONT.S};
@@ -57,6 +57,7 @@ export const StyledButton = styled.button`
   font-size: ${FONT.ML};
   cursor: pointer;
   width: 100%;
+  margin-top: 20px;
 
   &:hover {
     background-color: ${COLOR.Purple2};
@@ -78,7 +79,7 @@ export const Logininfo = styled.div`
   margin-bottom: 30px;
 `;
 
-export const MLogininfo= styled(Logininfo)`
+export const MLogininfo = styled(Logininfo)`
   text-align: center;
 `;
 
@@ -97,7 +98,6 @@ export const Password = styled.input`
   border-radius: 5px;
   padding-right: 40px;
   transition: 0.3s;
-  margin-bottom: 10px;
 
   &::placeholder {
     color: ${COLOR.Gray12};
@@ -132,7 +132,7 @@ export const IconBox = styled.div`
 export const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
+  margin-top: 30px;
 `;
 
 export const LinkWrapper = styled.div``;
@@ -152,4 +152,14 @@ export const SignUpLink = styled(Link)`
   color: ${COLOR.Black};
   font-size: ${FONT.M};
   margin-left: 20px;
+`;
+
+export const AlertP = styled.p`
+  position: absolute;
+  color: ${COLOR.Red1};
+  font-size: ${FONT.XS};
+`;
+
+export const CorrectP = styled(AlertP)`
+  color: ${COLOR.Green1};
 `;
