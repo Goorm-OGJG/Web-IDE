@@ -5,7 +5,7 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public enum ErrorCode {
+public enum ErrorCode implements ErrorType {
 
     SUCCESS(HttpStatus.OK, "200", "OK"),
     LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "401", "아이디와 비밀번호를 확인 해주세요"),
@@ -39,11 +39,10 @@ public enum ErrorCode {
         this.message = message;
     }
 
-    public ErrorCode changeMessage(
+    public ErrorResult changeMessage(
             String message
     ) {
-        this.message = message;
-        return this;
+        return new ErrorResult(this.statusCode, this.getCode(), message);
     }
 
 }
