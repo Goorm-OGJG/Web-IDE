@@ -2,22 +2,20 @@ package com.ogjg.back.file.controller;
 
 import com.ogjg.back.common.ControllerTest;
 import com.ogjg.back.file.dto.request.CreateFileRequest;
-import com.ogjg.back.file.dto.request.DeleteFileRequest;
 import com.ogjg.back.file.dto.request.UpdateFileRequest;
-import com.ogjg.back.file.dto.request.UpdateFilenameRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static com.ogjg.back.common.util.S3PathUtil.createNewFilePath;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.doNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class FileControllerTest extends ControllerTest {
@@ -27,14 +25,15 @@ public class FileControllerTest extends ControllerTest {
     public void createFile() throws Exception {
         //given
         CreateFileRequest request = CreateFileRequest.builder()
-                .filePath("/my-container1/hello.txt")
+                .uuid("uuid")
                 .build();
 
-        doNothing().when(fileService).createFile(any(String.class), any(CreateFileRequest.class));
+        doNothing().when(fileService).createFile(any(String.class), any(String.class), any(String.class));
 
         //when
         ResultActions result = this.mockMvc.perform(
                 post("/api/files")
+                        .queryParam("filePath", "{filePath}")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -44,8 +43,11 @@ public class FileControllerTest extends ControllerTest {
         result.andDo(document("file/create",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
+                queryParameters(
+                        parameterWithName("filePath").description("생성할 파일 전체 경로")
+                ),
                 requestFields(
-                        fieldWithPath("filePath").description("생성할 파일 전체 경로")
+                        fieldWithPath("uuid").description("key값으로 사용하는 uuid")
                 ),
                 responseFields(
                         fieldWithPath("status.code").description("응답 코드"),
@@ -59,17 +61,12 @@ public class FileControllerTest extends ControllerTest {
     @Test
     public void deleteFile() throws Exception {
         //given
-        DeleteFileRequest request = DeleteFileRequest.builder()
-                .filePath("/my-container1/hello")
-                .build();
-
-        doNothing().when(fileService).deleteFile(any(String.class), any(DeleteFileRequest.class));
+        doNothing().when(fileService).deleteFile(any(String.class), any(String.class));
 
         //when
         ResultActions result = this.mockMvc.perform(
                 delete("/api/files")
-                        .content(objectMapper.writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .queryParam("filePath", "{filePath}")
                         .accept(MediaType.APPLICATION_JSON)
         );
 
@@ -77,8 +74,8 @@ public class FileControllerTest extends ControllerTest {
         result.andDo(document("file/delete",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
-                requestFields(
-                        fieldWithPath("filePath").description("삭제할 파일 전체 경로")
+                queryParameters(
+                        parameterWithName("filePath").description("삭제할 파일 전체 경로")
                 ),
                 responseFields(
                         fieldWithPath("status.code").description("응답 코드"),
@@ -95,14 +92,14 @@ public class FileControllerTest extends ControllerTest {
         UpdateFileRequest request = UpdateFileRequest.builder()
                 .content("content...\n I'am a cbum. muscle king.\n" +
                         "do you know?")
-                .filePath("/my-container1/hello")
                 .build();
 
-        doNothing().when(fileService).updateFile(any(String.class), any(UpdateFileRequest.class));
+        doNothing().when(fileService).updateFile(any(String.class), any(String.class), any(UpdateFileRequest.class));
 
         //when
         ResultActions result = this.mockMvc.perform(
-                delete("/api/files")
+                put("/api/files")
+                        .queryParam("filePath", "{filePath}")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -112,8 +109,10 @@ public class FileControllerTest extends ControllerTest {
         result.andDo(document("file/update",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
+                queryParameters(
+                        parameterWithName("filePath").description("수정할 파일의 전체 경로")
+                ),
                 requestFields(
-                        fieldWithPath("filePath").description("수정할 파일의 전체 경로"),
                         fieldWithPath("content").description("수정할 파일의 전체 내용")
                 ),
                 responseFields(
@@ -128,18 +127,13 @@ public class FileControllerTest extends ControllerTest {
     @Test
     public void updateFilename() throws Exception {
         //given
-        UpdateFilenameRequest request = UpdateFilenameRequest.builder()
-                .filePath("/my-container1/hello.txt")
-                .newFilename(createNewFilePath("/my-container1/hello.txt", "hi.txt"))
-                .build();
-
-        doNothing().when(fileService).updateFilename(any(String.class), any(UpdateFilenameRequest.class));
+        doNothing().when(fileService).updateFilename(any(String.class), any(String.class), any(String.class));
 
         //when
         ResultActions result = this.mockMvc.perform(
-                delete("/api/files")
-                        .content(objectMapper.writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON)
+                put("/api/files/rename")
+                        .queryParam("filePath","{filePath}")
+                        .queryParam("newFilename", "{newFilename}")
                         .accept(MediaType.APPLICATION_JSON)
         );
 
@@ -147,9 +141,9 @@ public class FileControllerTest extends ControllerTest {
         result.andDo(document("file/rename",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
-                requestFields(
-                        fieldWithPath("filePath").description("수정할 파일의 기존 전체 경로"),
-                        fieldWithPath("newFilename").description("새로 지정할 파일 이름")
+                queryParameters(
+                        parameterWithName("filePath").description("수정할 파일의 전체 경로"),
+                        parameterWithName("newFilename").description("새로 지정할 파일 이름")
                 ),
                 responseFields(
                         fieldWithPath("status.code").description("응답 코드"),

@@ -2,10 +2,7 @@ package com.ogjg.back.file.service;
 
 import com.ogjg.back.container.exception.NotFoundContainer;
 import com.ogjg.back.container.repository.ContainerRepository;
-import com.ogjg.back.file.dto.request.CreateFileRequest;
-import com.ogjg.back.file.dto.request.DeleteFileRequest;
 import com.ogjg.back.file.dto.request.UpdateFileRequest;
-import com.ogjg.back.file.dto.request.UpdateFilenameRequest;
 import com.ogjg.back.file.exception.FileAlreadyExists;
 import com.ogjg.back.file.exception.NotFoundFile;
 import com.ogjg.back.s3.service.S3FileService;
@@ -26,8 +23,7 @@ public class FileService {
     // todo : 모든 로직에 해당 파일이 존재하는지 여부 확인 필요하다.
 
     @Transactional
-    public void createFile(String loginEmail, CreateFileRequest request) {
-        String filePath = request.getFilePath();
+    public void createFile(String loginEmail, String filePath, String uuid) {
         String s3Path = givenPathToS3Path(loginEmail, filePath);
 
         if (!isContainerExist(loginEmail, extractContainerName(filePath))) throw new NotFoundContainer();
@@ -37,8 +33,7 @@ public class FileService {
     }
 
     @Transactional
-    public void deleteFile(String loginEmail, DeleteFileRequest request) {
-        String filePath = request.getFilePath();
+    public void deleteFile(String loginEmail, String filePath) {
         String s3Path = givenPathToS3Path(loginEmail, filePath);
 
         if (!isContainerExist(loginEmail, extractContainerName(filePath))) throw new NotFoundContainer();
@@ -48,8 +43,7 @@ public class FileService {
     }
 
     @Transactional
-    public void updateFile(String loginEmail, UpdateFileRequest request) {
-        String filePath = request.getFilePath();
+    public void updateFile(String loginEmail, String filePath, UpdateFileRequest request) {
         String s3Path = givenPathToS3Path(loginEmail, filePath);
 
         if (!isContainerExist(loginEmail, extractContainerName(filePath))) throw new NotFoundContainer();
@@ -59,9 +53,7 @@ public class FileService {
     }
 
     @Transactional
-    public void updateFilename(String loginEmail, UpdateFilenameRequest request) {
-        String filePath = request.getFilePath();
-        String newFilename = request.getNewFilename();
+    public void updateFilename(String loginEmail, String filePath, String newFilename) {
         String s3Path = givenPathToS3Path(loginEmail, filePath);
 
         String newFilePath = createNewFilePath(filePath, newFilename);

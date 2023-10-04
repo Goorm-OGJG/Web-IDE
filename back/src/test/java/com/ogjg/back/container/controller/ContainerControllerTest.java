@@ -75,7 +75,7 @@ public class ContainerControllerTest extends ControllerTest {
         // when
         ResultActions result = this.mockMvc.perform(
                 get("/api/containers/check")
-                        .param("name", "컨테이너 1")
+                        .param("name", "{name}")
                         .accept(MediaType.APPLICATION_JSON)
         );
 

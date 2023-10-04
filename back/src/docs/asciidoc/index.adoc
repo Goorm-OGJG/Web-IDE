@@ -80,6 +80,8 @@ include::{snippets}/container/check/http-response.adoc[]
 해당 경로의 파일을 생성합니다.
 
 include::{snippets}/file/create/http-request.adoc[]
+include::{snippets}/file/create/query-parameters.adoc[]
+include::{snippets}/file/create/request-body.adoc[]
 include::{snippets}/file/create/request-fields.adoc[]
 
 include::{snippets}/file/create/http-response.adoc[]
@@ -88,15 +90,16 @@ include::{snippets}/file/create/http-response.adoc[]
 해당 경로의 파일을 삭제합니다.
 
 include::{snippets}/file/delete/http-request.adoc[]
-include::{snippets}/file/delete/request-fields.adoc[]
+include::{snippets}/file/delete/query-parameters.adoc[]
 
-include::{snippets}/file/delete/http-response.adoc[]
 include::{snippets}/file/delete/http-response.adoc[]
 
 === 파일 수정
 해당 경로의 파일을 수정합니다.
 
 include::{snippets}/file/update/http-request.adoc[]
+include::{snippets}/file/update/query-parameters.adoc[]
+include::{snippets}/file/update/request-body.adoc[]
 include::{snippets}/file/update/request-fields.adoc[]
 
 include::{snippets}/file/update/http-response.adoc[]
@@ -105,7 +108,7 @@ include::{snippets}/file/update/http-response.adoc[]
 해당 경로의 파일의 이름을 수정합니다.
 
 include::{snippets}/file/rename/http-request.adoc[]
-include::{snippets}/file/rename/request-fields.adoc[]
+include::{snippets}/file/rename/query-parameters.adoc[]
 
 include::{snippets}/file/rename/http-response.adoc[]
 
@@ -115,6 +118,8 @@ include::{snippets}/file/rename/http-response.adoc[]
 해당 경로의 파일을 생성합니다.
 
 include::{snippets}/directory/create/http-request.adoc[]
+include::{snippets}/directory/create/query-parameters.adoc[]
+include::{snippets}/directory/create/request-body.adoc[]
 include::{snippets}/directory/create/request-fields.adoc[]
 
 include::{snippets}/directory/create/http-response.adoc[]
@@ -123,7 +128,7 @@ include::{snippets}/directory/create/http-response.adoc[]
 해당 경로의 파일을 생성합니다.
 
 include::{snippets}/directory/delete/http-request.adoc[]
-include::{snippets}/directory/delete/request-fields.adoc[]
+include::{snippets}/directory/delete/query-parameters.adoc[]
 
 include::{snippets}/directory/delete/http-response.adoc[]
 
@@ -131,6 +136,6 @@ include::{snippets}/directory/delete/http-response.adoc[]
 해당 경로의 파일을 생성합니다.
 
 include::{snippets}/directory/rename/http-request.adoc[]
-include::{snippets}/directory/rename/request-fields.adoc[]
+include::{snippets}/directory/rename/query-parameters.adoc[]
 
 include::{snippets}/directory/rename/http-response.adoc[]

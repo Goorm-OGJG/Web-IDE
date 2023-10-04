@@ -9,13 +9,10 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 public class UpdateFileRequest {
-    private String filePath;
     private String content;
 
     @Builder
-    public UpdateFileRequest(String filePath, String content) {
-        this.filePath = filePath;
+    public UpdateFileRequest(String content) {
         this.content = content;
     }
-
 }

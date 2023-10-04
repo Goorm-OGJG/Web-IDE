@@ -9,10 +9,10 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 public class CreateDirectoryRequest {
-    private String directoryPath;
+    private String uuid;
 
     @Builder
-    public CreateDirectoryRequest(String directoryPath) {
-        this.directoryPath = directoryPath;
+    public CreateDirectoryRequest(String uuid) {
+        this.uuid = uuid;
     }
 }
