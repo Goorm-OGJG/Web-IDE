@@ -80,7 +80,7 @@ public class UserService {
         findUser.deactivate();
     }
 
-    protected User findByEmail(String email) {
+    private User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(NotFoundUser::new);
     }
