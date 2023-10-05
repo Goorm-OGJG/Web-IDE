@@ -85,12 +85,6 @@ export const AuthButton = styled.button`
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
 `;
 
-export const Error = styled.div`
-  font-size: ${FONT.M};
-  color: ${COLOR.Red1};
-  margin-bottom: 10px;
-`;
-
 export const StyledButton = styled.button`
   background-color: ${COLOR.Purple1};
   color: ${COLOR.White};
@@ -100,7 +94,7 @@ export const StyledButton = styled.button`
   font-size: ${FONT.M};
   cursor: pointer;
   width: 100%;
-  margin-top: 25px;
+  margin-top: 35px;
 
   &:hover {
     background-color: ${COLOR.Purple2};
@@ -126,10 +120,16 @@ export const Logininfo = styled.div`
   margin-left: 20px;
 `;
 
+export const NameBOX = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
 export const AlertP = styled.p`
   position: absolute;
   color: ${COLOR.Red1};
   font-size: ${FONT.XS};
+  /* padding-top: 15px; */
 `;
 
 export const CorrectP = styled(AlertP)`

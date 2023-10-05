@@ -14,5 +14,5 @@ export interface FindPassword {
 }
 
 export interface SendEmail {
-  clientId: string;
+  email: string;
 }

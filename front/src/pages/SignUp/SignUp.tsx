@@ -22,9 +22,8 @@ const Signup = () => {
   };
 
   const handleSendEmailClick = () => {
-    const clientId = crypto.randomUUID();
     const payload: T.SendEmail = {
-      clientId,
+      email,
     };
     requestSendEmail(payload, setIsEmailSent);
   };
@@ -81,14 +80,16 @@ const Signup = () => {
         </S.Wrapper>
 
         <React.Fragment>
-          <S.StyledInputBox
-            placeholder="이름"
-            minLength={2}
-            maxLength={30}
-            onChange={changeNameHandler}
-          />
-          {nameOk === 1 && <S.CorrectP>사용 가능한 이름입니다.</S.CorrectP>}
-          {nameOk === 0 && <S.AlertP>이름 형식이 올바르지 않습니다.</S.AlertP>}
+          <S.NameBOX>
+            <S.StyledInputBox
+              placeholder="이름"
+              minLength={2}
+              maxLength={30}
+              onChange={changeNameHandler}
+            />
+            {nameOk === 1 && <S.CorrectP>사용 가능한 이름입니다.</S.CorrectP>}
+            {nameOk === 0 && <S.AlertP>이름 형식이 올바르지 않습니다.</S.AlertP>}
+          </S.NameBOX>
         </React.Fragment>
 
         <S.StyledButton onClick={handleSignup}>회원가입</S.StyledButton>

@@ -11,7 +11,8 @@ export function useUserAPI() {
       .post(`${import.meta.env.VITE_API_URL}/api/users/login`, payload)
       .then((response) => {
         if (response) {
-          navigate("/main"); //추가 작업이 있을 수 있음, 확인 필요
+          navigate("/main");
+          localStorage.setItem("accessToken", response.headers.authorization);
         } else {
           alert("존재하는 계정이 없습니다.");
         }
@@ -57,7 +58,7 @@ export function useUserAPI() {
     payload: T.SendEmail,
     setIsEmailSent: React.Dispatch<React.SetStateAction<boolean>>,
   ) => {
-    const clientId = payload.clientId;
+    const clientId = crypto.randomUUID();
     axios
       .post(`${import.meta.env.VITE_API_URL}/api/users/email-auth/${clientId}`, payload)
       .then((response) => {
