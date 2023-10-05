@@ -3,6 +3,7 @@ import * as S from "./BodyCotainers.style";
 import { useRecoilValue } from "recoil";
 import { isSpaceItemId } from "../../../../recoil/SidebarState";
 import { containersState, isOrdered } from "../../../../recoil/homeState";
+import { userInfoState } from "../../../../recoil/userState";
 export interface ContainerType {
   containerId: number;
   name: string;
@@ -25,8 +26,9 @@ export interface UserImage {
 
 function BodyContainers() {
   // 🔥API를 받아와서 컨테이너를 뿌려주는 데이터
+  const userInfo = useRecoilValue(userInfoState);
   const containers = useRecoilValue(containersState);
-  const user = "jamesjoe"; // 로그인된 user의 nickName값을 받아온다. App.tsx에서 recoile로 선언되는 것
+
   const ordered = useRecoilValue(isOrdered);
   const spaceItemId = useRecoilValue(isSpaceItemId);
 
@@ -54,8 +56,8 @@ function BodyContainers() {
           (spaceItemId === 1
             ? sortedContainers
             : spaceItemId === 2
-            ? sortedContainers.filter((container) => container.owner === user)
-            : sortedContainers.filter((container) => container.owner !== user)
+            ? sortedContainers.filter((container) => container.owner === userInfo?.email)
+            : sortedContainers.filter((container) => container.owner !== userInfo?.email)
           ).map((container) => {
             return <Container data={container} key={container.containerId} />;
           })}
