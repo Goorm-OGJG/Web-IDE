@@ -18,7 +18,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class FileControllerTest extends ControllerTest {
+public class PathControllerTest extends ControllerTest {
 
     @DisplayName("파일 생성")
     @Test

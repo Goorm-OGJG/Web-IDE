@@ -12,7 +12,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class File {
+public class Path {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -29,14 +29,14 @@ public class File {
     private String path;
 
     @Builder
-    public File(String uuid, Container container, String name, String path) {
+    public Path(String uuid, Container container, String name, String path) {
         this.uuid = uuid;
         this.container = container;
         this.name = name;
         this.path = path;
     }
 
-    public File rename(String newFilename) {
+    public Path rename(String newFilename) {
         this.name = newFilename;
         return this;
     }

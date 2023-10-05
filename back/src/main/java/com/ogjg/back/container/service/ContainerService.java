@@ -11,7 +11,7 @@ import com.ogjg.back.container.exception.NotFoundContainer;
 import com.ogjg.back.container.repository.ContainerRepository;
 import com.ogjg.back.directory.exception.NotFoundDirectory;
 import com.ogjg.back.file.exception.NotFoundFile;
-import com.ogjg.back.file.repository.FileRepository;
+import com.ogjg.back.file.repository.PathRepository;
 import com.ogjg.back.s3.repository.S3ContainerRepository;
 import com.ogjg.back.s3.service.S3ContainerService;
 import com.ogjg.back.s3.service.S3DirectoryService;
@@ -33,7 +33,7 @@ import static com.ogjg.back.common.util.S3PathUtil.*;
 public class ContainerService {
     private final UserRepository userRepository;
     private final ContainerRepository containerRepository;
-    private final FileRepository fileRepository;
+    private final PathRepository pathRepository;
     private final S3ContainerService s3ContainerService;
     private final S3ContainerRepository s3ContainerRepository;
     private final S3DirectoryService s3DirectoryService;
@@ -105,12 +105,12 @@ public class ContainerService {
                 .map((key) -> ContainerGetFileResponse.builder()
                         .filePath(createEmailRemovedKey(key, loginEmail))
                         .content(s3ContainerRepository.getFileContent(key))
-                        .uuid(fileRepository.findUuid(
+                        .uuid(pathRepository.findUuid(
                                 containerId,
-                                extractKeyPrefix(
+                                extractFilePrefix(
                                         createEmailRemovedKey(key, loginEmail)
                                 ),
-                                extractFileName(key)
+                                extractFilename(key)
                         ).orElseThrow(() -> new NotFoundFile("존재하지 않는 파일입니다. containerId="+ containerId +", key ="+ extractFilePrefix(key))))
                         .build())
                 .toList();

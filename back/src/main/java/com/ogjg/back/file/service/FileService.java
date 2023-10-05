@@ -1,13 +1,14 @@
 package com.ogjg.back.file.service;
 
+import com.ogjg.back.common.util.S3PathUtil;
 import com.ogjg.back.container.domain.Container;
 import com.ogjg.back.container.exception.NotFoundContainer;
 import com.ogjg.back.container.repository.ContainerRepository;
-import com.ogjg.back.file.domain.File;
+import com.ogjg.back.file.domain.Path;
 import com.ogjg.back.file.dto.request.UpdateFileRequest;
 import com.ogjg.back.file.exception.FileAlreadyExists;
 import com.ogjg.back.file.exception.NotFoundFile;
-import com.ogjg.back.file.repository.FileRepository;
+import com.ogjg.back.file.repository.PathRepository;
 import com.ogjg.back.s3.service.S3FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ import static com.ogjg.back.common.util.S3PathUtil.*;
 @RequiredArgsConstructor
 public class FileService {
     private final ContainerRepository containerRepository;
-    private final FileRepository fileRepository;
+    private final PathRepository pathRepository;
     private final S3FileService s3FileService;
 
     @Transactional
@@ -34,10 +35,10 @@ public class FileService {
 
         Container container = findContainerByNameAndEmail(containerName, loginEmail);
 
-        fileRepository.save(File.builder()
+        pathRepository.save(Path.builder()
                 .container(container)
                 .path(extractFilePrefix(filePath))
-                .name(extractFileName(filePath))
+                .name(extractFilename(filePath))
                 .uuid(uuid)
                 .build());
 
@@ -55,10 +56,11 @@ public class FileService {
         // db 삭제
         Container container = findContainerByNameAndEmail(containerName, loginEmail);
 
-        File findFile = container.findFileByPrefix(
-                extractFilePrefix(filePath)
+        Path findPath = container.findPath(
+                extractFilePrefix(filePath),
+                S3PathUtil.extractFilename(filePath)
         );
-        fileRepository.delete(findFile);
+        pathRepository.delete(findPath);
 
         // s3 삭제
         s3FileService.deleteFile(loginEmail, filePath);
@@ -86,10 +88,11 @@ public class FileService {
         // db rename
         Container container = findContainerByNameAndEmail(containerName, loginEmail);
 
-        File findFile = container.findFileByPrefix(
-                extractFilePrefix(filePath)
+        Path findPath = container.findPath(
+                extractFilePrefix(filePath),
+                extractFilename(filePath)
         );
-        findFile.rename(newFilename);
+        findPath.rename(newFilename);
 
         // s3 rename
         s3FileService.updateFilename(loginEmail, filePath, newFilePath);

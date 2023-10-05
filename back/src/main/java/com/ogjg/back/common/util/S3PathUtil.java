@@ -48,9 +48,7 @@ public class S3PathUtil {
     }
 
     public static String createNewDirectoryPath(String originPath, String newFilename) {
-        String temp = originPath.substring(0, originPath.length() - 1);
-        int secondLastDelimiterIndex = temp.lastIndexOf(DELIMITER);
-
+        int secondLastDelimiterIndex = findSecondLastDelimiterIndex(originPath);
         return originPath.substring(0, secondLastDelimiterIndex) + DELIMITER + newFilename + DELIMITER;
     }
 
@@ -58,7 +56,7 @@ public class S3PathUtil {
         return newS3Path + s3Object.key().substring(originPrefix.length());
     }
 
-    public static String extractFileName(String filePath) {
+    public static String extractFilename(String filePath) {
         int lastIndex = filePath.lastIndexOf(DELIMITER);
         return filePath.substring(lastIndex + 1);
     }
@@ -68,11 +66,15 @@ public class S3PathUtil {
         return filePath.substring(0, lastIndex + 1);
     }
 
-    public static String extractKeyPrefix(String filePath) {
-        int lastIndex = filePath.lastIndexOf(DELIMITER);
-        return filePath.substring(0, lastIndex + 1);
+    public static String extractDirectoryPrefix(String directoryPath) {
+        int secondLastDelimiterIndex = findSecondLastDelimiterIndex(directoryPath);
+        return directoryPath.substring(0, secondLastDelimiterIndex + 1);
     }
 
+    public static String extractDirectoryName(String directoryPath) {
+        int secondLastDelimiterIndex = findSecondLastDelimiterIndex(directoryPath);
+        return directoryPath.substring(secondLastDelimiterIndex + 1);
+    }
 
     public static String createImagePrefix(String email) {
         return DELIMITER + email + DELIMITER + "image.";
@@ -81,6 +83,10 @@ public class S3PathUtil {
     public static String extractExtension(String originalName) {
         int index = originalName.lastIndexOf('.');
         return originalName.substring(index + 1); // .제외한 확장자만 추출한다.
+    }
 
+    private static int findSecondLastDelimiterIndex(String directoryPath) {
+        String temp = directoryPath.substring(0, directoryPath.length() - 1);
+        return temp.lastIndexOf(DELIMITER);
     }
 }
