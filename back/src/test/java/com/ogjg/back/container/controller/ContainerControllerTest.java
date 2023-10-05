@@ -2,6 +2,7 @@ package com.ogjg.back.container.controller;
 
 import com.ogjg.back.common.ControllerTest;
 import com.ogjg.back.container.dto.request.ContainerCreateRequest;
+import com.ogjg.back.container.dto.request.ContainerGetDirectoryResponse;
 import com.ogjg.back.container.dto.response.ContainerGetFileResponse;
 import com.ogjg.back.container.dto.response.ContainerCheckNameResponse;
 import com.ogjg.back.container.dto.response.ContainerGetNodeResponse;
@@ -134,7 +135,7 @@ public class ContainerControllerTest extends ControllerTest {
                 "/containerName/h1/h2/hello11.txt", "/containerName/h1/h3/hello13.txt"
         );
 
-        List<String> directories = List.of("/containerName/",
+        List<String> directoryList = List.of("/containerName/",
                 "/containerName/h1/", "/containerName/h2/",
                 "/containerName/h3/", "/containerName/h4/",
                 "/containerName/h1/h2/", "/containerName/h1/h3/"
@@ -142,7 +143,14 @@ public class ContainerControllerTest extends ControllerTest {
 
         List<String> parsedKeys = new ArrayList<>();
         parsedKeys.addAll(fileKeys);
-        parsedKeys.addAll(directories);
+        parsedKeys.addAll(directoryList);
+
+        List<ContainerGetDirectoryResponse> directories = directoryList.stream()
+                .map((key) -> ContainerGetDirectoryResponse.builder()
+                        .directory(key)
+                        .uuid("uuid")
+                        .build())
+                .toList();
 
         ContainerGetNodeResponse treeData = ContainerGetNodeResponse.buildTreeFromKeys(parsedKeys);
         List<ContainerGetFileResponse> fileData = fileKeys.stream()
@@ -197,7 +205,8 @@ public class ContainerControllerTest extends ControllerTest {
                                 fieldWithPath("data.fileData[].filePath").description("파일 경로"),
                                 fieldWithPath("data.fileData[].content").description("파일 내용"),
                                 fieldWithPath("data.fileData[].uuid").description("파일 uuid"),
-                                fieldWithPath("data.directories").description("모든 디렉토리 경로")
+                                fieldWithPath("data.directories[].directory").description("모든 디렉토리 경로"),
+                                fieldWithPath("data.directories[].uuid").description("모든 디렉토리 경로")
                         )
                 )
         ).andExpect(status().isOk());

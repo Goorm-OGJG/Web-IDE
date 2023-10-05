@@ -1,5 +1,6 @@
 package com.ogjg.back.container.dto.response;
 
+import com.ogjg.back.container.dto.request.ContainerGetDirectoryResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,14 +16,14 @@ public class ContainerGetResponse {
     private String language;
     private ContainerGetNodeResponse treeData;
     private List<ContainerGetFileResponse> fileData;
-    private List<String> directories;
+    private List<ContainerGetDirectoryResponse> directories;
 
     @Builder
     public ContainerGetResponse(
             String language,
             ContainerGetNodeResponse treeData,
             List<ContainerGetFileResponse> fileData,
-            List<String> directories
+            List<ContainerGetDirectoryResponse> directories
     ) {
         this.language = language;
         this.treeData = treeData;

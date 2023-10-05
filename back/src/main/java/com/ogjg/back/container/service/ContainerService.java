@@ -2,6 +2,7 @@ package com.ogjg.back.container.service;
 
 import com.ogjg.back.container.domain.Container;
 import com.ogjg.back.container.dto.request.ContainerCreateRequest;
+import com.ogjg.back.container.dto.request.ContainerGetDirectoryResponse;
 import com.ogjg.back.container.dto.response.ContainerCheckNameResponse;
 import com.ogjg.back.container.dto.response.ContainerGetFileResponse;
 import com.ogjg.back.container.dto.response.ContainerGetResponse;
@@ -84,18 +85,20 @@ public class ContainerService {
         }
 
         // 맨 앞에 이메일 부분이 절삭된 key 목록을 만든다.
-        List<String> parsedKeys = parse(allKeys, loginEmail);
-
-        List<ContainerGetFileResponse> fileData = getFileData(containerId, loginEmail, allKeys);
+        List<String> emailRemovedKeys = parse(allKeys, loginEmail);
 
         return ContainerGetResponse.builder()
                 .language(container.getLanguage())
-                .treeData(s3ContainerService.buildTreeFromKeys(parsedKeys))
-                .fileData(fileData)
-                .directories(s3ContainerService.getDirectories(parsedKeys))
+                .treeData(s3ContainerService.buildTreeFromKeys(emailRemovedKeys))
+                .fileData(getFileData(containerId, loginEmail, allKeys))
+                .directories(getDirectories(containerId, emailRemovedKeys))
                 .build();
     }
 
+    /**
+     * 파일 데이터 가져오기
+     * - 파일 데이터의 경우 s3에서 fullKey로 조회해서 값을 가져와야해서 파싱되지 않은 키가 필요하다.
+     */
     private List<ContainerGetFileResponse> getFileData(Long containerId, String loginEmail, List<String> allKeys) {
         List<String> fileKeys = allKeys.stream()
                 .filter((key) -> isFile(key))
@@ -115,6 +118,20 @@ public class ContainerService {
                         .build())
                 .toList();
         return fileData;
+    }
+
+    private List<ContainerGetDirectoryResponse> getDirectories(Long containerId, List<String> emailRemovedKeys) {
+        return emailRemovedKeys.stream()
+                .filter((parsedKey) -> !isFile(parsedKey))
+                .map((emailRemovedKey) -> ContainerGetDirectoryResponse.builder()
+                        .directory(emailRemovedKey)
+                        .uuid(pathRepository.findUuid(
+                                containerId,
+                                extractFilePrefix(emailRemovedKey),
+                                extractFilename(emailRemovedKey)
+                                ).orElseThrow(() -> new NotFoundDirectory("해당 디렉토리가 DB에 존재하지 않습니다."))
+                        ).build())
+                .toList();
     }
 
     private List<String> parse(List<String> allKeys, String email) {
