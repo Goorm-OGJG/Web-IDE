@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.ogjg.back.common.util.S3PathUtil.*;
 
 @Slf4j
@@ -58,6 +60,10 @@ public class DirectoryService {
         // db 삭제
         Container container = findContainerByNameAndEmail(containerName, loginEmail);
 
+        List<Path> deleteTargetList = pathRepository.findByPathStartsWith(directoryPath);
+        deleteTargetList.stream()
+                .forEach(pathRepository::delete);
+
         Path findPath = container.findPath(
                 extractDirectoryPrefix(directoryPath),
                 extractDirectoryName(directoryPath)
@@ -79,11 +85,21 @@ public class DirectoryService {
         // db rename
         Container container = findContainerByNameAndEmail(containerName, loginEmail);
 
+        // dPath  /my-container1/bird/bird/
+        List<Path> changeTargetList = pathRepository.findByPathStartsWith(directoryPath);
+
+        String newAncestorPath = createNewDirectoryPath(directoryPath, newDirectoryName);
+        changeTargetList.stream()
+                .map((path) -> path.renameAncestor(
+                        directoryPath,
+                        newAncestorPath
+                )).toList();
+
         Path findPath = container.findPath(
                 extractDirectoryPrefix(directoryPath),
                 extractDirectoryName(directoryPath)
         );
-        findPath.rename(newDirectoryName);
+        findPath.rename(newDirectoryName + DELIMITER);
 
         s3DirectoryService.updateDirectoryName(originS3Path, newS3Path);
     }

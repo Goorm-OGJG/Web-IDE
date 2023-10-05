@@ -11,6 +11,8 @@ import com.ogjg.back.container.exception.DuplicatedContainerName;
 import com.ogjg.back.container.exception.NotFoundContainer;
 import com.ogjg.back.container.repository.ContainerRepository;
 import com.ogjg.back.directory.exception.NotFoundDirectory;
+import com.ogjg.back.directory.repository.DirectoryRepository;
+import com.ogjg.back.file.domain.Path;
 import com.ogjg.back.file.exception.NotFoundFile;
 import com.ogjg.back.file.repository.PathRepository;
 import com.ogjg.back.s3.repository.S3ContainerRepository;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.ogjg.back.common.util.S3PathUtil.*;
 
@@ -38,6 +41,7 @@ public class ContainerService {
     private final S3ContainerService s3ContainerService;
     private final S3ContainerRepository s3ContainerRepository;
     private final S3DirectoryService s3DirectoryService;
+    private final DirectoryRepository directoryRepository;
 
     @Transactional
     public void createContainer(String loginEmail, ContainerCreateRequest request) {
@@ -57,7 +61,13 @@ public class ContainerService {
         Container container = request.toContainer(user);
         containerRepository.save(container);
 
-        // todo: 디렉토리 구조 db에 반영
+        String containerPath = DELIMITER + request.getName() + DELIMITER;
+        directoryRepository.save(Path.builder()
+                .container(container)
+                .path(extractDirectoryPrefix(containerPath))
+                .name(extractDirectoryName(containerPath))
+                .uuid(UUID.randomUUID().toString())
+                .build());
     }
 
     protected boolean isContainerNameDuplicated(String containerName, String loginEmail) {
@@ -114,7 +124,7 @@ public class ContainerService {
                                         createEmailRemovedKey(key, loginEmail)
                                 ),
                                 extractFilename(key)
-                        ).orElseThrow(() -> new NotFoundFile("존재하지 않는 파일입니다. containerId="+ containerId +", key ="+ extractFilePrefix(key))))
+                        ).orElseThrow(() -> new NotFoundFile("존재하지 않는 파일입니다. containerId="+ containerId +", key ="+ extractFilePrefix(createEmailRemovedKey(key, loginEmail)))))
                         .build())
                 .toList();
         return fileData;
@@ -127,9 +137,9 @@ public class ContainerService {
                         .directory(emailRemovedKey)
                         .uuid(pathRepository.findUuid(
                                 containerId,
-                                extractFilePrefix(emailRemovedKey),
-                                extractFilename(emailRemovedKey)
-                                ).orElseThrow(() -> new NotFoundDirectory("해당 디렉토리가 DB에 존재하지 않습니다."))
+                                extractDirectoryPrefix(emailRemovedKey),
+                                extractDirectoryName(emailRemovedKey)
+                                ).orElseThrow(() -> new NotFoundDirectory("해당 디렉토리가 DB에 존재하지 않습니다. prefix="+extractDirectoryPrefix(emailRemovedKey)+ ", filename="+ extractDirectoryName(emailRemovedKey)))
                         ).build())
                 .toList();
     }

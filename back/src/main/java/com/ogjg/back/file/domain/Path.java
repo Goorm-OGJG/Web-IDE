@@ -40,4 +40,9 @@ public class Path {
         this.name = newFilename;
         return this;
     }
+
+    public Path renameAncestor(String ancestorPath, String newAncestorPath) {
+        this.path = this.path.replace(ancestorPath, newAncestorPath);
+        return this;
+    }
 }
