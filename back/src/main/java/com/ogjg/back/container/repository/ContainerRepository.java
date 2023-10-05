@@ -21,7 +21,7 @@ public interface ContainerRepository extends JpaRepository<Container, Long> {
             @Param("email")String email
     );
 
-    List<Container> findAllByName(String email);
+    List<Container> findAllByUserEmail(String email);
 
     List<Container> findAllByNameContainingAndUserEmail(String query, String email);
 }

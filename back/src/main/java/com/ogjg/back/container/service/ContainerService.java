@@ -127,7 +127,7 @@ public class ContainerService {
     public List<ContainersResponse> searchContainers(String query, String email) {
 
         if (query.isEmpty()) {
-            List<Container> containers = containerRepository.findAllByName(email);
+            List<Container> containers = containerRepository.findAllByUserEmail(email);
             return containers.stream()
                     .map(ContainersResponse::new)
                     .toList();
