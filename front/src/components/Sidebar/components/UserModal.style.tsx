@@ -30,6 +30,7 @@ export const UserImg = styled.img`
 `;
 export const UserName = styled.div`
   font-size: ${FONT.ML};
+  font-weight: ${FONT.SemiBold};
   display: flex;
   width: 220px;
   height: ${FONT.L};

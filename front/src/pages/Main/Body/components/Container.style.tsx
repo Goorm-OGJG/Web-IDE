@@ -63,7 +63,6 @@ export const VolumeIconDiv = styled.div`
   display: flex;
   margin-left: 6px;
   align-items: center;
-  cursor: pointer;
 `;
 export const SettingDiv = styled.div`
   display: flex;
@@ -88,7 +87,9 @@ export const ContainerLanguage = styled.div`
   text-transform: uppercase;
   align-items: center;
 `;
-export const Language = styled.div``;
+export const Language = styled.div`
+  margin-right: 5px;
+`;
 export const ContainerPrivate = styled.div`
   display: flex;
   align-items: center;

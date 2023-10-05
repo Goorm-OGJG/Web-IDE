@@ -1,13 +1,13 @@
 import dayjs from "dayjs";
 
 function useDateCalculator() {
-  const timeCalculator = (upload: string) => {
+  const timeCalculator = (upload: Date) => {
     const now = new Date();
     const utc = now.getTime() + now.getTimezoneOffset() * 60 * 1000;
     const utcNow = dayjs(utc);
     const uploadDate = dayjs(upload);
     const diff_year = utcNow.diff(uploadDate, "y");
-    const diff_month = utcNow.diff(uploadDate, "m");
+    const diff_month = utcNow.diff(uploadDate, "M");
     const diff_day = utcNow.diff(uploadDate, "d");
     const diff_hour = utcNow.diff(uploadDate, "h");
     const diff_miniute = utcNow.diff(uploadDate, "m");

@@ -4,6 +4,8 @@ import { ContainerType } from "./BodyContainers";
 import ContainerSettingModal from "./ContainerSettingModal";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
+import useContainerAPI from "../../../../api/useContainerAPI";
+import useDateCalculator from "../../../../hooks/useDateCalculator";
 
 interface BodyContainerPops {
   data: ContainerType;
@@ -11,28 +13,29 @@ interface BodyContainerPops {
 
 function Container(props: BodyContainerPops) {
   const navigate = useNavigate();
-
+  const timeCalculator = useDateCalculator();
+  const timeAgo = timeCalculator(props.data.updatedDate);
   const [containerSettingModal, setContainerSettingModal] = useState(false);
   const [editInfo, setEditInfo] = useState<boolean>(false);
   // 🔥 PUT 요청시 api로 받아온 데이터의 값을 컨테이너 마다 반영이 필요해서 상태관리가 필요
-  const [privated, setPrivated] = useState<boolean>(props.data.privated);
-  const [infoText, setInfoText] = useState<string>(props.data.containerInfo);
+  const [privated, setPrivated] = useState<boolean>(props.data.private);
+  const [infoText, setInfoText] = useState<string>(props.data.info);
   const [pinned, setPinned] = useState<boolean>(props.data.pinned);
-
+  const { requestPutContainerInfo } = useContainerAPI();
   const handleEdit = () => {
     setEditInfo(true);
   };
   const handleSave = () => {
-    // 🔥 containerInfo 글 저장 -> 이전의 받아온 데이터와 달라졌다면 request요청보냄
-    // if (props.data.containerInfo !== infoText) {
-    //   requestPutContainerInfo(props.data.containerId, infoText, setInfoText);
-    // }
+    // 🔥 info 글 저장 -> 이전의 받아온 데이터와 달라졌다면 request요청보냄
+    if (props.data.info !== infoText) {
+      requestPutContainerInfo(props.data.containerId, infoText, setInfoText);
+    }
     setEditInfo(false);
   };
 
   const handleEditCancel = () => {
-    if (props.data.containerInfo) {
-      setInfoText(props.data.containerInfo);
+    if (props.data.info) {
+      setInfoText(props.data.info);
     }
     setEditInfo(false);
   };
@@ -45,13 +48,13 @@ function Container(props: BodyContainerPops) {
       // !containerSettingModal && setContainerSettingModal(true);
     }
   };
-  const handleNavigate = (containerId: string) => {
+  const handleNavigate = (containerId: number) => {
     navigate(`/container/${containerId}`);
   };
 
   useEffect(() => {
-    if (props.data.containerInfo) {
-      setInfoText(props.data.containerInfo);
+    if (props.data.info) {
+      setInfoText(props.data.info);
     }
   }, []);
   return (
@@ -104,9 +107,9 @@ function Container(props: BodyContainerPops) {
         </S.ContainerHeader>
         <S.ContainenrLanguageBox>
           <S.ContainerLanguage>
-            <S.Language>{props.data.containerLanguage} </S.Language>
+            <S.Language>{props.data.language} </S.Language>|
             <S.VolumeIconDiv>
-              | <Icon.Volume /> {props.data.availableStorage}
+              <Icon.Volume /> {props.data.storage}GB
             </S.VolumeIconDiv>
           </S.ContainerLanguage>
           <S.ContainerPrivate>
@@ -131,7 +134,7 @@ function Container(props: BodyContainerPops) {
           <S.InfoText>{infoText}</S.InfoText>
         )}
         <S.TextBottom>
-          {props.data.updatedDate}
+          {timeAgo}
           <S.UserImgBox>
             {props.data.usersImg
               .slice(0, Math.min(10, props.data.usersImg.length))

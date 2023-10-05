@@ -1,25 +1,29 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import * as Icon from "../../Icon";
 import * as S from "./Space.style";
-import { isSpaceOpenState } from "../../../recoil/homeState";
-import { useState } from "react";
+import { containersState, isSpaceOpenState } from "../../../recoil/homeState";
+
 import { isSpaceItemId } from "../../../recoil/SidebarState";
+import { containerDataType } from "../../../types/containers";
+import { userInfoState } from "../../../recoil/userState";
 
 function Space() {
-  // const user ="jamesjoe" // recoil로 선언된 유저네임
+  const userInfo = useRecoilValue(userInfoState);
+
   const [isSpaceOpen, setIsSpaceOpen] = useRecoilState(isSpaceOpenState);
   const [spaceItemId, setSpaceItemId] = useRecoilState(isSpaceItemId);
   // 🔥API를 받아와서 컨테이너를 뿌려주는 데이터
-  // const containers = useRecoileValue();
+  const containers = useRecoilValue(containersState);
 
-  // 🔥container 별 개수
-  // const allContainerCnt = containers.length;
-  // const myContainerCnt = containers.filter((containers) => {
-  //   containers.owner === user;
-  // }).length;
-  // const shareContainerCnt = containers.filter((containers) => {
-  //   containers.owner !== user;
-  // }).length;
+  // 🔥container종류 개수
+  const allContainerCnt = containers.length;
+  const myContainerCnt = containers.filter((containers: containerDataType) => {
+    return containers.owner === userInfo?.email;
+  }).length;
+
+  const shareContainerCnt = containers.filter((containers: containerDataType) => {
+    return containers.owner !== userInfo?.email;
+  }).length;
 
   const handleSpaceOpen = () => {
     setIsSpaceOpen((prev) => !prev);
@@ -35,18 +39,18 @@ function Space() {
     {
       id: 1,
       spaceName: "모든 컨테이너",
-      spaceCount: 3,
+      spaceCount: allContainerCnt,
     },
     {
       id: 2,
       spaceName: "내 컨테이너",
-      spaceCount: 2,
+      spaceCount: myContainerCnt,
       //
     },
     {
       id: 3,
       spaceName: "공유된 컨테이너",
-      spaceCount: 1,
+      spaceCount: shareContainerCnt,
     },
   ];
 
@@ -73,6 +77,7 @@ function Space() {
                   onClick={() => {
                     handleItemActive(list.id);
                   }}
+                  key={list.id}
                   isid={spaceItemId}
                   islistid={list.id}
                 >

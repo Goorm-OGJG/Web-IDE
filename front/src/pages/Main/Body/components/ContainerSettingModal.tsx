@@ -3,8 +3,10 @@ import * as Icon from "../../../../components/Icon";
 import ContainerDeleteModal from "./ContainerDeleteModal";
 
 import { ContainerType } from "./BodyContainers";
-
 import { Dispatch, useState } from "react";
+import useContainerAPI from "../../../../api/useContainerAPI";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { containersState, isSearchContainer } from "../../../../recoil/homeState";
 
 interface PropsType {
   containerData: ContainerType;
@@ -17,7 +19,6 @@ interface PropsType {
 }
 function ContainerSettingModal({
   containerData,
-  containerSettingModal,
   privated,
   pinned,
   setContainerSettingModal,
@@ -25,7 +26,10 @@ function ContainerSettingModal({
   setPinned,
 }: PropsType) {
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-
+  const searchContainer = useRecoilValue(isSearchContainer);
+  const setContainers = useSetRecoilState(containersState);
+  const { requestContainerData, requestPutContainerPinned, requestPutContainerPrivated } =
+    useContainerAPI();
   const handleExitSettingModal = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     setContainerSettingModal(false);
@@ -33,28 +37,37 @@ function ContainerSettingModal({
   };
   const handleDeleteContainer = () => {
     // 삭제 요청
-    console.log("삭제");
     setContainerSettingModal(true);
     setDeleteModal(true);
   };
   const handleCopyUrl = () => {
-    window.navigator.clipboard.writeText(`${containerData.containerUrl}`).then(() => {
-      console.log(containerData.containerUrl);
-      alert("컨테이너 링크가 복사되었습니다.");
-      setContainerSettingModal(false);
-    });
+    window.navigator.clipboard
+      .writeText(`http://localhost:5173/container/${containerData.containerId}`)
+      .then(() => {
+        alert("컨테이너 링크가 복사되었습니다.");
+        setContainerSettingModal(false);
+      });
   };
-  const handleUpdatePinned = () => {
+  const handleUpdatePinned = async () => {
     // 🔥 핀 상태값 변경 요청
-    // requestPutContainerPinned(containerData.containerId, setPinned);
-    setContainerSettingModal(false);
-    setDeleteModal(false);
+    try {
+      await requestPutContainerPinned(containerData.containerId, setPinned);
+      setContainerSettingModal(false);
+      setDeleteModal(false);
+      requestContainerData(searchContainer, setContainers);
+    } catch (error) {
+      alert(error);
+    }
   };
-  const handleUpdatePrivated = () => {
+  const handleUpdatePrivated = async () => {
     // 🔥 컨테이너 공개 여부 변경 요청
-    // requestPutContainerPrivated(containerData.containerId, setPrivated);
-    setContainerSettingModal(false);
-    setDeleteModal(false);
+    try {
+      await requestPutContainerPrivated(containerData.containerId, setPrivated);
+      setContainerSettingModal(false);
+      setDeleteModal(false);
+    } catch (error) {
+      alert(error);
+    }
   };
 
   return (
@@ -89,8 +102,8 @@ function ContainerSettingModal({
       </S.SettingModalWrapper>
       {deleteModal && (
         <ContainerDeleteModal
-          containerName={containerData.containerName}
-          containerSettingModal={containerSettingModal}
+          containerId={containerData.containerId}
+          containerName={containerData.name}
           setContainerSettingModal={setContainerSettingModal}
         />
       )}

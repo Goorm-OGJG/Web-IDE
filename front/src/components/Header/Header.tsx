@@ -1,12 +1,13 @@
 import * as S from "./Header.style";
 import * as Icon from "../Icon";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   isMSidebarOpenState,
   isMenuHoverState,
   isSidebarOpenState,
 } from "../../recoil/homeState";
 import { Desktop, Mobile } from "../Responsive";
+import { userInfoState } from "../../recoil/userState";
 
 const data = {
   id: 1,
@@ -14,6 +15,7 @@ const data = {
 };
 
 function Header() {
+  const userInfo = useRecoilValue(userInfoState);
   const [isMenuHover, setIsMenuHover] = useRecoilState(isMenuHoverState);
   const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(isSidebarOpenState);
   const [isMSidebarOpen, setIsMSidebarOpen] = useRecoilState(isMSidebarOpenState);
@@ -38,7 +40,7 @@ function Header() {
             {!isSidebarOpen &&
               (isMenuHover ? <Icon.MenuOpen size={18} /> : <Icon.Menu size={18} />)}
           </S.MenuIcon>
-          <S.HeaderContentBox>{data.userName} / 모든 컨테이너 </S.HeaderContentBox>
+          <S.HeaderContentBox>{userInfo?.name} / 모든 컨테이너 </S.HeaderContentBox>
         </S.HeaderWrapper>
       </Desktop>
       <Mobile>
@@ -55,7 +57,7 @@ function Header() {
             {!isMSidebarOpen &&
               (isMenuHover ? <Icon.RightArrow2 size={18} /> : <Icon.Menu size={18} />)}
           </S.MenuIcon>
-          <S.HeaderContentBox>{data.userName} / 모든 컨테이너 </S.HeaderContentBox>
+          <S.HeaderContentBox>{userInfo?.name} / 모든 컨테이너 </S.HeaderContentBox>
         </S.HeaderWrapper>
       </Mobile>
     </div>

@@ -3,13 +3,15 @@ import * as FONT from "../../../constants/font";
 import styled from "styled-components";
 
 export const UserInfoBox = styled.div`
+  display: flex;
+  justify-content: space-between;
   width: 100%;
   height: auto;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem;
   cursor: pointer;
   margin-bottom: 10px;
 `;
-
+export const UserBox = styled.div``;
 export const UserNameBox = styled.div`
   overflow: ellipsis;
   white-space: nowrap;

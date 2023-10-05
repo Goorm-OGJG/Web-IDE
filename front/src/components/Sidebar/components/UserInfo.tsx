@@ -2,14 +2,11 @@ import * as S from "./UserInfo.style";
 import * as Icon from "../../Icon";
 import { useState } from "react";
 import UserModal from "./UserModal";
-
-const user = {
-  id: 1,
-  userName: "조재균(풀스택1회차)",
-  userEmail: "kyeun950830@gmai.com",
-};
+import { useRecoilValue } from "recoil";
+import { userInfoState } from "../../../recoil/userState";
 
 function UserInfo() {
+  const userInfo = useRecoilValue(userInfoState);
   const [info, setInfo] = useState<boolean>(false);
   const handleUserModal = () => {
     setInfo((prev) => !prev);
@@ -17,16 +14,19 @@ function UserInfo() {
   return (
     <>
       <S.UserInfoBox onClick={handleUserModal}>
-        <S.UserNameBox>
-          <S.UserName>{user.userName}</S.UserName>
-          <S.Free>free</S.Free>
-          <S.DetailBtn>
-            {!info ? <Icon.DownArrow1 size={10} /> : <Icon.RightArrow1 size={10} />}
-          </S.DetailBtn>
-        </S.UserNameBox>
-        <S.EmailBox>
-          <S.EmailDiv>{user.userEmail}</S.EmailDiv>
-        </S.EmailBox>
+        <S.UserBox>
+          <S.UserNameBox>
+            <S.UserName>{userInfo?.name}</S.UserName>
+            <S.Free>free</S.Free>
+          </S.UserNameBox>
+          <S.EmailBox>
+            <S.EmailDiv>{userInfo?.email}</S.EmailDiv>
+          </S.EmailBox>
+        </S.UserBox>
+
+        <S.DetailBtn>
+          {!info ? <Icon.DownArrow1 size={10} /> : <Icon.RightArrow1 size={10} />}
+        </S.DetailBtn>
       </S.UserInfoBox>
       {info && <UserModal />}
     </>

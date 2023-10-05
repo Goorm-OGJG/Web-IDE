@@ -1,46 +1,49 @@
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import * as S from "./ContainerDeleteModal.style";
-import { isDeleteModal, isSearchContainer } from "../../../../recoil/homeState";
+import {
+  containersState,
+  isDeleteModal,
+  isSearchContainer,
+} from "../../../../recoil/homeState";
 import { Desktop, Mobile } from "../../../../components/Responsive";
 import { Dispatch } from "react";
+import useContainerAPI from "../../../../api/useContainerAPI";
 interface PropsType {
   containerId: number;
   containerName: string;
-  containerSettingModal: boolean;
   setContainerSettingModal: Dispatch<React.SetStateAction<boolean>>;
 }
 function ContainerDeleteModal({
   containerId,
   containerName,
-  containerSettingModal,
   setContainerSettingModal,
 }: PropsType) {
   const setDeleteModal = useSetRecoilState(isDeleteModal);
-  // const searchContainer = useRecoilValue(isSearchContainer);
-  // const setContainers = useSetRecoilState(containersState);
-  // const ordered = useRecoilValue(isOrdered);
+  const searchContainer = useRecoilValue(isSearchContainer);
+  const setContainers = useSetRecoilState(containersState);
+
+  const { requestDeleteContainer, requestContainerData } = useContainerAPI();
   const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setDeleteModal(false);
     setContainerSettingModal(false);
-    console.log("containerSettingModal", containerSettingModal);
   };
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setDeleteModal(false);
     // 🔥 API 삭제 요청
-    // handlerequestDelete();
+    handlerequestDelete();
     setContainerSettingModal(false);
   };
-  // const handlerequestDelete = async () => {
-  //   try {
-  //     await requestDeleteContainer(containerId);
-  //     // 🔥 삭제 요청 날리고 API containerData 요청
-  //     requestContainerData(searchContainer, ordered, setContainers);
-  //   } catch (error) {
-  //     alert(error);
-  //   }
-  // };
+  const handlerequestDelete = async () => {
+    try {
+      await requestDeleteContainer(containerId);
+      // 🔥 삭제 요청 날리고 API containerData 요청
+      requestContainerData(searchContainer, setContainers);
+    } catch (error) {
+      alert(error);
+    }
+  };
 
   return (
     <div>

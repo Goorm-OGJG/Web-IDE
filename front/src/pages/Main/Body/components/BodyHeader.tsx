@@ -17,14 +17,13 @@ function BodyHeader() {
   const [searchContainer, setSearchContainer] = useRecoilState(isSearchContainer);
   const setContainers = useSetRecoilState(containersState);
   const ordered = useRecoilValue(isOrdered);
-  console.log(ordered);
   const { requestContainerData } = useContainerAPI();
 
   const handleSearchContainer = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
   const handleSearchContainerEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (searchText !== "" && e.key === "Enter") {
+    if (e.key === "Enter") {
       setSearchContainer(searchText);
       console.log(searchContainer);
     }

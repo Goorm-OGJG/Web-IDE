@@ -15,7 +15,6 @@ export default function useContainerAPI() {
     axios
       .get(`${profileURL}/containers?search=${searchContainer}`)
       .then((response) => {
-        console.log(response.data.data);
         setContainers(response.data.data);
       })
       .catch((error) => {
@@ -23,16 +22,16 @@ export default function useContainerAPI() {
       });
   };
   //🔥PUT : 해당 container 비공개,공개 상태 변경요청
-  const requestPutContainerPrivated = (
+  const requestPutContainerPrivated = async (
     containerId: number,
     setPrivated: React.Dispatch<SetStateAction<boolean>>,
   ) => {
     const requestData = { containerId: containerId };
 
-    axios
+    await axios
       .put(`${profileURL}/containers/${containerId}/private`, requestData)
       .then((response) => {
-        setPrivated(response.data.data.privated);
+        setPrivated(response.data.data.private);
       })
       .catch((error) => {
         alert(error);
@@ -60,16 +59,17 @@ export default function useContainerAPI() {
       });
   };
   //🔥PUT : 해당 container 핀 여부 수정 요청
-  const requestPutContainerPinned = (
+  const requestPutContainerPinned = async (
     containerId: number,
     setPinned: React.Dispatch<SetStateAction<boolean>>,
   ) => {
     const requestData = { containerId: containerId };
 
-    axios
+    await axios
       .put(`${profileURL}/containers/${containerId}/pin`, requestData)
       .then((response) => {
-        setPinned(response.data.data.privated);
+        setPinned(response.data.data.pinned);
+        console.log(response.data.data.pinned);
       })
       .catch((error) => {
         alert(error);
@@ -77,9 +77,9 @@ export default function useContainerAPI() {
   };
 
   //🔥Delete : 해당 container 핀 여부 수정 요청
-  const requestDeleteContainer = (containerId: number) => {
+  const requestDeleteContainer = async (containerId: number) => {
     console.log(containerId);
-    axios
+    await axios
       .delete(`${profileURL}/containers/${containerId}`)
       .then(() => {})
       .catch((error) => {

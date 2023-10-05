@@ -2,13 +2,11 @@ import * as S from "./UserModal.style";
 import * as Icon from "../../Icon";
 import { useNavigate } from "react-router";
 import { Desktop, Mobile } from "../../Responsive";
-const user = {
-  id: 1,
-  userName: "조재균(풀스택1회차)",
-  userEmail: "kyeun950830@gmail.com",
-  imgUrl: "https://blog.kakaocdn.net/dn/AFzsZ/btqI088tZW3/HCqq10x0OG9SoMdG2Bo3YK/img.jpg",
-};
+import { userInfoState } from "../../../recoil/userState";
+import { useRecoilValue } from "recoil";
+
 function UserModal() {
+  const userInfo = useRecoilValue(userInfoState);
   const navigate = useNavigate();
   const handleNavigate = (destination: string) => {
     navigate(destination);
@@ -19,12 +17,12 @@ function UserModal() {
         <S.UserModalBox>
           <S.UserHeader>
             <S.UserImgBox>
-              <S.UserImg src={user.imgUrl} alt="userImg" />
+              <S.UserImg src={userInfo?.userImg} alt="userImg" />
             </S.UserImgBox>
-            <S.UserName>{user.userName}</S.UserName>
+            <S.UserName>{userInfo?.name}</S.UserName>
           </S.UserHeader>
           <S.UserEmailBox>
-            <S.UserEmail>{user.userEmail}</S.UserEmail>
+            <S.UserEmail>{userInfo?.email}</S.UserEmail>
           </S.UserEmailBox>
           <S.EtcBox>
             <S.SettingBox
@@ -51,12 +49,12 @@ function UserModal() {
         <S.MUserModalBox>
           <S.UserHeader>
             <S.MUserImgBox>
-              <S.MUserImg src={user.imgUrl} alt="userImg" />
+              <S.MUserImg src={userInfo?.userImg} alt="userImg" />
             </S.MUserImgBox>
-            <S.UserName>{user.userName}</S.UserName>
+            <S.UserName>{userInfo?.name}</S.UserName>
           </S.UserHeader>
           <S.UserEmailBox>
-            <S.UserEmail>{user.userEmail}</S.UserEmail>
+            <S.UserEmail>{userInfo?.email}</S.UserEmail>
           </S.UserEmailBox>
           <S.EtcBox>
             <S.SettingBox
