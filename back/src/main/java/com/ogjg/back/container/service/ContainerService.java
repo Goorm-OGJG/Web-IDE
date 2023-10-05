@@ -9,10 +9,12 @@ import com.ogjg.back.container.dto.response.ContainersResponse;
 import com.ogjg.back.container.exception.DuplicatedContainerName;
 import com.ogjg.back.container.exception.NotFoundContainer;
 import com.ogjg.back.container.repository.ContainerRepository;
+import com.ogjg.back.directory.exception.NotFoundDirectory;
 import com.ogjg.back.file.exception.NotFoundFile;
 import com.ogjg.back.file.repository.FileRepository;
 import com.ogjg.back.s3.repository.S3ContainerRepository;
 import com.ogjg.back.s3.service.S3ContainerService;
+import com.ogjg.back.s3.service.S3DirectoryService;
 import com.ogjg.back.user.domain.User;
 import com.ogjg.back.user.exception.NotFoundUser;
 import com.ogjg.back.user.repository.UserRepository;
@@ -29,11 +31,12 @@ import static com.ogjg.back.common.util.S3PathUtil.*;
 @Service
 @RequiredArgsConstructor
 public class ContainerService {
+    private final UserRepository userRepository;
     private final ContainerRepository containerRepository;
     private final FileRepository fileRepository;
     private final S3ContainerService s3ContainerService;
     private final S3ContainerRepository s3ContainerRepository;
-    private final UserRepository userRepository;
+    private final S3DirectoryService s3DirectoryService;
 
     @Transactional
     public void createContainer(String loginEmail, ContainerCreateRequest request) {
@@ -47,7 +50,7 @@ public class ContainerService {
         // todo: 언어별 디렉토리 내려주기
         // s3에 명시적으로 빈 경로 데이터를 만들어줘야 후에 listObject로 조회가 가능하다.
         s3ContainerService.createContainer(
-                createS3Directory(loginEmail, request.getName())
+                createContainerPrefix(loginEmail, request.getName())
         );
 
         Container container = request.toContainer(user);
@@ -73,7 +76,7 @@ public class ContainerService {
         Container container = containerRepository.findById(containerId)
                 .orElseThrow(() -> new NotFoundContainer());
 
-        String prefix = createS3Directory(loginEmail, container.getName());
+        String prefix = createContainerPrefix(loginEmail, container.getName());
         List<String> allKeys = s3ContainerService.getAllKeysByPrefix(prefix);
 
         for (String key : allKeys) {
@@ -163,5 +166,18 @@ public class ContainerService {
         container.updatePinned(email);
         containerRepository.save(container);
         return container.getIsPinned();
+    }
+
+    @Transactional
+    public void deleteContainer(Long containerId, String email) {
+        Container container = containerRepository.findById(containerId)
+                .orElseThrow(() -> new NotFoundContainer("컨테이너가 존재하지 않습니다."));
+
+        String containerPrefix = createContainerPrefix(email, container.getName());
+        if (!s3DirectoryService.isDirectoryAlreadyExist(containerPrefix)) throw new NotFoundDirectory("S3에 존재하지 않는 컨테이너 경로입니다.");
+
+        s3ContainerService.deleteAllByPrefix(containerPrefix);
+
+        containerRepository.delete(container);
     }
 }

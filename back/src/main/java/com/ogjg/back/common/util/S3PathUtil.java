@@ -10,7 +10,7 @@ public class S3PathUtil {
     /**
      * email을 s3 prefix로 사용하기 위해 특수문자를 '-'로 대체한다.
      */
-    public static String createS3Directory(String loginEmail, String containerName) {
+    public static String createContainerPrefix(String loginEmail, String containerName) {
         loginEmail = loginEmail
                 .replace('.', S3_EMAIL_DELIMETER)
                 .replace('@', S3_EMAIL_DELIMETER);

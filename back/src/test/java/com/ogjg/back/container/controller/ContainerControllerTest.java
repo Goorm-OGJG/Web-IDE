@@ -16,8 +16,7 @@ import java.util.List;
 
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -38,7 +37,7 @@ public class ContainerControllerTest extends ControllerTest {
 
         doNothing()
                 .when(containerService)
-                .createContainer(any(String.class), eq(request));
+                .createContainer(anyString(), eq(request));
 
         // when
         ResultActions result = this.mockMvc.perform(
@@ -61,6 +60,37 @@ public class ContainerControllerTest extends ControllerTest {
         )).andExpect(status().isOk());
      }
 
+    @DisplayName("컨테이너 삭제")
+    @Test
+    public void deleteContainer() throws Exception {
+        //given
+        ContainerCreateRequest request = ContainerCreateRequest.builder()
+                .name("이회장")
+                .description("자바 연습 할거야")
+                .isPrivate(false)
+                .language("Java")
+                .build();
+
+        doNothing()
+                .when(containerService)
+                .deleteContainer(anyLong(), anyString());
+
+        // when
+        ResultActions result = this.mockMvc.perform(
+                delete("/api/containers/{containerId}", 1L)
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        // then
+        result.andDo(document("container/delete",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                pathParameters(
+                        parameterWithName("containerId").description("컨테이너 ID")
+                )
+        )).andExpect(status().isOk());
+    }
+
     @DisplayName("컨테이너 이름 중복 체크")
     @Test
     public void checkDuplication() throws Exception {
@@ -69,7 +99,7 @@ public class ContainerControllerTest extends ControllerTest {
                 .isDuplicated(true)
                 .build();
 
-        given(containerService.checkDuplication(any(String.class), any(String.class)))
+        given(containerService.checkDuplication(anyString(), anyString()))
                 .willReturn(response);
 
         // when
@@ -130,7 +160,7 @@ public class ContainerControllerTest extends ControllerTest {
                 .directories(directories)
                 .build();
 
-        given(containerService.getAllFilesAndDirectories(any(Long.class), any(String.class)))
+        given(containerService.getAllFilesAndDirectories(anyLong(), anyString()))
                 .willReturn(response);
 
         //when

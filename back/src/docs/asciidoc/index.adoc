@@ -58,6 +58,14 @@ include::{snippets}/container/create/request-fields.adoc[]
 
 include::{snippets}/container/create/http-response.adoc[]
 
+=== 컨테이너 삭제
+ID에 해당하는 컨테이너를 삭제합니다.
+
+include::{snippets}/container/delete/http-request.adoc[]
+include::{snippets}/container/delete/path-parameters.adoc[]
+
+include::{snippets}/container/delete/http-response.adoc[]
+
 === 컨테이너 이름 중복체크
 컨테이너 생성 시에 중복되는 컨테이너 이름이 없는지 검사합니다.
 

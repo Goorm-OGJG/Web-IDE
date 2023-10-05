@@ -77,9 +77,15 @@ public class S3ContainerService {
      * 컨테이너 모든 구조 가져오기 - 디렉토리 데이터 생성
      * 이메일 경로를 제외한 구조를 응답값에 포함해야 하므로 절삭된 키 사용
      */
+    @Transactional(readOnly = true)
     public List<String> getDirectories(List<String> parsedKeys) {
         return parsedKeys.stream()
                 .filter((key) -> !isFile(key))
                 .toList();
+    }
+
+    @Transactional
+    public void deleteAllByPrefix(String prefix) {
+        s3ContainerRepository.deleteObjectsWithPrefix(prefix);
     }
 }

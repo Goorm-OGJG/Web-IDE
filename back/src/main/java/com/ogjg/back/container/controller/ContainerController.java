@@ -28,6 +28,21 @@ public class ContainerController {
     }
 
     /**
+     * 컨테이너 삭제
+     */
+    @DeleteMapping("/{containerId}")
+    public ApiResponse<ContainerGetResponse> deleteContainer(
+            @PathVariable("containerId") Long containerId
+    ) {
+        String loginEmail = "ogjg1234@naver.com";
+
+        containerService.deleteContainer(containerId, loginEmail);
+        return new ApiResponse<>(
+                ErrorCode.SUCCESS
+        );
+    }
+
+    /**
      * 컨테이너 이름 중복체크
      */
     @GetMapping("/check")

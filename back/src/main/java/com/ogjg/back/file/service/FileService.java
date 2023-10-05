@@ -22,7 +22,7 @@ import static com.ogjg.back.common.util.S3PathUtil.*;
 public class FileService {
     private final ContainerRepository containerRepository;
     private final FileRepository fileRepository;
-    private final S3FileService s3PathService;
+    private final S3FileService s3FileService;
 
     @Transactional
     public void createFile(String loginEmail, String filePath, String uuid) {
@@ -30,7 +30,7 @@ public class FileService {
 
         String containerName = extractContainerName(filePath);
         if (!isContainerExist(loginEmail, containerName)) throw new NotFoundContainer();
-        if (s3PathService.isFileAlreadyExist(s3Path)) throw new FileAlreadyExists();
+        if (s3FileService.isFileAlreadyExist(s3Path)) throw new FileAlreadyExists();
 
         Container container = findContainerByNameAndEmail(containerName, loginEmail);
 
@@ -41,7 +41,7 @@ public class FileService {
                 .uuid(uuid)
                 .build());
 
-        s3PathService.createFile(loginEmail, filePath);
+        s3FileService.createFile(loginEmail, filePath);
     }
 
     @Transactional
@@ -50,7 +50,7 @@ public class FileService {
         String containerName = extractContainerName(filePath);
 
 //        if (!isContainerExist(loginEmail, containerName)) throw new NotFoundContainer();
-        if (!s3PathService.isFileAlreadyExist(s3Path)) throw new NotFoundFile();
+        if (!s3FileService.isFileAlreadyExist(s3Path)) throw new NotFoundFile();
 
         // db 삭제
         Container container = findContainerByNameAndEmail(containerName, loginEmail);
@@ -61,7 +61,7 @@ public class FileService {
         fileRepository.delete(findFile);
 
         // s3 삭제
-        s3PathService.deleteFile(loginEmail, filePath);
+        s3FileService.deleteFile(loginEmail, filePath);
     }
 
     @Transactional
@@ -69,9 +69,9 @@ public class FileService {
         String s3Path = givenPathToS3Path(loginEmail, filePath);
 
         if (!isContainerExist(loginEmail, extractContainerName(filePath))) throw new NotFoundContainer();
-        if (!s3PathService.isFileAlreadyExist(s3Path)) throw new NotFoundFile();
+        if (!s3FileService.isFileAlreadyExist(s3Path)) throw new NotFoundFile();
 
-        s3PathService.updateFile(loginEmail, filePath, request.getContent());
+        s3FileService.updateFile(loginEmail, filePath, request.getContent());
     }
 
     @Transactional
@@ -81,7 +81,7 @@ public class FileService {
         String containerName = extractContainerName(filePath);
 
 //        if (!isContainerExist(loginEmail, containerName)) throw new NotFoundContainer();
-        if (!s3PathService.isFileAlreadyExist(s3Path)) throw new NotFoundFile();
+        if (!s3FileService.isFileAlreadyExist(s3Path)) throw new NotFoundFile();
 
         // db rename
         Container container = findContainerByNameAndEmail(containerName, loginEmail);
@@ -92,7 +92,7 @@ public class FileService {
         findFile.rename(newFilename);
 
         // s3 rename
-        s3PathService.updateFilename(loginEmail, filePath, newFilePath);
+        s3FileService.updateFilename(loginEmail, filePath, newFilePath);
     }
 
     private boolean isContainerExist(String loginEmail, String containerName) {

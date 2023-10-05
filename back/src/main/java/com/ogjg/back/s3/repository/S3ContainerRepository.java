@@ -68,4 +68,27 @@ public class S3ContainerRepository {
 
         return s3Client.getObject(getObjectRequest, ResponseTransformer.toBytes()).asUtf8String();
     }
+
+    public void deleteObjectsWithPrefix(String prefix) {
+        try {
+            ListObjectsV2Request listObjectsV2Request = ListObjectsV2Request.builder()
+                    .bucket(bucketName)
+                    .prefix(prefix)
+                    .build();
+
+            s3Client.listObjectsV2(listObjectsV2Request).contents().stream()
+                    .map((content) -> toDeleteObjectRequest(content))
+                    .forEach((request) -> s3Client.deleteObject(request));
+
+        } catch (Exception e) {
+            log.error("error message={}",e.getMessage());
+        }
+    }
+
+    private DeleteObjectRequest toDeleteObjectRequest(S3Object content) {
+        return DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(content.key())
+                .build();
+    }
 }
