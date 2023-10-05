@@ -3,6 +3,7 @@ package com.ogjg.back.common;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ogjg.back.config.security.jwt.JwtUserDetails;
 import com.ogjg.back.container.controller.ContainerController;
+import com.ogjg.back.container.controller.MainController;
 import com.ogjg.back.container.service.ContainerService;
 import com.ogjg.back.directory.controller.DirectoryController;
 import com.ogjg.back.directory.service.DirectoryService;
@@ -36,7 +37,8 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
         UserController.class,
         ContainerController.class,
         FileController.class,
-        DirectoryController.class
+        DirectoryController.class,
+        MainController.class
 })
 public class ControllerTest {
 
