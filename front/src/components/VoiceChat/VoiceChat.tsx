@@ -1,8 +1,4 @@
-import ConnectLive, {
-  IRemoteParticipant,
-  ILocalMedia,
-  IRoom,
-} from "@connectlive/connectlive-web-sdk";
+import ConnectLive, { ILocalMedia, IRoom } from "@connectlive/connectlive-web-sdk";
 import React, { useRef, useState } from "react";
 import * as Icon from "../Icon";
 import * as S from "./VoiceChat.style";
@@ -27,33 +23,32 @@ function VoiceChat() {
         serviceSecret: import.meta.env.VITE_KAKAO_SECRET,
       });
       // console.log(a);
-      // console.log("커넥트 라이브에 로그인");
       localMedia.current = await ConnectLive.createLocalMedia({ audio: true });
       room.current = ConnectLive.createRoom();
 
       if (!room) {
         throw new Error("Failed to create room");
       }
-      room.current.on("connected", (evt) => {
+      room.current.on("connected", () => {
         setIsConnect(true);
         setIsListOpen(true);
-        // console.log(room.current?.localParticipant);
-        setUsers((prev) => [...prev, room.current!.localParticipant.id]);
-        // console.log(evt);
-        evt.remoteParticipants.forEach((member: IRemoteParticipant) => {
-          setUsers((prev) => [...prev, member.id]);
-        });
+        console.log("커넥트 라이브에 로그인");
+        room.current!.localParticipant.id = "tmp_user1";
+        // const tmpUser = room.current!.remoteParticipants.map((user) => user.id);
+        setUsers((prev) => [room.current!.localParticipant.id, ...prev]);
       });
 
       room.current.on("participantEntered", (evt) => {
+        evt.remoteParticipant.id = "tmp_user2";
         console.log("user: " + evt.remoteParticipant.id + " is entered.");
         setUsers((prev) => [...prev, evt.remoteParticipant.id]);
       });
 
-      room.current.on("participantLeft", (evt) => {
-        console.log("user: " + evt.remoteParticipantId + " is left.");
-        const tmpUsers = users.filter((user) => user !== evt.remoteParticipantId);
-        setUsers(tmpUsers);
+      room.current.on("participantLeft", () => {
+        // console.log("user: " + evt.remoteParticipantId + " is left.");
+        // console.log(room.current!.remoteParticipants, evt.remoteParticipantId);
+        // const tmpUser = [...users];
+        setUsers((prev) => [room.current!.localParticipant.id, ...prev]);
       });
       await room.current.connect(roomId as string);
 
@@ -64,7 +59,7 @@ function VoiceChat() {
   };
 
   const disconnectRoom = async () => {
-    console.log(room, localMedia);
+    // console.log(room, localMedia);
     if (!room || !localMedia) return;
     room.current!.disconnect();
     localMedia.current!.stop();
@@ -75,7 +70,7 @@ function VoiceChat() {
   };
 
   return (
-    <React.Fragment>
+    <S.Wrapper>
       <S.IconBox>
         <S.Button onClick={connectRoom} isConnect={isConnect}>
           <Icon.Phone size={25} />
@@ -117,7 +112,7 @@ function VoiceChat() {
           </Mobile>
         </React.Fragment>
       )}
-    </React.Fragment>
+    </S.Wrapper>
   );
 }
 

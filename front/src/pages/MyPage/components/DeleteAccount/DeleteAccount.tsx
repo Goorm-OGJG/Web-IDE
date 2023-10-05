@@ -7,8 +7,8 @@ function DeleteAccount() {
   const [isOpen, setOpen] = useState(false);
 
   const ref = useRef<HTMLInputElement>(null);
-
   const { requestDeleteUser } = useMyAPI();
+
   const cancelHandler = () => {
     setOpen(!isOpen);
   };

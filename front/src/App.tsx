@@ -1,5 +1,5 @@
 import "./App.css";
-import { Route, Routes } from "react-router";
+import { Route, Routes, useLocation, useNavigate } from "react-router";
 import Main from "./pages/Main/Main";
 import MyPage from "./pages/MyPage/MyPage";
 import CreateContainer from "./pages/CreateContainer/CreateContainer";
@@ -9,6 +9,8 @@ import SignUp from "./pages/SignUp/SignUp";
 import FindPassword from "./pages/FindPassword/FindPassword";
 import { useEffect } from "react";
 import { useMyAPI } from "./api/useMyAPI";
+import PrivateRoute from "./components/PrivateRoute";
+import PublicRoute from "./components/PublicRoute";
 
 function App() {
   const LoginRoutes = [
@@ -25,18 +27,35 @@ function App() {
   ];
 
   const { requestUserInfo } = useMyAPI();
-
+  const token = localStorage.getItem("accessToken");
+  const auth = token != null;
+  const location = useLocation();
+  const navigate = useNavigate();
+  console.log(location);
   useEffect(() => {
     requestUserInfo();
+
+    if (location.pathname === "/") {
+      navigate(auth ? "/main" : "/login");
+    }
   }, []);
 
   return (
     <Routes>
+      <Route path="/" />
       {LoginRoutes.map(({ path, element }) => (
-        <Route key={path} path={path} element={element} />
+        <Route
+          key={path}
+          path={path}
+          element={<PrivateRoute element={element} authenticated={auth} />}
+        />
       ))}
       {LogoutRoutes.map(({ path, element }) => (
-        <Route key={path} path={path} element={element} />
+        <Route
+          key={path}
+          path={path}
+          element={<PublicRoute element={element} authenticated={auth} />}
+        />
       ))}
     </Routes>
   );
