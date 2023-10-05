@@ -30,7 +30,7 @@ function ProfileImg({ img }: Props) {
   const saveHandler = () => {
     if (file) {
       // alert("프로필 이미지 저장");
-      requestEditProfile(file);
+      requestEditProfile(file, setFile);
     }
   };
 

@@ -6,7 +6,10 @@ export function useMyAPI() {
   const axios = useAxios();
   const setUserInfo = useSetRecoilState(userInfoState);
 
-  const requestEditProfile = (img: File) => {
+  const requestEditProfile = (
+    img: File,
+    setFile: React.Dispatch<React.SetStateAction<File | null>>,
+  ) => {
     const formData = new FormData();
     formData.append("img", img);
 
@@ -16,8 +19,9 @@ export function useMyAPI() {
           "Content-Type": "multipart/form-data",
         },
       })
-      .then((response) => {
-        console.log("요청 성공", response);
+      .then(() => {
+        alert("이미지 변경이 완료되었습니다.");
+        setFile(null);
       })
       .catch((error) => {
         console.error(error);
