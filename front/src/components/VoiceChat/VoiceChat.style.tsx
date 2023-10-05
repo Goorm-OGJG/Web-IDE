@@ -12,12 +12,18 @@ export const Wrapper = styled.div`
 
 export const Button = styled.button<Style>`
   display: flex;
-  padding: 10px;
+  padding: 0px;
   border: none;
   cursor: pointer;
-  background-color: ${(props) => (props.isConnect ? `${COLOR.Green1}` : `transparent`)};
+  background-color: ${(props) =>
+    props.isConnect ? `${COLOR.Green1}` : `${COLOR.Gray10}`};
   color: ${COLOR.White};
+`;
+export const MButton = styled(Button)`
+  padding: 10px;
 
+  background-color: ${(props) =>
+    props.isConnect ? `${COLOR.Green1}` : `${COLOR.Gray10}`};
   &:hover {
     background-color: ${COLOR.Gray11};
   }

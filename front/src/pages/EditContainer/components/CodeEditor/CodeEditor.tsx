@@ -8,6 +8,7 @@ import Tab from "./Tab";
 import * as Icon from "../../../../components/Icon";
 import { useFileManage } from "../../../../hooks/CodeEditor/useFileManage";
 import CodeMirror from "./CodeMirror";
+import VoiceChat from "../../../../components/VoiceChat/VoiceChat";
 
 function CodeEditer() {
   const tabs = useRecoilValue(tabsState);
@@ -45,6 +46,7 @@ function CodeEditer() {
               <S.IconWrapper>
                 <Icon.Chat size={14} />
               </S.IconWrapper>
+              <VoiceChat />
             </S.Icons>
           </S.Header>
         )}
