@@ -4,25 +4,6 @@ import { useRecoilValue } from "recoil";
 import { isSpaceItemId } from "../../../../recoil/SidebarState";
 import { containersState, isOrdered } from "../../../../recoil/homeState";
 import { userInfoState } from "../../../../recoil/userState";
-export interface ContainerType {
-  containerId: number;
-  name: string;
-  containerUrl: string;
-  language: string;
-  storage: string;
-  info: string;
-  updatedDate: Date;
-  createdDate: Date;
-  pinned: boolean;
-  owner: string;
-  private: boolean;
-  usersImg: UserImage[];
-}
-export interface UserImage {
-  id: number;
-  imgUrl: string;
-  userName: string;
-}
 
 function BodyContainers() {
   // 🔥API를 받아와서 컨테이너를 뿌려주는 데이터

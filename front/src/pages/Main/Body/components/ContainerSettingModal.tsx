@@ -2,14 +2,14 @@ import * as S from "./ContainerSettingModal.style";
 import * as Icon from "../../../../components/Icon";
 import ContainerDeleteModal from "./ContainerDeleteModal";
 
-import { ContainerType } from "./BodyContainers";
+import * as T from "../../../../types/containers";
 import { Dispatch, useState } from "react";
 import useContainerAPI from "../../../../api/useContainerAPI";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { containersState, isSearchContainer } from "../../../../recoil/homeState";
 
 interface PropsType {
-  containerData: ContainerType;
+  containerData: T.containerDataType;
   containerSettingModal: boolean;
   privated: boolean;
   pinned: boolean;

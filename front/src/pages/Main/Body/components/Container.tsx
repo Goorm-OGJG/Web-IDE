@@ -1,6 +1,6 @@
 import * as S from "./Container.style";
 import * as Icon from "../../../../components/Icon";
-import { ContainerType } from "./BodyContainers";
+import * as T from "../../../../types/containers";
 import ContainerSettingModal from "./ContainerSettingModal";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
@@ -8,7 +8,7 @@ import useContainerAPI from "../../../../api/useContainerAPI";
 import useDateCalculator from "../../../../hooks/useDateCalculator";
 
 interface BodyContainerPops {
-  data: ContainerType;
+  data: T.containerDataType;
 }
 
 function Container(props: BodyContainerPops) {

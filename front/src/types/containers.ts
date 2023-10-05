@@ -1,16 +1,16 @@
 export interface containerDataType {
   containerId: number;
-  containerName: string;
+  name: string;
   containerUrl: string;
-  containerLanguage: string;
-  availableStorage: string;
-  containerInfo: string;
+  language: string;
+  storage: string;
+  info: string;
   updatedDate: Date;
   createdDate: Date;
   pinned: false;
   owner: string;
-  privated: false;
-  userImg: userImgType[];
+  private: false;
+  usersImg: userImgType[];
 }
 export interface userImgType {
   id: number;

@@ -9,11 +9,6 @@ import {
 import { Desktop, Mobile } from "../Responsive";
 import { userInfoState } from "../../recoil/userState";
 
-const data = {
-  id: 1,
-  userName: "조재균(풀스택 1회차)",
-};
-
 function Header() {
   const userInfo = useRecoilValue(userInfoState);
   const [isMenuHover, setIsMenuHover] = useRecoilState(isMenuHoverState);
