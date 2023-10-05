@@ -7,6 +7,8 @@ import EditContainer from "./pages/EditContainer/EditContainer";
 import Login from "./pages/Login/Login";
 import SignUp from "./pages/SignUp/SignUp";
 import FindPassword from "./pages/FindPassword/FindPassword";
+import { useEffect } from "react";
+import { useMyAPI } from "./api/useMyAPI";
 
 function App() {
   const LoginRoutes = [
@@ -21,6 +23,13 @@ function App() {
     { path: "/signup", element: <SignUp /> },
     { path: "/help/password", element: <FindPassword /> },
   ];
+
+  const { requestUserInfo } = useMyAPI();
+
+  useEffect(() => {
+    requestUserInfo();
+  }, []);
+
   return (
     <Routes>
       {LoginRoutes.map(({ path, element }) => (

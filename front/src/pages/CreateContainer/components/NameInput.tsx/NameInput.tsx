@@ -12,19 +12,22 @@ const NameInput = forwardRef(function NameInput(
   ref: React.ForwardedRef<HTMLInputElement>,
 ) {
   const [value, setValue] = useState("");
-  const [isOk, setIsOk] = useState(false);
+  const [isOk, setIsOk] = useState(-1);
+
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
+    if (!e.target.value) {
+      setIsOk(-1);
+      isNameValid.current = false;
+    }
   };
 
   const { requestDuplicateContainerName } = useCreateContainerAPI();
 
   const debounceHandler = () => {
+    // console.log(value);
     if (value) {
       requestDuplicateContainerName(value, setIsOk, isNameValid);
-    } else {
-      setIsOk(false);
-      isNameValid.current = false;
     }
   };
   const debouncedSearchTerm = useDebounce(debounceHandler, value, 500);
@@ -43,8 +46,10 @@ const NameInput = forwardRef(function NameInput(
         ref={ref}
       />
       <S.Count>{`${value.length}/20`}</S.Count>
-      {isOk && <S.CorrectP>사용가능한 컨테이너 이름입니다.</S.CorrectP>}
-      {isOk || <S.AlertP>이미 존재하거나 올바르지 않은 컨테이너 이름입니다.</S.AlertP>}
+      {isOk === 1 && <S.CorrectP>사용가능한 컨테이너 이름입니다.</S.CorrectP>}
+      {isOk === 0 && (
+        <S.AlertP>이미 존재하거나 올바르지 않은 컨테이너 이름입니다.</S.AlertP>
+      )}
     </S.Wrapper>
   );
 });

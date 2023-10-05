@@ -6,6 +6,8 @@ import UserInfo from "./components/UserInfo/UserInfo";
 import PasswordChange from "./components/PasswordChange/PasswordChange";
 import DeleteAccount from "./components/DeleteAccount/DeleteAccount";
 import { useNavigate } from "react-router";
+import { useRecoilValue } from "recoil";
+import { userInfoState } from "../../recoil/userState";
 
 function MyPage() {
   const navigate = useNavigate();
@@ -13,7 +15,8 @@ function MyPage() {
   const backHandler = () => {
     navigate(-1);
   };
-
+  const userInfo = useRecoilValue(userInfoState);
+  // console.log(userInfo);
   return (
     <S.BackGround>
       {/* Desktop */}
@@ -25,10 +28,13 @@ function MyPage() {
           <S.Title>내 설정</S.Title>
         </S.Header>
         <Container name="프로필 사진">
-          <ProfileImg />
+          <ProfileImg img={userInfo ? userInfo.userImg : ""} />
         </Container>
         <Container name="기본 정보">
-          <UserInfo />
+          <UserInfo
+            userName={userInfo ? userInfo.name : ""}
+            email={userInfo && (userInfo.email as string)}
+          />
         </Container>
         <Container name="비밀번호 변경">
           <PasswordChange />

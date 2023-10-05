@@ -14,7 +14,7 @@ export function useCreateContainerAPI() {
 
   const requestCreateContainer = (payload: CreateContainerType) => {
     axios
-      .post(`${import.meta.env.VITE_API_URL}/api/container`, payload)
+      .post(`${import.meta.env.VITE_API_URL}/api/containers`, payload)
       .then((response) => {
         if (response) {
           alert("컨테이너 생성 완료!");
@@ -30,15 +30,19 @@ export function useCreateContainerAPI() {
 
   const requestDuplicateContainerName = (
     name: string,
-    setIsOk: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsOk: React.Dispatch<React.SetStateAction<number>>,
     isNameValid: React.MutableRefObject<boolean>,
   ) => {
     axios
       .get(`${import.meta.env.VITE_API_URL}/api/containers/check?name=${name}`)
       .then((response) => {
-        if (response) {
-          setIsOk(true);
+        const responseData = response.data;
+
+        if (!responseData.data.duplicated) {
+          setIsOk(1);
           isNameValid.current = true;
+        } else {
+          setIsOk(0);
         }
       })
       .catch((error) => {

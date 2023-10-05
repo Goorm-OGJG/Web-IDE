@@ -2,7 +2,11 @@ import { useState } from "react";
 import * as S from "./ProfileImg.style";
 import { useMyAPI } from "../../../../api/useMyAPI";
 
-function ProfileImg() {
+interface Props {
+  img: string;
+}
+
+function ProfileImg({ img }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState("");
   const { requestEditProfile } = useMyAPI();
@@ -33,7 +37,7 @@ function ProfileImg() {
   return (
     <S.Wrapper>
       <S.ImgBox>
-        <S.Img src={preview} />
+        <S.Img src={preview ? preview : (img as string)} />
       </S.ImgBox>
       <S.ProfileDesc>
         <S.Buttons>

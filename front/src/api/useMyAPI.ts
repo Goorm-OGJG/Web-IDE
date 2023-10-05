@@ -65,8 +65,9 @@ export function useMyAPI() {
     axios
       .get(`${import.meta.env.VITE_API_URL}/api/users`)
       .then((response) => {
-        if (response) {
-          setUserInfo(response.data);
+        const responseData = response.data;
+        if (responseData.status.code === "200") {
+          setUserInfo(responseData.data);
         }
       })
       .catch((error) => console.error(error));

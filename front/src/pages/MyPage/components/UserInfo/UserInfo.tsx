@@ -4,7 +4,12 @@ import UserInput from "./UserInput";
 import { NAME_REG } from "../../../../constants/regExp";
 import { useMyAPI } from "../../../../api/useMyAPI";
 
-function UserInfo() {
+interface Props {
+  userName: string;
+  email: string | null;
+}
+
+function UserInfo({ userName, email }: Props) {
   const nameRef = useRef<HTMLInputElement>(null);
   const { requestEditUserName } = useMyAPI();
 
@@ -17,13 +22,13 @@ function UserInfo() {
       console.log("올바르지 않은 아이디 입니다");
     }
   };
-
+  // console.log(userName);
   return (
     <S.Wrapper>
       <S.InfoTitle>이름</S.InfoTitle>
-      <UserInput userName="유저 이름" ref={nameRef} />
+      <UserInput userName={userName} ref={nameRef} />
       <S.InfoTitle>이메일</S.InfoTitle>
-      <S.Input placeholder="test@gamil.com" disabled />
+      <S.Input value={email ? email : ""} placeholder="test@gamil.com" disabled />
       <S.Button onClick={saveHandler}>변경사항 저장</S.Button>
     </S.Wrapper>
   );

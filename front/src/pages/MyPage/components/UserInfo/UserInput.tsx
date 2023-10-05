@@ -13,7 +13,6 @@ const UserInput = forwardRef(function UserInput(
 ) {
   const [value, setValue] = useState(userName);
   const [isOk, setIsOk] = useRegTest();
-
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const eValue = e.target.value;
     setValue(eValue);
@@ -26,7 +25,7 @@ const UserInput = forwardRef(function UserInput(
         placeholder="이름"
         minLength={2}
         maxLength={30}
-        value={value}
+        value={value ? value : userName}
         onChange={changeHandler}
         ref={ref}
       />
