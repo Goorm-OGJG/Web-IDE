@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.ogjg.back.common.util.S3PathUtil.createImagePrefix;
+import static com.ogjg.back.common.util.S3PathUtil.extractExtension;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -22,18 +25,13 @@ public class S3ProfileImageService {
         String originalName = multipartFile.getOriginalFilename();
 
         // 컨테이너 이름에 . 을 넣을수 없다. image. 을 prefix로 이미지를 지우고 다시 생성한다.
-        String prefix = email + "/image.";
+        String prefix = createImagePrefix(email);
+
         s3ImageUploadRepository.deleteObjectsWithPrefix(prefix);
 
         String fileName = prefix + extractExtension(originalName);
 
         return s3ImageUploadRepository.uploadFile(multipartFile, fileName)
                 .orElseThrow(() -> new S3ImageUploadException());
-    }
-
-    private String extractExtension(String originName) {
-        int index = originName.lastIndexOf('.');
-
-        return originName.substring(index + 1); // .제외한 확장자만 추출한다.
     }
 }

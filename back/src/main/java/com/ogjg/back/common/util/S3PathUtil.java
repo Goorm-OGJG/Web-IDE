@@ -74,4 +74,13 @@ public class S3PathUtil {
     }
 
 
+    public static String createImagePrefix(String email) {
+        return DELIMITER + email + DELIMITER + "image.";
+    }
+
+    public static String extractExtension(String originalName) {
+        int index = originalName.lastIndexOf('.');
+        return originalName.substring(index + 1); // .제외한 확장자만 추출한다.
+
+    }
 }
