@@ -2,11 +2,13 @@ package com.ogjg.back.container.controller;
 
 import com.ogjg.back.common.exception.ErrorCode;
 import com.ogjg.back.common.response.ApiResponse;
+import com.ogjg.back.config.security.jwt.JwtUserDetails;
 import com.ogjg.back.container.dto.request.ContainerCreateRequest;
 import com.ogjg.back.container.dto.response.ContainerCheckNameResponse;
 import com.ogjg.back.container.dto.response.ContainerGetResponse;
 import com.ogjg.back.container.service.ContainerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,10 +22,11 @@ public class ContainerController {
      * 컨테이너 생성
      */
     @PostMapping("")
-    public ApiResponse<Void> create(@RequestBody ContainerCreateRequest request) {
-        String loginEmail = "ogjg1234@naver.com";
-
-        containerService.createContainer(loginEmail, request);
+    public ApiResponse<Void> create(
+            @RequestBody ContainerCreateRequest request,
+            @AuthenticationPrincipal JwtUserDetails user
+    ) {
+        containerService.createContainer(user.getEmail(), request);
         return new ApiResponse<>(ErrorCode.SUCCESS);
     }
 
@@ -32,11 +35,10 @@ public class ContainerController {
      */
     @DeleteMapping("/{containerId}")
     public ApiResponse<ContainerGetResponse> deleteContainer(
-            @PathVariable("containerId") Long containerId
+            @PathVariable("containerId") Long containerId,
+            @AuthenticationPrincipal JwtUserDetails user
     ) {
-        String loginEmail = "ogjg1234@naver.com";
-
-        containerService.deleteContainer(containerId, loginEmail);
+        containerService.deleteContainer(containerId, user.getEmail());
         return new ApiResponse<>(
                 ErrorCode.SUCCESS
         );
@@ -47,13 +49,12 @@ public class ContainerController {
      */
     @GetMapping("/check")
     public ApiResponse<ContainerCheckNameResponse> checkDuplication(
-            @RequestParam("name") String containerName
+            @RequestParam("name") String containerName,
+            @AuthenticationPrincipal JwtUserDetails user
     ) {
-        String loginEmail = "ogjg1234@naver.com";
-
         return new ApiResponse<>(
                 ErrorCode.SUCCESS,
-                containerService.checkDuplication(containerName, loginEmail)
+                containerService.checkDuplication(containerName, user.getEmail())
         );
     }
 
@@ -62,13 +63,12 @@ public class ContainerController {
      */
     @GetMapping("/{containerId}")
     public ApiResponse<ContainerGetResponse> getContainer(
-            @PathVariable("containerId") Long containerId
+            @PathVariable("containerId") Long containerId,
+            @AuthenticationPrincipal JwtUserDetails user
     ) {
-        String loginEmail = "ogjg1234@naver.com";
-
         return new ApiResponse<>(
                 ErrorCode.SUCCESS,
-                containerService.getAllFilesAndDirectories(containerId, loginEmail)
+                containerService.getAllFilesAndDirectories(containerId, user.getEmail())
         );
     }
 }

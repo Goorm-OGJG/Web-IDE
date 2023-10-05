@@ -2,11 +2,13 @@ package com.ogjg.back.file.controller;
 
 import com.ogjg.back.common.exception.ErrorCode;
 import com.ogjg.back.common.response.ApiResponse;
+import com.ogjg.back.config.security.jwt.JwtUserDetails;
 import com.ogjg.back.file.dto.request.CreateFileRequest;
 import com.ogjg.back.file.dto.request.UpdateFileRequest;
 import com.ogjg.back.file.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -23,10 +25,10 @@ public class FileController {
     @PostMapping("")
     public ApiResponse<Void> createFile(
             @RequestParam("filePath") String filePath,
-            @RequestBody CreateFileRequest request
+            @RequestBody CreateFileRequest request,
+            @AuthenticationPrincipal JwtUserDetails user
     ) {
-        String loginEmail = "ogjg1234@naver.com";
-        fileService.createFile(loginEmail, filePath, request.getUuid());
+        fileService.createFile(user.getEmail(), filePath, request.getUuid());
         return new ApiResponse<>(ErrorCode.SUCCESS);
     }
 
@@ -35,10 +37,10 @@ public class FileController {
      */
     @DeleteMapping("")
     public ApiResponse<Void> deleteFile(
-        @RequestParam("filePath") String filePath
+        @RequestParam("filePath") String filePath,
+            @AuthenticationPrincipal JwtUserDetails user
     ) {
-        String loginEmail = "ogjg1234@naver.com";
-        fileService.deleteFile(loginEmail, filePath);
+        fileService.deleteFile(user.getEmail(), filePath);
         return new ApiResponse<>(ErrorCode.SUCCESS);
     }
 
@@ -48,10 +50,10 @@ public class FileController {
     @PutMapping("")
     public ApiResponse<Void> updateFile(
             @RequestParam("filePath") String filePath,
-            @RequestBody UpdateFileRequest request
+            @RequestBody UpdateFileRequest request,
+            @AuthenticationPrincipal JwtUserDetails user
     ) {
-        String loginEmail = "ogjg1234@naver.com";
-        fileService.updateFile(loginEmail, filePath, request);
+        fileService.updateFile(user.getEmail(), filePath, request);
         return new ApiResponse<>(ErrorCode.SUCCESS);
     }
 
@@ -61,11 +63,11 @@ public class FileController {
     @PutMapping("/rename")
     public ApiResponse<Void> updateFilename(
             @RequestParam String filePath,
-            @RequestParam String newFilename
+            @RequestParam String newFilename,
+            @AuthenticationPrincipal JwtUserDetails user
 
     ) {
-        String loginEmail = "ogjg1234@naver.com";
-        fileService.updateFilename(loginEmail, filePath, newFilename);
+        fileService.updateFilename(user.getEmail(), filePath, newFilename);
         return new ApiResponse<>(ErrorCode.SUCCESS);
     }
 }

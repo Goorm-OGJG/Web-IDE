@@ -73,13 +73,12 @@ public class UserController {
      */
     @PatchMapping("/img")
     public ApiResponse<ImgUpdateResponse> updateImg(
-            @RequestParam("img") MultipartFile multipartFile
+            @RequestParam("img") MultipartFile multipartFile,
+            @AuthenticationPrincipal JwtUserDetails user
     ) {
-        String loginEmail = "ogjg1234@naver.com";
-
         return new ApiResponse<>(
                 ErrorCode.SUCCESS,
-                userService.updateImg(multipartFile, loginEmail)
+                userService.updateImg(multipartFile, user.getEmail())
         );
     }
 
@@ -88,11 +87,10 @@ public class UserController {
      */
     @PatchMapping("/info")
     public ApiResponse<Void> updateInfo(
-            @Valid @RequestBody InfoUpdateRequest request
+            @Valid @RequestBody InfoUpdateRequest request,
+            @AuthenticationPrincipal JwtUserDetails user
     ) {
-        String loginEmail = "ogjg1234@naver.com";
-
-        userService.updateInfo(request, loginEmail);
+        userService.updateInfo(request, user.getEmail());
         return new ApiResponse<>(ErrorCode.SUCCESS);
     }
 
@@ -101,11 +99,10 @@ public class UserController {
      */
     @PatchMapping("/password")
     public ApiResponse<Void> updatePassword(
-            @RequestBody PasswordUpdateRequest request
+            @RequestBody PasswordUpdateRequest request,
+            @AuthenticationPrincipal JwtUserDetails user
     ) {
-        String loginEmail = "ogjg1234@naver.com";
-
-        userService.updatePassword(request, loginEmail);
+        userService.updatePassword(request, user.getEmail());
         return new ApiResponse<>(ErrorCode.SUCCESS);
     }
 
@@ -113,10 +110,10 @@ public class UserController {
      * 회원 탈퇴
      */
     @PatchMapping("/deactivate")
-    public ApiResponse<Void> deactivate() {
-        String loginEmail = "ogjg1234@naver.com";
-
-        userService.deactivate(loginEmail);
+    public ApiResponse<Void> deactivate(
+            @AuthenticationPrincipal JwtUserDetails user
+    ) {
+        userService.deactivate(user.getEmail());
         return new ApiResponse<>(ErrorCode.SUCCESS);
     }
 

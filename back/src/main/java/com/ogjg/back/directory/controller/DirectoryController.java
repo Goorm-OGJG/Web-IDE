@@ -2,10 +2,12 @@ package com.ogjg.back.directory.controller;
 
 import com.ogjg.back.common.exception.ErrorCode;
 import com.ogjg.back.common.response.ApiResponse;
+import com.ogjg.back.config.security.jwt.JwtUserDetails;
 import com.ogjg.back.directory.dto.request.CreateDirectoryRequest;
 import com.ogjg.back.directory.service.DirectoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -22,10 +24,10 @@ public class DirectoryController {
     @PostMapping("")
     public ApiResponse<Void> creatDirectory(
             @RequestParam("directoryPath") String directoryPath,
-            @RequestBody CreateDirectoryRequest request
+            @RequestBody CreateDirectoryRequest request,
+            @AuthenticationPrincipal JwtUserDetails user
     ) {
-        String loginEmail = "ogjg1234@naver.com";
-        directoryService.createDirectory(loginEmail, directoryPath, request);
+        directoryService.createDirectory(user.getEmail(), directoryPath, request);
         return new ApiResponse<>(ErrorCode.SUCCESS);
     }
 
@@ -34,10 +36,10 @@ public class DirectoryController {
      */
     @DeleteMapping("")
     public ApiResponse<Void> deleteDirectory(
-            @RequestParam String directoryPath
+            @RequestParam String directoryPath,
+            @AuthenticationPrincipal JwtUserDetails user
     ) {
-        String loginEmail = "ogjg1234@naver.com";
-        directoryService.deleteDirectory(loginEmail, directoryPath);
+        directoryService.deleteDirectory(user.getEmail(), directoryPath);
         return new ApiResponse<>(ErrorCode.SUCCESS);
     }
 
@@ -47,10 +49,10 @@ public class DirectoryController {
     @PutMapping("/rename")
     public ApiResponse<Void> updateFilename(
             @RequestParam String directoryPath,
-            @RequestParam String newDirectoryName
+            @RequestParam String newDirectoryName,
+            @AuthenticationPrincipal JwtUserDetails user
     ) {
-        String loginEmail = "ogjg1234@naver.com";
-        directoryService.updateDirectoryName(loginEmail, directoryPath, newDirectoryName);
+        directoryService.updateDirectoryName(user.getEmail(), directoryPath, newDirectoryName);
         return new ApiResponse<>(ErrorCode.SUCCESS);
     }
 }
