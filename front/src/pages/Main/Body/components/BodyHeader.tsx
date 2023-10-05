@@ -9,6 +9,7 @@ import {
 } from "../../../../recoil/homeState";
 import RecentUpdateModal from "./RecentUpdateModal";
 import { useEffect, useState } from "react";
+import useContainerAPI from "../../../../api/useContainerAPI";
 
 function BodyHeader() {
   const [isRecentUpdateModal, setIsRecentUpdateModal] = useRecoilState(isUpdateModal);
@@ -17,6 +18,7 @@ function BodyHeader() {
   const setContainers = useSetRecoilState(containersState);
   const ordered = useRecoilValue(isOrdered);
   console.log(ordered);
+  const { requestContainerData } = useContainerAPI();
 
   const handleSearchContainer = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -32,8 +34,8 @@ function BodyHeader() {
   };
   useEffect(() => {
     // 🔥 컨테이너 API 호출: 검색 컨테이너, ordered는 (생성일, 수정일인지) 보내고 setContainers 로 받아온다.
-    // requestContainerData(searchContainer, ordered, setContainers);
-  }, [searchContainer, ordered]);
+    requestContainerData(searchContainer, setContainers);
+  }, [searchContainer]);
   return (
     <div>
       <S.BodyHeaderWrapper>

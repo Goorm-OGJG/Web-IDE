@@ -47,22 +47,23 @@ export const isSearchContainer = atom<string>({
   default: "",
 });
 
-export const containersState = atom<containerDataType>({
+export const containersState = atom<containerDataType[]>({
   key: "containersState",
-  default: {
-    containerId: -1,
-    containerName: "",
-    containerUrl: "",
-    containerLanguage: "",
-    availableStorage: "",
-    containerInfo: "",
-    updatedDate: new Date(),
-    createdDate: new Date(),
-    pinned: false,
-    owner: "",
-    privated: false,
-    userImg: [],
-  },
+  default: [],
+  // {
+  //   containerId: -1,
+  //   containerName: "",
+  //   containerUrl: "",
+  //   containerLanguage: "",
+  //   availableStorage: "",
+  //   containerInfo: "",
+  //   updatedDate: new Date(),
+  //   createdDate: new Date(),
+  //   pinned: false,
+  //   owner: "",
+  //   privated: false,
+  //   userImg: [],
+  // },
 });
 export const isOrdered = atom<string>({
   key: "isOrdered",

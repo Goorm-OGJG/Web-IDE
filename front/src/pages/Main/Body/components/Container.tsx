@@ -45,8 +45,8 @@ function Container(props: BodyContainerPops) {
       // !containerSettingModal && setContainerSettingModal(true);
     }
   };
-  const handleNavigate = (containerUrl: string) => {
-    navigate(`/${containerUrl}`);
+  const handleNavigate = (containerId: string) => {
+    navigate(`/container/${containerId}`);
   };
 
   useEffect(() => {
@@ -62,7 +62,7 @@ function Container(props: BodyContainerPops) {
             <S.DotIconDiv>
               <Icon.Dot />
             </S.DotIconDiv>
-            {props.data.containerName}
+            {props.data.name}
           </S.ContTitle>
           <S.IconsBox>
             {pinned && (
@@ -152,7 +152,7 @@ function Container(props: BodyContainerPops) {
         <S.ContainerFooter>
           <S.ContainerBtn
             onClick={() => {
-              handleNavigate(props.data.containerUrl);
+              handleNavigate(props.data.containerId);
             }}
           >
             ▶ 시작하기

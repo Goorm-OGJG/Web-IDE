@@ -1,21 +1,22 @@
 import { SetStateAction } from "react";
 import * as T from "../types/containers";
 import { useAxios } from "./useAxios";
-export default function useMainAPI() {
+import { SetterOrUpdater } from "recoil";
+export default function useContainerAPI() {
   const API_URL = import.meta.env.VITE_API_URL;
-  const profileURL = `${API_URL}/`;
+  const profileURL = `${API_URL}/api/main`;
   const axios = useAxios();
 
   //🔥 containerData 요청
   const requestContainerData = (
     searchContainer: string,
-    ordered: string,
-    setContainers: React.Dispatch<React.SetStateAction<T.containerDataType[]>>,
+    setContainers: SetterOrUpdater<T.containerDataType[]>,
   ) => {
     axios
-      .get(`${profileURL}/`)
+      .get(`${profileURL}/containers?search=${searchContainer}`)
       .then((response) => {
-        setContainers(response.data);
+        console.log(response.data.data);
+        setContainers(response.data.data);
       })
       .catch((error) => {
         alert(error);
@@ -29,9 +30,9 @@ export default function useMainAPI() {
     const requestData = { containerId: containerId };
 
     axios
-      .put(`${profileURL}/`, requestData)
+      .put(`${profileURL}/containers/${containerId}/private`, requestData)
       .then((response) => {
-        setPrivated(response.data.privated);
+        setPrivated(response.data.data.privated);
       })
       .catch((error) => {
         alert(error);
@@ -50,9 +51,9 @@ export default function useMainAPI() {
       containerInfo: containerInfo,
     };
     axios
-      .put(`${profileURL}/`, requestInfoData)
+      .put(`${profileURL}/containers/${containerId}/info`, requestInfoData)
       .then((response) => {
-        setInfoText(response.data.containerInfo);
+        setInfoText(response.data.data.containerInfo);
       })
       .catch((error) => {
         alert(error);
@@ -66,9 +67,9 @@ export default function useMainAPI() {
     const requestData = { containerId: containerId };
 
     axios
-      .put(`${profileURL}/`, requestData)
+      .put(`${profileURL}/containers/${containerId}/pin`, requestData)
       .then((response) => {
-        setPinned(response.data.privated);
+        setPinned(response.data.data.privated);
       })
       .catch((error) => {
         alert(error);
@@ -79,7 +80,7 @@ export default function useMainAPI() {
   const requestDeleteContainer = (containerId: number) => {
     console.log(containerId);
     axios
-      .delete(`${profileURL}/`)
+      .delete(`${profileURL}/containers/${containerId}`)
       .then(() => {})
       .catch((error) => {
         alert(error);
