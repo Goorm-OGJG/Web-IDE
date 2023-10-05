@@ -17,7 +17,7 @@ function App() {
     { path: "/main", element: <Main /> },
     { path: "/my", element: <MyPage /> },
     { path: "/container", element: <CreateContainer /> },
-    { path: "/container/:id", element: <EditContainer /> },
+    { path: "/container/:containerId", element: <EditContainer /> },
   ];
 
   const LogoutRoutes = [

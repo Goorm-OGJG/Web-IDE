@@ -1,13 +1,41 @@
 import * as T from "../../types/FileTree";
-import { useRecoilState } from "recoil";
-import { fileDataState, tabsState, treeDataState } from "../../recoil/CodeEditorState";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import {
+  RootDirectoryPathState,
+  directoryDataState,
+  fileDataState,
+  tabsState,
+  treeDataState,
+} from "../../recoil/CodeEditorState";
 import { useTab } from "./useTab";
+import {
+  ResponseTreeDataType,
+  ResponseFileData,
+  FileType,
+} from "../../types/filesAPIType";
+import { FileData } from "../../types/FileTree";
 
 export const useFileManage = () => {
   const [fileData, setFileData] = useRecoilState(fileDataState);
   const [treeData, setTreeData] = useRecoilState(treeDataState);
   const [tabs, setTabs] = useRecoilState(tabsState);
+  const setDirectoryData = useSetRecoilState(directoryDataState);
+  const setRootDirectoryPath = useSetRecoilState(RootDirectoryPathState);
   const { tabClose } = useTab();
+
+  const setFilesData = (data: ResponseTreeDataType): void => {
+    setRootDirectoryPath(data.treeData.key);
+    setTreeData([data.treeData as T.FileType]);
+    setFileData(getFileMap(data.fileData));
+    setDirectoryData(getFileMap(data.directories));
+  };
+
+  const getFileMap = (fileData: ResponseFileData): FileData => {
+    return fileData.reduce((result: FileData, data: FileType) => {
+      result[data.filePath] = data.uuid; // content -> uuid 수정 필요
+      return result;
+    }, {});
+  };
 
   const saveFile = (info: T.InfoType) => {
     const filePath = info.node.key as string;
@@ -29,7 +57,7 @@ export const useFileManage = () => {
     }));
   };
 
-  const createFile = (info: T.InfoType, fileName: string) => {
+  const createFile = (info: T.InfoType, fileName: string, uuid: string) => {
     const parentPath = info.node.key as string;
     const newFilePath = `${parentPath}${fileName}`;
 
@@ -44,12 +72,13 @@ export const useFileManage = () => {
     // 2. 로컬 데이터 추가
     setFileData((prevFileData: T.FileData) => ({
       ...prevFileData,
-      [newFilePath]: "",
+      [newFilePath]: uuid,
     }));
 
     // 3. 트리 데이터 변경
-    setTreeData((prevTreeData: T.FileTreeType) =>
-      createFileByPath(prevTreeData, parentPath, fileName),
+    setTreeData(
+      (prevTreeData: T.FileTreeType) =>
+        createFileByPath(prevTreeData, parentPath, fileName) as T.FileTreeType,
     );
   };
 
@@ -57,17 +86,21 @@ export const useFileManage = () => {
     treeData: T.FileTreeType,
     parentPath: string,
     fileName: string,
-  ): T.FileTreeType => {
+  ): T.FileTreeType | unknown => {
     return treeData.map((item) => {
       if (item.key === parentPath) {
         const newChildren = [
-          ...(item.children as T.FileTreeType),
+          ...(item.children as unknown as T.FileTreeType),
           { key: `${parentPath}${fileName}`, title: fileName },
         ];
         return { ...item, children: newChildren };
       } else if (item.children) {
-        const newChildren = createFileByPath(item.children, parentPath, fileName);
-        if (newChildren !== item.children) {
+        const newChildren = createFileByPath(
+          item.children as unknown as T.FileTreeType,
+          parentPath,
+          fileName,
+        );
+        if (newChildren !== (item.children as unknown as T.FileTreeType)) {
           return { ...item, children: newChildren };
         }
       }
@@ -79,8 +112,14 @@ export const useFileManage = () => {
     const parentPath = info.node.key as string;
     const newDirectoryPath = `${parentPath}${directoryName}/`;
 
-    setTreeData((prevTreeData: T.FileTreeType) =>
-      createDirectoryByPath(prevTreeData, parentPath, newDirectoryPath, directoryName),
+    setTreeData(
+      (prevTreeData) =>
+        createDirectoryByPath(
+          prevTreeData,
+          parentPath,
+          newDirectoryPath,
+          directoryName,
+        ) as T.FileTreeType,
     );
   };
 
@@ -89,11 +128,11 @@ export const useFileManage = () => {
     parentPath: string,
     newDirectoryPath: string,
     directoryName: string,
-  ): T.FileTreeType => {
+  ): T.FileTreeType | unknown => {
     return treeData.map((item) => {
       if (item.key === parentPath) {
         const newChildren = [
-          ...(item.children as T.FileTreeType),
+          ...(item.children as unknown as T.FileTreeType),
           {
             key: newDirectoryPath,
             title: directoryName,
@@ -103,7 +142,7 @@ export const useFileManage = () => {
         return { ...item, children: newChildren };
       } else if (item.children) {
         const newChildren = createDirectoryByPath(
-          item.children,
+          item.children as unknown as T.FileTreeType,
           parentPath,
           newDirectoryPath,
           directoryName,
@@ -142,8 +181,9 @@ export const useFileManage = () => {
     });
 
     // 3. 트리 데이터 변경
-    setTreeData((prevTreeData: T.FileTreeType) =>
-      renameFileByPath(prevTreeData, targetPath, newFileName),
+    setTreeData(
+      (prevTreeData: T.FileTreeType) =>
+        renameFileByPath(prevTreeData, targetPath, newFileName) as T.FileTreeType,
     );
   };
 
@@ -151,7 +191,7 @@ export const useFileManage = () => {
     treeData: T.FileTreeType,
     targetPath: string,
     newFileName: string,
-  ): T.FileTreeType => {
+  ): T.FileTreeType | unknown => {
     return treeData.map((item) => {
       if (item.key === targetPath) {
         const parentPath = targetPath.substring(0, targetPath.lastIndexOf("/"));
@@ -161,7 +201,11 @@ export const useFileManage = () => {
           title: newFileName,
         };
       } else if (item.children) {
-        const newChildren = renameFileByPath(item.children, targetPath, newFileName);
+        const newChildren = renameFileByPath(
+          item.children as unknown as T.FileTreeType,
+          targetPath,
+          newFileName,
+        );
         if (newChildren !== item.children) {
           return { ...item, children: newChildren };
         }
@@ -208,7 +252,7 @@ export const useFileManage = () => {
 
     // 3. 트리 데이터 변경
     setTreeData((prevTreeData) => {
-      return renameInTree(prevTreeData, targetPath, newDirectoryPath);
+      return renameInTree(prevTreeData, targetPath, newDirectoryPath) as T.FileTreeType;
     });
   };
 
@@ -216,7 +260,7 @@ export const useFileManage = () => {
     tree: T.FileTreeType,
     targetPath: string,
     newDirectoryPath: string,
-  ): T.FileTreeType => {
+  ): T.FileTreeType | unknown => {
     return tree.map((item) => {
       if (item.key.startsWith(targetPath)) {
         const newKey = item.key.replace(targetPath, newDirectoryPath);
@@ -230,13 +274,17 @@ export const useFileManage = () => {
           key: newKey,
           title: newTitle,
           children: item.children
-            ? renameInTree(item.children, item.key, newKey)
+            ? renameInTree(item.children as unknown as T.FileTreeType, item.key, newKey)
             : undefined,
         };
       } else if (item.children) {
         return {
           ...item,
-          children: renameInTree(item.children, targetPath, newDirectoryPath),
+          children: renameInTree(
+            item.children as unknown as T.FileTreeType,
+            targetPath,
+            newDirectoryPath,
+          ),
         };
       }
       return item;
@@ -256,15 +304,21 @@ export const useFileManage = () => {
 
     // 원격 데이터 삭제
     const newTreeData = deleteByPath([...treeData], filePath);
-    setTreeData(newTreeData);
+    setTreeData(newTreeData as T.FileTreeType);
   };
 
-  const deleteByPath = (treeData: T.FileTreeType, paths: string): T.FileTreeType => {
+  const deleteByPath = (
+    treeData: T.FileTreeType,
+    paths: string,
+  ): T.FileTreeType | unknown => {
     return treeData
       .filter((item) => item.key !== paths)
       .map((item) => {
         if (item.children) {
-          const newChildren = deleteByPath(item.children as T.FileTreeType, paths);
+          const newChildren = deleteByPath(
+            item.children as unknown as T.FileTreeType,
+            paths,
+          );
           if (newChildren !== item.children) {
             return { ...item, children: newChildren };
           }
@@ -274,6 +328,7 @@ export const useFileManage = () => {
   };
 
   return {
+    setFilesData,
     createFile,
     createDirectory,
     renameFile,

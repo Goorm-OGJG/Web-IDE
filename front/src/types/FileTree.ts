@@ -3,7 +3,7 @@ import { DataNode, EventDataNode } from "rc-tree/lib/interface";
 export interface FileType {
   key: string;
   title: string;
-  children?: FileTreeType;
+  children?: FileType[];
 }
 
 export type FileTreeType = FileType[];

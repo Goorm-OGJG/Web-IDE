@@ -3,6 +3,8 @@ import * as Icon from "../../../../components/Icon";
 import { useRecoilState } from "recoil";
 
 import { isExtandAllFilesState } from "../../../../recoil/CodeEditorState";
+import { useParams } from "react-router-dom";
+import { useFilesAPI } from "../../../../api/useFilesAPI";
 // import CreateModal from "./CreateModal";
 // import { useState } from "react";
 
@@ -15,6 +17,8 @@ function SidebarHeader() {
   const handleCloseFileTree = () => {
     setIsExtandAllFilesState(isExtandAllFiles + 1);
   };
+  const { requestFileTreeData } = useFilesAPI();
+  const { containerId } = useParams();
 
   // const handleModal = () => {
   //   setIsModalOpened((prev) => !prev);
@@ -33,7 +37,11 @@ function SidebarHeader() {
           <Icon.FolderClose />
         </S.IconWrapper>
 
-        <S.IconWrapper>
+        <S.IconWrapper
+          onClick={() => {
+            requestFileTreeData(containerId as string);
+          }}
+        >
           <Icon.Refresh />
         </S.IconWrapper>
       </S.Icons>

@@ -16,9 +16,9 @@ export const fileDataState = atom<T.FileData>({
   default: {},
 });
 
-export const directoryDataState = atom<T.DirectoryData>({
+export const directoryDataState = atom<T.FileData>({
   key: "directoryDataState",
-  default: new Set(),
+  default: {},
 });
 
 export const tabsState = atom<T.TabsStateType>({
@@ -55,4 +55,9 @@ export const optionsState = atom<T.OptionsType>({
 export const modeState = atom<T.ModeType>({
   key: "modeState",
   default: "EDIT",
+});
+
+export const RootDirectoryPathState = atom<string>({
+  key: "RootDirectoryPathState",
+  default: "",
 });

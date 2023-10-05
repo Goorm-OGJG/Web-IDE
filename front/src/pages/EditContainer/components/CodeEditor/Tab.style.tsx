@@ -8,7 +8,7 @@ type ActiveProps = {
 
 type TabProps = {
   active: boolean;
-  edited: boolean;
+  edited?: boolean;
 };
 
 export const TabWrapper = styled.div<ActiveProps>`
@@ -29,6 +29,7 @@ export const Tab = styled.div<TabProps>`
   padding-right: 30px;
   font-size: ${FONT.S};
   font-weight: ${(props) => (props.active ? `${FONT.Bold}` : `${FONT.Regular}`)};
+
   color: ${(props) => {
     if (props.edited) {
       return COLOR.Yellow1;

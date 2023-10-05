@@ -9,16 +9,20 @@ import * as RS from "../../../../recoil/CodeEditorState";
 import { getIcon } from "../../../../components/FileIcon";
 import ContextMenu from "./ContextMenu";
 import { getTreeNode } from "./TreeNodes";
+import { useFilesAPI } from "../../../../api/useFilesAPI";
+import { useParams } from "react-router";
 
 function SidebarFileTree() {
   const [tabs, setTabs] = useRecoilState(RS.tabsState);
-  const [treeData, setTreeData] = useRecoilState(RS.treeDataState);
-  const [fileData, setFileData] = useRecoilState(RS.fileDataState);
+  const treeData = useRecoilValue(RS.treeDataState);
+  const fileData = useRecoilValue(RS.fileDataState);
   const [isContextMenuOpened, setIsContextMenuOpened] = useRecoilState(
     RS.isContextModalOpenedState,
   );
   const setSelectedInfo = useSetRecoilState(RS.selectedInfoState);
   const isExtandAllFiles = useRecoilValue<number>(RS.isExtandAllFilesState);
+  const { requestFileTreeData } = useFilesAPI();
+  const { containerId } = useParams();
 
   // 파일시스템 요소 타입(파일, 혹은 디렉토리)에 따른 아이콘 생성 로직
   const switcherIcon: TreeProps["switcherIcon"] = (fsElement) => {
@@ -68,44 +72,7 @@ function SidebarFileTree() {
   };
 
   useEffect(() => {
-    setTreeData([
-      {
-        key: "/hello/",
-        title: "hello",
-        children: [
-          {
-            key: "/hello/duck/",
-            title: "duck",
-            children: [{ key: "/hello/duck/duck1.css", title: "duck1.css" }],
-          },
-          {
-            key: "/hello/bird/",
-            title: "bird",
-            children: [
-              { key: "/hello/bird/bird1.png", title: "bird1.png" },
-              { key: "/hello/bird/bird2.txt", title: "bird2.txt" },
-              {
-                key: "/hello/bird/minsu/",
-                title: "minsu",
-                children: [{ key: "/hello/bird/minsu/minsu1.tsx", title: "minsu1.tsx" }],
-              },
-            ],
-          },
-          {
-            key: "/hello/empty/",
-            title: "empty",
-            children: [],
-          },
-        ],
-      },
-    ]);
-
-    setFileData({
-      "/hello/duck/duck1.css": "cdb9986c-ff3c-4ee8-8b6b-142971bb7ff3",
-      "/hello/bird/bird1.png": "734f6f91-cebc-412d-b2f4-635e12fd248b",
-      "/hello/bird/bird2.txt": "3d64440f-571c-46a4-a6f3-a7b24e67690c",
-      "/hello/bird/minsu/minsu1.tsx": "d64d75ee-e629-438b-b62b-43538bfc3b5c",
-    });
+    requestFileTreeData(containerId as string);
   }, []);
 
   return (

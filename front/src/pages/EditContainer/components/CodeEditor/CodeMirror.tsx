@@ -72,6 +72,8 @@ function CodeMirror() {
           `${fileData[tabs.files[tabs.active]]}`, //          narcoker-root-duck-duck1.css
         );
 
+        console.log(fileData);
+
         await client.attach(doc);
 
         doc.update((root) => {

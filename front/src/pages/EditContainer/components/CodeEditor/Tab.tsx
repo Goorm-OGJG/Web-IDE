@@ -2,7 +2,7 @@ import * as S from "./Tab.style";
 import * as Icon from "../../../../components/Icon";
 import { useRecoilValue } from "recoil";
 import { ReactEventHandler } from "react";
-import { fileDataState, tabsState } from "../../../../recoil/CodeEditorState";
+import { tabsState } from "../../../../recoil/CodeEditorState";
 import { useTab } from "../../../../hooks/CodeEditor/useTab";
 import { getIcon } from "../../../../components/FileIcon";
 
@@ -11,13 +11,14 @@ type PropsType = {
 };
 
 function Tab({ file }: PropsType) {
+  // const fileData = useRecoilValue(fileDataState);
   const tabs = useRecoilValue(tabsState);
-  const fileData = useRecoilValue(fileDataState);
   const { tabActive, tabClose } = useTab();
   const title = file.split("/").pop() as string;
   const extension = file.split(".").pop() as string;
   const extensionIcon = getIcon(extension);
   const tabIndex = tabs.files.indexOf(file);
+
   //탭 틀릭 이벤트 핸들러 함수
   const handleTabClick = (selectedFile: string) => {
     tabActive(selectedFile);
@@ -34,7 +35,7 @@ function Tab({ file }: PropsType) {
       {extensionIcon}
       <S.Tab
         active={tabIndex == tabs.active}
-        edited={tabs.codes[tabIndex] != fileData[file]}
+        // edited={tabs.codes[tabIndex] != fileData[file]}
       >
         {title}
       </S.Tab>

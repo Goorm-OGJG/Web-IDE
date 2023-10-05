@@ -3,9 +3,11 @@ import * as S from "./CreateFileModal.style";
 import InputFsName from "./InputFsName";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { modeState, selectedInfoState } from "../../../../recoil/CodeEditorState";
-import { useFileManage } from "../../../../hooks/CodeEditor/useFileManage";
+// import { useFileManage } from "../../../../hooks/CodeEditor/useFileManage";
 import * as T from "../../../../types/FileTree";
 import { FILENAME_REG } from "../../../../constants/regExp";
+import { useFilesAPI } from "../../../../api/useFilesAPI";
+import { RequestCreateFilePayload } from "../../../../types/filesAPIType";
 
 function CreateFileModal() {
   const setMode = useSetRecoilState(modeState);
@@ -13,13 +15,18 @@ function CreateFileModal() {
   const path = selectedInfo?.node.key;
   const inputRef = useRef<HTMLInputElement | null>(null);
   const modalRef = useRef<HTMLInputElement | null>(null);
-  const { createFile } = useFileManage();
   const [isNotOK, setIsNotOK] = useState(false);
-
+  const { requestCreateFile } = useFilesAPI();
   const handlerOK = () => {
     if (FILENAME_REG.test(inputRef.current!.value)) {
       setIsNotOK(false);
-      createFile(selectedInfo as T.InfoType, inputRef.current!.value);
+
+      const payload: RequestCreateFilePayload = {
+        filePath: selectedInfo?.node.key as string,
+        uuid: crypto.randomUUID(),
+      };
+      requestCreateFile(payload, selectedInfo as T.InfoType, inputRef.current!.value);
+
       setMode("EDIT");
       return;
     }

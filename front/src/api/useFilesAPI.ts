@@ -1,21 +1,13 @@
 import { useAxios } from "./useAxios";
 import * as T from "../types/filesAPIType";
-import { FileData, DirectoryDataType, InfoType } from "../types/FileTree";
+import { InfoType } from "../types/FileTree";
 import { useFileManage } from "../hooks/CodeEditor/useFileManage";
-import { useSetRecoilState } from "recoil";
-import {
-  directoryDataState,
-  fileDataState,
-  treeDataState,
-} from "../recoil/CodeEditorState";
 
 export function useFilesAPI() {
   const axios = useAxios();
-  const setTreeData = useSetRecoilState(treeDataState);
-  const setFileData = useSetRecoilState(fileDataState);
-  const setDirectoryData = useSetRecoilState(directoryDataState);
 
   const {
+    setFilesData,
     createFile,
     createDirectory,
     renameFile,
@@ -25,31 +17,15 @@ export function useFilesAPI() {
     saveActiveTabFile,
   } = useFileManage();
 
-  const requestFilesData = (containerId: string): void => {
+  const requestFileTreeData = (containerId: string): void => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/api/container/${containerId}`)
+      .get(`${import.meta.env.VITE_API_URL}/api/containers/${containerId}`)
       .then((response) => {
-        setTreeData(response.data.data.treeData);
-        setFileData(getFileMap(response.data.data.fileData));
-        setDirectoryData(getDirectorySet(response.data.data.directories));
+        setFilesData(response.data.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  };
-
-  const getFileMap = (fileData: T.ResponseFileData): FileData => {
-    return fileData.reduce((result: FileData, data: T.ResponseFileType) => {
-      result[data.filePath] = data.content; // content -> uuid 수정 필요
-      return result;
-    }, {});
-  };
-
-  const getDirectorySet = (directoryData: T.ResponseDirectoryData): DirectoryDataType => {
-    return directoryData.reduce((result: DirectoryDataType, data: string) => {
-      result.add(data);
-      return result;
-    }, new Set());
   };
 
   const requestCreateFile = (
@@ -58,11 +34,16 @@ export function useFilesAPI() {
     fileName: string,
   ): void => {
     axios
-      .post(`${import.meta.env.VITE_API_URL}/api/files?filePath=${payload.filePath}`, {
-        uuid: payload.uuid,
-      })
+      .post(
+        `${import.meta.env.VITE_API_URL}/api/files?filePath=${
+          payload.filePath
+        }${fileName}`,
+        {
+          uuid: payload.uuid,
+        },
+      )
       .then(() => {
-        createFile(info, fileName);
+        createFile(info, fileName, payload.uuid);
       })
       .catch((error) => {
         console.log(error);
@@ -70,15 +51,16 @@ export function useFilesAPI() {
   };
 
   const requestCreateDirectory = (
-    payload: T.RequestCreateDirectoryPayload,
     info: InfoType,
     directoryName: string,
+    payload: T.RequestCreateDirectoryPayload,
   ): void => {
     axios
       .post(
         `${import.meta.env.VITE_API_URL}/api/directories?directoryPath=${
           payload.directoryPath
-        }`,
+        }/`,
+        { uuid: payload.uuid },
       )
       .then(() => {
         createDirectory(info, directoryName);
@@ -123,7 +105,7 @@ export function useFilesAPI() {
 
   const requestDeleteFile = (filePath: string, info: InfoType): void => {
     axios
-      .delete(`${import.meta.env.VITE_API_URL}/api/files?filePath=${filePath}`, {})
+      .delete(`${import.meta.env.VITE_API_URL}/api/files?filePath=${filePath}`)
       .then(() => {
         deleteFile(info);
       })
@@ -172,7 +154,7 @@ export function useFilesAPI() {
   };
 
   return {
-    requestFilesData,
+    requestFileTreeData,
     requestCreateFile,
     requestCreateDirectory,
     requestRenameFile,

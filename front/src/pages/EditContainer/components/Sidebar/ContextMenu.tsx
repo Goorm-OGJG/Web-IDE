@@ -4,19 +4,23 @@ import * as S from "./ContextMenu.style";
 import { useFileManage } from "../../../../hooks/CodeEditor/useFileManage";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
+  RootDirectoryPathState,
   isContextModalOpenedState,
   modeState,
   selectedInfoState,
 } from "../../../../recoil/CodeEditorState";
+import { useFilesAPI } from "../../../../api/useFilesAPI";
 
 function ContextMenu() {
   const selectedInfo = useRecoilValue(selectedInfoState);
   const setIsContextMenuOpened = useSetRecoilState(isContextModalOpenedState);
   const setMode = useSetRecoilState(modeState);
+  const rootPath = useRecoilValue(RootDirectoryPathState);
 
   const isFile = selectedInfo?.node.title?.toString().includes(".");
+
   const contextMenuRef = useRef<HTMLDivElement | null>(null);
-  const { saveFile, deleteFile } = useFileManage();
+  const { saveFile } = useFileManage();
 
   const handleClickOutside = (event: MouseEvent) => {
     const isContextMenuAvailable = contextMenuRef.current !== null;
@@ -25,6 +29,8 @@ function ContextMenu() {
       setIsContextMenuOpened(false);
     }
   };
+
+  const { requestDeleteFile, requestDeleteDirectory } = useFilesAPI();
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -49,7 +55,7 @@ function ContextMenu() {
   const handleDeleteFile = (info: T.InfoType): void => {
     console.log(`${info.node.key} 파일 삭제`);
     setIsContextMenuOpened(false);
-    deleteFile(info);
+    requestDeleteFile(info.node.key as string, info);
   };
 
   const handleCreateFile = (info: T.InfoType): void => {
@@ -73,7 +79,7 @@ function ContextMenu() {
   const handleDeleteDirectory = (info: T.InfoType): void => {
     console.log(`${info.node.key} 폴더 삭제`);
     setIsContextMenuOpened(false);
-    deleteFile(info);
+    requestDeleteDirectory(info.node.key as string, info);
   };
 
   return (
@@ -101,12 +107,18 @@ function ContextMenu() {
           <S.Menu onClick={() => handleCreateDirectory(selectedInfo as T.InfoType)}>
             폴더 추가
           </S.Menu>
-          <S.Menu onClick={() => handleChangeDirectoryName(selectedInfo as T.InfoType)}>
-            이름 변경
-          </S.Menu>
-          <S.Menu onClick={() => handleDeleteDirectory(selectedInfo as T.InfoType)}>
-            삭제
-          </S.Menu>
+          {selectedInfo?.node.key !== rootPath && (
+            <>
+              <S.Menu
+                onClick={() => handleChangeDirectoryName(selectedInfo as T.InfoType)}
+              >
+                이름 변경
+              </S.Menu>
+              <S.Menu onClick={() => handleDeleteDirectory(selectedInfo as T.InfoType)}>
+                삭제
+              </S.Menu>
+            </>
+          )}
         </>
       )}
     </S.Menus>

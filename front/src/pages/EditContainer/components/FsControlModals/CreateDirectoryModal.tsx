@@ -3,9 +3,10 @@ import * as S from "./CreateFileModal.style";
 import InputFsName from "./InputFsName";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { modeState, selectedInfoState } from "../../../../recoil/CodeEditorState";
-import { useFileManage } from "../../../../hooks/CodeEditor/useFileManage";
 import * as T from "../../../../types/FileTree";
 import { DIRECTORYNAME_REG } from "../../../../constants/regExp";
+import { useFilesAPI } from "../../../../api/useFilesAPI";
+import { RequestCreateDirectoryPayload } from "../../../../types/filesAPIType";
 
 function CreateDirectoryModal() {
   const setMode = useSetRecoilState(modeState);
@@ -13,13 +14,24 @@ function CreateDirectoryModal() {
   const path = selectedInfo?.node.key;
   const inputRef = useRef<HTMLInputElement | null>(null);
   const modalRef = useRef<HTMLInputElement | null>(null);
-  const { createDirectory } = useFileManage();
+  const { requestCreateDirectory } = useFilesAPI();
+
   const [isNotOK, setIsNotOK] = useState(false);
 
   const handlerOK = () => {
     if (DIRECTORYNAME_REG.test(inputRef.current!.value)) {
       setIsNotOK(false);
-      createDirectory(selectedInfo as T.InfoType, inputRef.current!.value);
+      // createDirectory(selectedInfo as T.InfoType, inputRef.current!.value);
+
+      const payload: RequestCreateDirectoryPayload = {
+        directoryPath: `${selectedInfo?.node.key}${inputRef.current!.value}`,
+        uuid: `${crypto.randomUUID}`,
+      };
+      requestCreateDirectory(
+        selectedInfo as T.InfoType,
+        inputRef.current!.value,
+        payload,
+      );
       setMode("EDIT");
       return;
     }

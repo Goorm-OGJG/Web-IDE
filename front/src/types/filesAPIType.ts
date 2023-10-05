@@ -1,10 +1,19 @@
-export type ResponseFileData = ResponseFileType[];
+import { FileType as ReponseFileType } from "./FileTree";
 
-export interface ResponseFileType {
+export type ResponseTreeDataType = {
+  language: string;
+  treeData: ReponseFileType;
+  fileData: FileType[];
+  directories: FileType[];
+};
+
+export type ResponseFileData = FileType[];
+
+export type FileType = {
   filePath: string;
-  content: string;
+  content?: string;
   uuid: string;
-}
+};
 
 export type ResponseDirectoryData = string[];
 
@@ -15,6 +24,7 @@ export interface RequestCreateFilePayload {
 
 export interface RequestCreateDirectoryPayload {
   directoryPath: string;
+  uuid: string;
 }
 
 export interface RequestRenameFilePayload {
