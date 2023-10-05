@@ -3,11 +3,13 @@ package com.ogjg.back.user.service;
 import com.ogjg.back.common.exception.ErrorCode;
 import com.ogjg.back.common.response.ApiResponse;
 import com.ogjg.back.config.security.emailauth.EmailAuthUserDetails;
+import com.ogjg.back.config.security.exception.EmailAuthFailure;
 import com.ogjg.back.config.security.jwt.JwtUtils;
 import com.ogjg.back.user.domain.EmailAuth;
 import com.ogjg.back.user.dto.EmailAuthSaveDto;
 import com.ogjg.back.user.dto.request.EmailAuthRequest;
 import com.ogjg.back.user.dto.request.JwtEmailAuthClaimsDto;
+import com.ogjg.back.user.exception.SignUpFailure;
 import com.ogjg.back.user.repository.EmailAuthRepository;
 import com.ogjg.back.user.repository.UserRepository;
 import jakarta.mail.MessagingException;
@@ -21,10 +23,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Map;
 
 @Service
@@ -37,7 +39,7 @@ public class EmailAuthService {
     private final JavaMailSender mailSender;
     private final JwtUtils jwtUtils;
     private final Map<String, SseEmitter> clients;
-    private static final String EMAIL_AUTH_ADDRESS = "http://localhost:8080/api/users/email-auth/success";
+    private static final String EMAIL_AUTH_ADDRESS = "https://ogjg.store/api/users/email-auth/success";
 
     /*
      * 이메일 중복 체크 후 인증관련 데이터 저장 후 인증 메일 발송
@@ -46,7 +48,7 @@ public class EmailAuthService {
     public void emailAuth(EmailAuthRequest emailAuthRequest, String clientId) {
 
         if (userRepository.findByEmail(emailAuthRequest.getEmail()).isPresent())
-            throw new IllegalArgumentException("이미 가입된 이메일 입니다.");
+            throw new SignUpFailure("이미 가입된 이메일 입니다.");
 
         EmailAuth emailAuth = saveEmailAuth(emailAuthRequest, clientId);
 
@@ -79,7 +81,7 @@ public class EmailAuthService {
      * */
     private EmailAuth findEmailAuthByEmail(String email) {
         return emailAuthRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("인증을 위한 이메일을 찾을 수 없습니다"));
+                .orElseThrow(() -> new EmailAuthFailure("인증을 위한 이메일을 찾을 수 없습니다"));
     }
 
     /*
@@ -112,7 +114,7 @@ public class EmailAuthService {
 
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            throw new IllegalArgumentException("인증 이메일을 발송하는데 오류가 발생했습니다");
+            throw new EmailAuthFailure("인증 이메일을 발송하는데 오류가 발생했습니다");
         }
     }
 
@@ -122,10 +124,20 @@ public class EmailAuthService {
     public String emailAuthTemplate(String emailTemplate) {
         try {
             ClassPathResource resource = new ClassPathResource(emailTemplate);
-            byte[] encoded = Files.readAllBytes(Paths.get(resource.getURI()));
-            return new String(encoded, StandardCharsets.UTF_8);
+            InputStream inputStream = resource.getInputStream();
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+            int nRead;
+            byte[] data = new byte[1024];
+            while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+
+            buffer.flush();
+
+            return buffer.toString(StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new IllegalArgumentException("이메일 인증 템플릿을 불러올 수 없습니다");
+            throw new EmailAuthFailure("이메일 인증 템플릿을 불러올 수 없습니다");
         }
     }
 

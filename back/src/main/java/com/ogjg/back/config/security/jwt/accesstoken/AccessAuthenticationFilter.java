@@ -1,5 +1,8 @@
 package com.ogjg.back.config.security.jwt.accesstoken;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ogjg.back.common.exception.ErrorCode;
+import com.ogjg.back.common.response.ApiResponse;
 import com.ogjg.back.config.security.exception.JwtAuthFailure;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -36,14 +39,23 @@ public class AccessAuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
-            String accessToken = getAccessToken(request);
+            String accessToken = getAccessToken(request, response);
             AccessAuthenticationToken accessAuthenticationToken = new AccessAuthenticationToken(accessToken);
 
             Authentication authenticate = authenticationManager.authenticate(accessAuthenticationToken);
 
             SecurityContextHolder.getContext().setAuthentication(authenticate);
         } catch (Exception e) {
-            throw new JwtAuthFailure("AccessToken 인증 실패");
+// todo 구조적 개선 필요
+            response.setStatus(ErrorCode.AUTH_FAIL.getStatusCode().value());
+            ApiResponse<?> jsonResponse = new ApiResponse<>(ErrorCode.AUTH_FAIL.changeMessage("AccessToken 인증 실패"));
+            ObjectMapper objectMapper = new ObjectMapper();
+            String errorResponse = objectMapper.writeValueAsString(jsonResponse);
+            response.setCharacterEncoding("utf-8");
+            response.getWriter().write(errorResponse);
+//            throw new JwtAuthFailure("AccessToken 인증 실패");
+            return;
+
         }
     }
 
@@ -62,7 +74,7 @@ public class AccessAuthenticationFilter extends OncePerRequestFilter {
     /*
      * 헤더에서 토큰값 가져오기
      * */
-    private String getAccessToken(HttpServletRequest request) {
+    private String getAccessToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String jwt = request.getHeader("Authorization");
 
         if (jwt != null && jwt.startsWith(PREFIX)) {
@@ -71,4 +83,5 @@ public class AccessAuthenticationFilter extends OncePerRequestFilter {
 
         throw new JwtAuthFailure("유효하지 않은 JWT 입니다.");
     }
+
 }

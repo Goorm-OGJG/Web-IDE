@@ -101,10 +101,10 @@ function SidebarFileTree() {
     ]);
 
     setFileData({
-      "/hello/duck/duck1.css": "duck1.css 파일 내용",
-      "/hello/bird/bird1.png": "bird1.png 파일 내용",
-      "/hello/bird/bird2.txt": "bird2.txt 파일 내용",
-      "/hello/bird/minsu/minsu1.tsx": "minsu1.tsx 파일 내용",
+      "/hello/duck/duck1.css": "cdb9986c-ff3c-4ee8-8b6b-142971bb7ff3",
+      "/hello/bird/bird1.png": "734f6f91-cebc-412d-b2f4-635e12fd248b",
+      "/hello/bird/bird2.txt": "3d64440f-571c-46a4-a6f3-a7b24e67690c",
+      "/hello/bird/minsu/minsu1.tsx": "d64d75ee-e629-438b-b62b-43538bfc3b5c",
     });
   }, []);
 

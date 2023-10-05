@@ -3,9 +3,7 @@ package com.ogjg.back.file.controller;
 import com.ogjg.back.common.exception.ErrorCode;
 import com.ogjg.back.common.response.ApiResponse;
 import com.ogjg.back.file.dto.request.CreateFileRequest;
-import com.ogjg.back.file.dto.request.DeleteFileRequest;
 import com.ogjg.back.file.dto.request.UpdateFileRequest;
-import com.ogjg.back.file.dto.request.UpdateFilenameRequest;
 import com.ogjg.back.file.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +22,11 @@ public class FileController {
      */
     @PostMapping("")
     public ApiResponse<Void> createFile(
+            @RequestParam("filePath") String filePath,
             @RequestBody CreateFileRequest request
     ) {
         String loginEmail = "ogjg1234@naver.com";
-        fileService.createFile(loginEmail, request);
+        fileService.createFile(loginEmail, filePath, request.getUuid());
         return new ApiResponse<>(ErrorCode.SUCCESS);
     }
 
@@ -36,10 +35,10 @@ public class FileController {
      */
     @DeleteMapping("")
     public ApiResponse<Void> deleteFile(
-            @RequestBody DeleteFileRequest request
+        @RequestParam("filePath") String filePath
     ) {
         String loginEmail = "ogjg1234@naver.com";
-        fileService.deleteFile(loginEmail, request);
+        fileService.deleteFile(loginEmail, filePath);
         return new ApiResponse<>(ErrorCode.SUCCESS);
     }
 
@@ -48,10 +47,11 @@ public class FileController {
      */
     @PutMapping("")
     public ApiResponse<Void> updateFile(
+            @RequestParam("filePath") String filePath,
             @RequestBody UpdateFileRequest request
     ) {
         String loginEmail = "ogjg1234@naver.com";
-        fileService.updateFile(loginEmail, request);
+        fileService.updateFile(loginEmail, filePath, request);
         return new ApiResponse<>(ErrorCode.SUCCESS);
     }
 
@@ -60,10 +60,12 @@ public class FileController {
      */
     @PutMapping("/rename")
     public ApiResponse<Void> updateFilename(
-            @RequestBody UpdateFilenameRequest request
+            @RequestParam String filePath,
+            @RequestParam String newFilename
+
     ) {
         String loginEmail = "ogjg1234@naver.com";
-        fileService.updateFilename(loginEmail, request);
+        fileService.updateFilename(loginEmail, filePath, newFilename);
         return new ApiResponse<>(ErrorCode.SUCCESS);
     }
 }

@@ -1,5 +1,8 @@
 package com.ogjg.back.config.security.emailauth;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ogjg.back.common.exception.ErrorCode;
+import com.ogjg.back.common.response.ApiResponse;
 import com.ogjg.back.config.security.exception.EmailAuthFailure;
 import com.ogjg.back.user.service.EmailAuthService;
 import jakarta.servlet.FilterChain;
@@ -51,6 +54,13 @@ public class EmailAuthenticationFilter extends OncePerRequestFilter {
 
         } catch (Exception e) {
             log.error("이메일 인증도중 에러발생 = {}", e.getMessage());
+//todo 구조적 개선필요
+            response.setStatus(ErrorCode.EMAIL_AUTH_FAIL.getStatusCode().value());
+            ApiResponse<?> jsonResponse = new ApiResponse<>(ErrorCode.EMAIL_AUTH_FAIL.changeMessage("이메일 인증 실패"));
+            ObjectMapper objectMapper = new ObjectMapper();
+            String errorResponse = objectMapper.writeValueAsString(jsonResponse);
+            response.setCharacterEncoding("utf-8");
+            response.getWriter().write(errorResponse);
             throw new EmailAuthFailure("이메일 인증 실패");
         }
 

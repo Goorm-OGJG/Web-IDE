@@ -27,10 +27,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -45,6 +45,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final JavaMailSender mailSender;
+    private final EmailAuthService emailAuthService;
 
     @Transactional
     public ImgUpdateResponse updateImg(MultipartFile multipartFile, String loginEmail) {
@@ -80,7 +81,7 @@ public class UserService {
         findUser.deactivate();
     }
 
-    protected User findByEmail(String email) {
+    private User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(NotFoundUser::new);
     }
@@ -187,14 +188,25 @@ public class UserService {
     private String passwordFindTemplate() {
         try {
             ClassPathResource resource = new ClassPathResource("email_pwd_find.html");
-            byte[] encoded = Files.readAllBytes(Paths.get(resource.getURI()));
-            return new String(encoded, StandardCharsets.UTF_8);
+            InputStream inputStream = resource.getInputStream();
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+            int nRead;
+            byte[] data = new byte[1024];
+            while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+
+            buffer.flush();
+
+            return buffer.toString(StandardCharsets.UTF_8);
+
         } catch (IOException e) {
             throw new IllegalArgumentException("임시 비밀번호 템플릿을 불러올 수 없습니다");
         }
     }
 
-    public UserResponse userInfo(String email){
+    public UserResponse userInfo(String email) {
         return userRepository.findByEmail(email)
                 .map(UserResponse::new)
                 .orElseThrow(NotFoundUser::new);

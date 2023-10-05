@@ -1,10 +1,13 @@
 package com.ogjg.back.user.domain;
 
+import com.ogjg.back.container.domain.Container;
 import com.ogjg.back.user.dto.SignUpSaveDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -21,6 +24,9 @@ public class User {
     private String name;
 
     private String userImg;
+
+    @OneToMany(mappedBy = "user")
+    private List<Container> containers;
 
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus = UserStatus.ACTIVE;

@@ -9,10 +9,10 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 public class CreateFileRequest {
-    private String filePath;
+    private String uuid;
 
     @Builder
-    public CreateFileRequest(String filePath) {
-        this.filePath = filePath;
+    public CreateFileRequest(String uuid) {
+        this.uuid = uuid;
     }
 }

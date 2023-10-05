@@ -3,8 +3,6 @@ package com.ogjg.back.directory.service;
 import com.ogjg.back.container.exception.NotFoundContainer;
 import com.ogjg.back.container.repository.ContainerRepository;
 import com.ogjg.back.directory.dto.request.CreateDirectoryRequest;
-import com.ogjg.back.directory.dto.request.DeleteDirectoryRequest;
-import com.ogjg.back.directory.dto.request.UpdateDirectoryNameRequest;
 import com.ogjg.back.directory.exception.DirectoryAlreadyExists;
 import com.ogjg.back.directory.exception.NotFoundDirectory;
 import com.ogjg.back.s3.service.S3DirectoryService;
@@ -24,8 +22,7 @@ public class DirectoryService {
     private final S3DirectoryService s3DirectoryService;
 
     @Transactional
-    public void createDirectory(String loginEmail, CreateDirectoryRequest request) {
-        String directoryPath = request.getDirectoryPath();
+    public void createDirectory(String loginEmail, String directoryPath, CreateDirectoryRequest request) {
         String s3Path = givenPathToS3Path(loginEmail, directoryPath);
 
         if (!isContainerExist(loginEmail, extractContainerName(directoryPath))) throw new NotFoundContainer();
@@ -35,8 +32,7 @@ public class DirectoryService {
     }
 
     @Transactional
-    public void deleteDirectory(String loginEmail, DeleteDirectoryRequest request) {
-        String directoryPath = request.getDirectoryPath();
+    public void deleteDirectory(String loginEmail, String directoryPath) {
         String s3Path = givenPathToS3Path(loginEmail, directoryPath);
 
         if (!isContainerExist(loginEmail, extractContainerName(directoryPath))) throw new NotFoundContainer();
@@ -46,14 +42,11 @@ public class DirectoryService {
     }
 
     @Transactional
-    public void updateDirectoryName(String loginEmail, UpdateDirectoryNameRequest request) {
-        String originPath = request.getDirectoryPath();
-        String name = request.getNewDirectoryName();
+    public void updateDirectoryName(String loginEmail, String directoryPath, String newDirectoryName) {
+        String originS3Path = givenPathToS3Path(loginEmail, directoryPath);
+        String newS3Path = createNewDirectoryPath(originS3Path, newDirectoryName);
 
-        String originS3Path = givenPathToS3Path(loginEmail, originPath);
-        String newS3Path = createNewDirectoryPath(originS3Path, name);
-
-        if (!isContainerExist(loginEmail, extractContainerName(originPath))) throw new NotFoundContainer();
+        if (!isContainerExist(loginEmail, extractContainerName(directoryPath))) throw new NotFoundContainer();
         if (!s3DirectoryService.isDirectoryAlreadyExist(originS3Path)) throw new NotFoundDirectory();
 
         s3DirectoryService.updateDirectoryName(originS3Path, newS3Path);

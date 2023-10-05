@@ -51,7 +51,14 @@ public class RefreshTokenAuthenticationFilter extends OncePerRequestFilter {
             authenticate = authenticationManager.authenticate(refreshAuthenticationToken);
 
         } catch (Exception e) {
+//            todo 구조적 개선필요
             log.error("RefreshToken 인증도중 에러발생 = {}", e.getMessage());
+            response.setStatus(ErrorCode.AUTH_FAIL.getStatusCode().value());
+            ApiResponse<?> jsonResponse = new ApiResponse<>(ErrorCode.AUTH_FAIL.changeMessage("RefreshToken 인증 실패"));
+            ObjectMapper objectMapper = new ObjectMapper();
+            String errorResponse = objectMapper.writeValueAsString(jsonResponse);
+            response.setCharacterEncoding("utf-8");
+            response.getWriter().write(errorResponse);
             throw new JwtAuthFailure("RefreshToken 인증 실패");
         }
 

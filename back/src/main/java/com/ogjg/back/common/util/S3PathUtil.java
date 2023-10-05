@@ -57,4 +57,21 @@ public class S3PathUtil {
     public static String createNewKey(String originPrefix, String newS3Path, S3Object s3Object) {
         return newS3Path + s3Object.key().substring(originPrefix.length());
     }
+
+    public static String extractFileName(String filePath) {
+        int lastIndex = filePath.lastIndexOf(DELIMITER);
+        return filePath.substring(lastIndex + 1);
+    }
+
+    public static String extractFilePrefix(String filePath) {
+        int lastIndex = filePath.lastIndexOf(DELIMITER);
+        return filePath.substring(0, lastIndex + 1);
+    }
+
+    public static String extractKeyPrefix(String filePath) {
+        int lastIndex = filePath.lastIndexOf(DELIMITER);
+        return filePath.substring(0, lastIndex + 1);
+    }
+
+
 }

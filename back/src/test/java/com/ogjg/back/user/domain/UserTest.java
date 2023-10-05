@@ -1,13 +1,12 @@
 package com.ogjg.back.user.domain;
 
-import com.ogjg.back.user.dto.request.PasswordUpdateRequest;
-import com.ogjg.back.user.exception.InvalidCurrentPassword;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class UserTest {
 
@@ -15,9 +14,11 @@ public class UserTest {
 
     @BeforeEach
     public void setUp() {
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+
         user = User.builder()
                 .email("ogjg1234@naver.com")
-                .password("1q2w3e4r!")
+                .password(encoder.encode("1q2w3e4r!"))
                 .name("김회원")
                 .userImg("temp_url : {bucket-name}.s3.{region-code}.amazonaws.com/" + 1L + "/{fileName}")
                 .userStatus(UserStatus.ACTIVE)
@@ -54,40 +55,14 @@ public class UserTest {
     @Test
     public void updatePassword() throws Exception {
         //given
-        String storedPassword = "1q2w3e4r!";
-        String currentPassword = "1q2w3e4r!";
-        String newPassword = "1q2w3e4r@";
-
-        PasswordUpdateRequest request = PasswordUpdateRequest.builder()
-                .newPassword(newPassword)
-                .currentPassword(currentPassword)
-                .build();
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        String newPassword = encoder.encode("1q2w3e4r@");
 
         //when
-        //todo 테스트 잘되는지 확인해보기 암호화된 String 문자열이 들어가야함니다 고쳐주세요
-        User updatedUser = user.updatePassword("request");
+        User updatedUser = user.updatePassword(newPassword);
 
         //then
         assertThat(updatedUser.getPassword()).isEqualTo(newPassword);
-    }
-
-    @DisplayName("회원 비밀번호 변경 예외 - 현재 비밀번호 db와 불일치")
-    @Test
-    public void invalidCurrentPassword() throws Exception {
-        //given
-        String storedPassword = "1q2w3e4r!";
-        String currentPassword = "123invalidPassword!@#";
-        String newPassword = "1q2w3e4r@";
-
-        PasswordUpdateRequest request = PasswordUpdateRequest.builder()
-                .currentPassword(currentPassword)
-                .newPassword(newPassword)
-                .build();
-
-        //whe, then
-        //todo 테스트 잘되는지 확인해보기 고쳐주세요 암호화된 String 문자열이 들어가야합니다
-        assertThatThrownBy(() -> user.updatePassword("request"))
-                .isInstanceOf(InvalidCurrentPassword.class);
     }
 
     @DisplayName("회원 탈퇴")

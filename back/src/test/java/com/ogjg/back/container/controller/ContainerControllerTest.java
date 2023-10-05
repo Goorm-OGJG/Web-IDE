@@ -75,7 +75,7 @@ public class ContainerControllerTest extends ControllerTest {
         // when
         ResultActions result = this.mockMvc.perform(
                 get("/api/containers/check")
-                        .param("name", "컨테이너 1")
+                        .param("name", "{name}")
                         .accept(MediaType.APPLICATION_JSON)
         );
 
@@ -119,6 +119,7 @@ public class ContainerControllerTest extends ControllerTest {
                 .map((key) -> ContainerGetFileResponse.builder()
                         .filePath(key)
                         .content("temp data")
+                        .uuid("temp uuid")
                         .build())
                 .toList();
 
@@ -165,6 +166,7 @@ public class ContainerControllerTest extends ControllerTest {
                                 fieldWithPath("data.fileData[]").description("모든 파일 데이터"),
                                 fieldWithPath("data.fileData[].filePath").description("파일 경로"),
                                 fieldWithPath("data.fileData[].content").description("파일 내용"),
+                                fieldWithPath("data.fileData[].uuid").description("파일 uuid"),
                                 fieldWithPath("data.directories").description("모든 디렉토리 경로")
                         )
                 )
