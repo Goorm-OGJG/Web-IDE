@@ -9,6 +9,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.regex.Pattern;
 
+@Slf4j
 @RequiredArgsConstructor
 public class AccessAuthenticationFilter extends OncePerRequestFilter {
 
@@ -53,10 +55,13 @@ public class AccessAuthenticationFilter extends OncePerRequestFilter {
             String errorResponse = objectMapper.writeValueAsString(jsonResponse);
             response.setCharacterEncoding("utf-8");
             response.getWriter().write(errorResponse);
+            log.info("에러메시지={}", new JwtAuthFailure());
 //            throw new JwtAuthFailure("AccessToken 인증 실패");
-            return;
-
+//            return;
         }
+
+        filterChain.doFilter(request, response);
+
     }
 
     /*
