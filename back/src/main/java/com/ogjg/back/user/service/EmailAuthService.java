@@ -7,7 +7,6 @@ import com.ogjg.back.config.security.exception.EmailAuthFailure;
 import com.ogjg.back.config.security.jwt.JwtUtils;
 import com.ogjg.back.user.domain.EmailAuth;
 import com.ogjg.back.user.dto.EmailAuthSaveDto;
-import com.ogjg.back.user.dto.request.EmailAuthRequest;
 import com.ogjg.back.user.dto.request.JwtEmailAuthClaimsDto;
 import com.ogjg.back.user.exception.SignUpFailure;
 import com.ogjg.back.user.repository.EmailAuthRepository;
@@ -45,14 +44,14 @@ public class EmailAuthService {
      * 이메일 중복 체크 후 인증관련 데이터 저장 후 인증 메일 발송
      * */
     @Transactional
-    public void emailAuth(EmailAuthRequest emailAuthRequest, String clientId) {
+    public void emailAuth(String email, String clientId) {
 
-        if (userRepository.findByEmail(emailAuthRequest.getEmail()).isPresent())
+        if (userRepository.findByEmail(email).isPresent())
             throw new SignUpFailure("이미 가입된 이메일 입니다.");
 
-        EmailAuth emailAuth = saveEmailAuth(emailAuthRequest, clientId);
+        EmailAuth emailAuth = saveEmailAuth(email, clientId);
 
-        sendEmailAuth(emailAuthRequest.getEmail(), emailAuth.getEmailToken());
+        sendEmailAuth(email, emailAuth.getEmailToken());
     }
 
     /*
@@ -60,15 +59,15 @@ public class EmailAuthService {
      * 이미 인증기록이 존재하면 삭제후 다시 생성
      * 삭제가 아니라 업데이트를 사용한다면 성능개선 가능
      * */
-    private EmailAuth saveEmailAuth(EmailAuthRequest emailAuthRequest, String clientId) {
+    private EmailAuth saveEmailAuth(String email, String clientId) {
 
-        if (emailAuthRepository.findByEmail(emailAuthRequest.getEmail()).isPresent())
-            emailAuthRepository.delete(findEmailAuthByEmail(emailAuthRequest.getEmail()));
+        if (emailAuthRepository.findByEmail(email).isPresent())
+            emailAuthRepository.delete(findEmailAuthByEmail(email));
 
-        EmailAuthSaveDto emailAuthSaveDto = new EmailAuthSaveDto(emailAuthRequest.getEmail(), clientId);
+        EmailAuthSaveDto emailAuthSaveDto = new EmailAuthSaveDto(email, clientId);
         emailAuthRepository.save(new EmailAuth(emailAuthSaveDto));
 
-        EmailAuth emailAuth = findEmailAuthByEmail(emailAuthRequest.getEmail());
+        EmailAuth emailAuth = findEmailAuthByEmail(email);
 
         String emailAuthToken = createEmailAuthToken(emailAuth);
         emailAuth.inPutEmailToken(emailAuthToken);
@@ -187,7 +186,7 @@ public class EmailAuthService {
         if (emitter != null) {
             try {
                 emitter.send(
-                        new ApiResponse<>(ErrorCode.SUCCESS.changeMessage("인증이 완료되었습니다"))
+                        new ApiResponse<>(ErrorCode.SUCCESS.changeMessage("email-completed"))
                 );
             } catch (IOException e) {
                 log.error("인증완료 메시지를 보내는데 실패했습니다" + e.getMessage());

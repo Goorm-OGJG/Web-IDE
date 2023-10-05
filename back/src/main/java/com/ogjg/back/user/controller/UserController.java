@@ -3,7 +3,10 @@ package com.ogjg.back.user.controller;
 import com.ogjg.back.common.exception.ErrorCode;
 import com.ogjg.back.common.response.ApiResponse;
 import com.ogjg.back.config.security.jwt.JwtUserDetails;
-import com.ogjg.back.user.dto.request.*;
+import com.ogjg.back.user.dto.request.InfoUpdateRequest;
+import com.ogjg.back.user.dto.request.LoginRequest;
+import com.ogjg.back.user.dto.request.PasswordUpdateRequest;
+import com.ogjg.back.user.dto.request.SignUpRequest;
 import com.ogjg.back.user.dto.response.ImgUpdateResponse;
 import com.ogjg.back.user.dto.response.UserResponse;
 import com.ogjg.back.user.service.EmailAuthService;
@@ -121,10 +124,10 @@ public class UserController {
      * emitter 연결유지
      * 이메일 인증메일 보내기
      * */
-    @PostMapping("/email-auth/{clientId}")
+    @GetMapping(value = "/email-auth/{clientId}/{email}", produces = "text/event-stream;charset=UTF-8")
     public SseEmitter emailAuth(
             @PathVariable(name = "clientId") String clientId,
-            @RequestBody @Valid EmailAuthRequest emailAuthRequest
+            @PathVariable(name = "email") String email
     ) {
         SseEmitter emitter = new SseEmitter(EMAIL_TIMEOUT);
 
@@ -134,11 +137,10 @@ public class UserController {
         });
 
         clients.put(clientId, emitter);
-        emailAuthService.emailAuth(emailAuthRequest, clientId);
-
+        emailAuthService.emailAuth(email, clientId);
         ApiResponse<?> apiResponse = new ApiResponse<>(
                 ErrorCode.SUCCESS
-                        .changeMessage("인증 메일이 전송되었습니다, 인증 확인 버튼을 눌러주세요")
+                        .changeMessage("email-sending")
         );
 
         try {
