@@ -5,6 +5,7 @@ import * as S from "./Main.style";
 import { isMSidebarOpenState, isSidebarOpenState } from "../../recoil/homeState";
 import { Desktop, Mobile } from "../../components/Responsive";
 import Body from "./Body/Body";
+import Chat from "../../components/Chat/Chat";
 function Main() {
   const isSidebarOpen = useRecoilValue(isSidebarOpenState);
   const isMSidebarOpen = useRecoilValue(isMSidebarOpenState);
@@ -15,6 +16,7 @@ function Main() {
         <S.TotalWrapper issidebaropen={isSidebarOpen}>
           <Header />
           <Body />
+          <Chat />
         </S.TotalWrapper>
         <Sidebar />
       </Desktop>
