@@ -1,6 +1,7 @@
 package com.ogjg.back.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ogjg.back.config.security.jwt.JwtUserDetails;
 import com.ogjg.back.container.controller.ContainerController;
 import com.ogjg.back.container.service.ContainerService;
 import com.ogjg.back.directory.controller.DirectoryController;
@@ -10,6 +11,7 @@ import com.ogjg.back.file.service.FileService;
 import com.ogjg.back.s3.service.S3DirectoryService;
 import com.ogjg.back.s3.service.S3ProfileImageService;
 import com.ogjg.back.user.controller.UserController;
+import com.ogjg.back.user.dto.request.JwtUserClaimsDto;
 import com.ogjg.back.user.service.EmailAuthService;
 import com.ogjg.back.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +22,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -44,6 +49,16 @@ public class ControllerTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(documentationConfiguration(restDocumentation))
                 .build();
+
+    // JwtUserDetails 객체 생성
+    JwtUserDetails userDetails = new JwtUserDetails(
+            new JwtUserClaimsDto("ogjg1234@naver.com")
+    );
+
+    // SecurityContext에 JwtUserDetails 설정
+    SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
+        SecurityContextHolder.setContext(securityContext);
     }
 
     @Autowired
