@@ -31,20 +31,6 @@ public class ContainerController {
     }
 
     /**
-     * 컨테이너 삭제
-     */
-    @DeleteMapping("/{containerId}")
-    public ApiResponse<ContainerGetResponse> deleteContainer(
-            @PathVariable("containerId") Long containerId,
-            @AuthenticationPrincipal JwtUserDetails user
-    ) {
-        containerService.deleteContainer(containerId, user.getEmail());
-        return new ApiResponse<>(
-                ErrorCode.SUCCESS
-        );
-    }
-
-    /**
      * 컨테이너 이름 중복체크
      */
     @GetMapping("/check")

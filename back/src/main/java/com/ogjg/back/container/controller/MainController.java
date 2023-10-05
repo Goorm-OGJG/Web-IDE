@@ -3,6 +3,7 @@ package com.ogjg.back.container.controller;
 import com.ogjg.back.common.exception.ErrorCode;
 import com.ogjg.back.common.response.ApiResponse;
 import com.ogjg.back.config.security.jwt.JwtUserDetails;
+import com.ogjg.back.container.dto.response.ContainerGetResponse;
 import com.ogjg.back.container.dto.response.ContainersResponse;
 import com.ogjg.back.container.service.ContainerService;
 import lombok.RequiredArgsConstructor;
@@ -21,15 +22,19 @@ public class MainController {
     private final ContainerService containerService;
 
     @GetMapping("")
-    public ApiResponse<?> getContainers(@RequestParam("search") String query,
-                                        @AuthenticationPrincipal JwtUserDetails userDetails) {
+    public ApiResponse<?> getContainers(
+            @RequestParam("search") String query,
+            @AuthenticationPrincipal JwtUserDetails userDetails
+    ) {
         List<ContainersResponse> containersResponses = containerService.searchContainers(query, userDetails.getEmail());
         return new ApiResponse<>(ErrorCode.SUCCESS, containersResponses);
     }
 
     @PutMapping("/{containerId}/private")
-    public ApiResponse<?> updatePrivateStatus(@PathVariable Long containerId,
-                                              @AuthenticationPrincipal JwtUserDetails userDetails) {
+    public ApiResponse<?> updatePrivateStatus(
+            @PathVariable Long containerId,
+            @AuthenticationPrincipal JwtUserDetails userDetails
+    ) {
         boolean isPrivate = containerService.updatePrivateStatus(containerId, userDetails.getEmail());
         return new ApiResponse<>(ErrorCode.SUCCESS, new HashMap<>(
                 Map.of("containerId", containerId,
@@ -37,9 +42,11 @@ public class MainController {
     }
 
     @PutMapping("/{containerId}/info")
-    public ApiResponse<?> updateContainerInfo(@PathVariable Long containerId,
-                                              @RequestBody Map<String, String> requestMap,
-                                              @AuthenticationPrincipal JwtUserDetails userDetails) {
+    public ApiResponse<?> updateContainerInfo(
+            @PathVariable Long containerId,
+            @RequestBody Map<String, String> requestMap,
+            @AuthenticationPrincipal JwtUserDetails userDetails
+    ) {
         containerService.updateContainerInfo(containerId, requestMap.get("containerInfo"), userDetails.getEmail());
         return new ApiResponse<>(ErrorCode.SUCCESS, new HashMap<>(
                 Map.of("containerId", containerId,
@@ -47,11 +54,27 @@ public class MainController {
     }
 
     @PutMapping("/{containerId}/pin")
-    public ApiResponse<?> updateContainerInfo(@PathVariable Long containerId,
-                                              @AuthenticationPrincipal JwtUserDetails userDetails) {
+    public ApiResponse<?> updateContainerInfo(
+            @PathVariable Long containerId,
+            @AuthenticationPrincipal JwtUserDetails userDetails
+    ) {
         boolean isPinned = containerService.updatePinStatus(containerId, userDetails.getEmail());
         return new ApiResponse<>(ErrorCode.SUCCESS, new HashMap<>(
                 Map.of("containerId", containerId,
                         "pinned", isPinned)));
+    }
+
+    /**
+     * 컨테이너 삭제
+     */
+    @DeleteMapping("/{containerId}")
+    public ApiResponse<ContainerGetResponse> deleteContainer(
+            @PathVariable("containerId") Long containerId,
+            @AuthenticationPrincipal JwtUserDetails user
+    ) {
+        containerService.deleteContainer(containerId, user.getEmail());
+        return new ApiResponse<>(
+                ErrorCode.SUCCESS
+        );
     }
 }
