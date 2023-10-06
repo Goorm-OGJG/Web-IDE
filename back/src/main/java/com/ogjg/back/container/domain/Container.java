@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -35,7 +36,11 @@ public class Container {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @OneToMany(mappedBy = "container")
+    @OneToMany(
+            mappedBy = "container",
+            cascade = ALL,
+            orphanRemoval = true
+    )
     private List<Path> paths = new ArrayList<>();
 
     @Pattern(regexp = "^[a-zA-Z0-9\\-_]{1,20}$",

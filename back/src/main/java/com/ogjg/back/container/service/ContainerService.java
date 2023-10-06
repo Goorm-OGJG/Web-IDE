@@ -205,8 +205,8 @@ public class ContainerService {
         String containerPrefix = createContainerPrefix(email, container.getName());
         if (!s3DirectoryService.isDirectoryAlreadyExist(containerPrefix)) throw new NotFoundDirectory("S3에 존재하지 않는 컨테이너 경로입니다.");
 
+        containerRepository.delete(container);
         s3ContainerService.deleteAllByPrefix(containerPrefix);
 
-        containerRepository.delete(container);
     }
 }
