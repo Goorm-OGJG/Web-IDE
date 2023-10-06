@@ -8,7 +8,7 @@ import * as T from "../../types/userAPIType";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
-  const [isEmailSent, setIsEmailSent] = useState(false);
+  const [isEmailSent, setIsEmailSent] = useState(0);
   const [emailOk, setEmailOk] = useRegTest();
   const [nameOk, setNameOk] = useRegTest();
   const [name, setName] = useState("");
@@ -42,7 +42,7 @@ const Signup = () => {
       nameOk === 1 &&
       PASSWORD_REG.test(passwordRef.current!.value) &&
       passwordRef.current!.value === passwordConfirmRef.current!.value &&
-      isEmailSent
+      isEmailSent === 2
     ) {
       const payload: T.SignUpType = {
         email,
@@ -64,6 +64,7 @@ const Signup = () => {
             type="email"
             value={email}
             placeholder="이메일을 입력하세요"
+            disabled={isEmailSent !== 0}
             onChange={handleEmailChange}
           />
           <S.AuthButton onClick={handleSendEmailClick} disabled={isButtonDisabled}>

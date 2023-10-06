@@ -1,7 +1,8 @@
 import { useAxios } from "./useAxios";
 import * as T from "../types/userAPIType";
 import { useNavigate } from "react-router";
-import React from "react";
+// import React from "react";
+// import axios from "axios";
 
 export function useUserAPI() {
   const axios = useAxios();
@@ -27,6 +28,7 @@ export function useUserAPI() {
       .post(`${import.meta.env.VITE_API_URL}/api/users/signup`, payload)
       .then((response) => {
         if (response) {
+          alert("회원가입에 성공하셨습니다.");
           navigate("/login");
         } else {
           alert("회원가입에 실패하셨습니다. 입력한 정보를 다시 확인해주세요.");
@@ -54,24 +56,31 @@ export function useUserAPI() {
       });
   };
 
-  const requestSendEmail = (
+  const requestSendEmail = async (
     payload: T.SendEmail,
-    setIsEmailSent: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsEmailSent: React.Dispatch<React.SetStateAction<number>>,
   ) => {
     const clientId = crypto.randomUUID();
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/api/users/email-auth/${clientId}`, payload)
-      .then((response) => {
-        if (response) {
-          alert("인증 메일을 발송 했습니다. 메일함을 확인해주세요.");
-          setIsEmailSent(true);
-        } else {
-          alert("인증메일 발송에 실패했습니다.");
-        }
-      })
-      .catch((error) => {
-        alert(error);
-      });
+
+    const eventSource = new EventSource(
+      `${import.meta.env.VITE_API_URL}/api/users/email-auth/${clientId}/${payload.email}`,
+    );
+
+    eventSource.onmessage = function (event) {
+      const data = JSON.parse(event.data);
+      // console.log(data);
+      if (data.status.message === "email-sending") {
+        setIsEmailSent(1);
+      } else if (data.status.message === "email-completed") {
+        setIsEmailSent(2);
+        eventSource.close();
+      }
+    };
+
+    eventSource.onerror = function () {
+      alert("이미 가입된 계정이 또는 일시적 오류가 발생했습니다.");
+      eventSource.close();
+    };
   };
 
   return {

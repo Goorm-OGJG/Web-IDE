@@ -31,7 +31,7 @@ function App() {
   const auth = token != null;
   const location = useLocation();
   const navigate = useNavigate();
-  console.log(location);
+
   useEffect(() => {
     requestUserInfo();
 
