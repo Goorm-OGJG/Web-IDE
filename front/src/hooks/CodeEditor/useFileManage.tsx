@@ -17,6 +17,7 @@ import { FileData } from "../../types/FileTree";
 
 export const useFileManage = () => {
   const [fileData, setFileData] = useRecoilState(fileDataState);
+  const [directoriesData, setDirectoriesData] = useRecoilState(directoryDataState);
   const [treeData, setTreeData] = useRecoilState(treeDataState);
   const [tabs, setTabs] = useRecoilState(tabsState);
   const setDirectoryData = useSetRecoilState(directoryDataState);
@@ -307,6 +308,42 @@ export const useFileManage = () => {
     setTreeData(newTreeData as T.FileTreeType);
   };
 
+  const deleteDirectory = (info: T.InfoType) => {
+    const directoryPath = info.node.key as string;
+
+    // 탭 삭제
+    const childrenFile = info.node.children!.map((file) => file.key);
+    const newTabs = { ...tabs };
+    newTabs.files = newTabs.files.filter((file, index) => {
+      if (!childrenFile.includes(file)) {
+        return true;
+      } else {
+        newTabs.active = Math.min(newTabs.active, index - 1);
+        return false;
+      }
+    });
+
+    if (newTabs.active === -1 && newTabs.files.length > 0) {
+      newTabs.active = 0;
+    }
+    setTabs(newTabs);
+
+    // 로컬 데이터 삭제
+    const newDirectoriesData = { ...directoriesData };
+    delete newDirectoriesData[directoryPath];
+    setDirectoriesData(newDirectoriesData);
+
+    const newFileData = { ...fileData };
+    childrenFile.forEach((filePath) => {
+      delete newFileData[filePath];
+    });
+    setFileData(newFileData);
+
+    // 원격 데이터 삭제
+    const newTreeData = deleteByPath([...treeData], directoryPath);
+    setTreeData(newTreeData as T.FileTreeType);
+  };
+
   const deleteByPath = (
     treeData: T.FileTreeType,
     paths: string,
@@ -336,5 +373,6 @@ export const useFileManage = () => {
     saveFile,
     saveActiveTabFile,
     deleteFile,
+    deleteDirectory,
   };
 };

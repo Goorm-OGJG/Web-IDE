@@ -13,6 +13,7 @@ export function useFilesAPI() {
     renameFile,
     renameDirectory,
     deleteFile,
+    deleteDirectory,
     saveFile,
     saveActiveTabFile,
   } = useFileManage();
@@ -120,7 +121,7 @@ export function useFilesAPI() {
         `${import.meta.env.VITE_API_URL}/api/directories?directoryPath=${directoryPath}`,
       )
       .then(() => {
-        deleteFile(info);
+        deleteDirectory(info);
       })
       .catch((error) => {
         console.log(error);
