@@ -1,11 +1,17 @@
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as Icon from "../../Icon";
 import * as S from "./Space.style";
-import { containersState, isSpaceOpenState } from "../../../recoil/homeState";
+import {
+  isSearchContainer,
+  isSpaceOpenState,
+  totalContainersState,
+} from "../../../recoil/homeState";
 
 import { isSpaceItemId } from "../../../recoil/SidebarState";
 import { containerDataType } from "../../../types/containers";
 import { userInfoState } from "../../../recoil/userState";
+import { useEffect } from "react";
+import useContainerAPI from "../../../api/useContainerAPI";
 
 function Space() {
   const userInfo = useRecoilValue(userInfoState);
@@ -13,15 +19,15 @@ function Space() {
   const [isSpaceOpen, setIsSpaceOpen] = useRecoilState(isSpaceOpenState);
   const [spaceItemId, setSpaceItemId] = useRecoilState(isSpaceItemId);
   // 🔥API를 받아와서 컨테이너를 뿌려주는 데이터
-  const containers = useRecoilValue(containersState);
+  const [totalContainers, setTotalContainers] = useRecoilState(totalContainersState);
 
   // 🔥container종류 개수
-  const allContainerCnt = containers.length;
-  const myContainerCnt = containers.filter((containers: containerDataType) => {
+  const allContainerCnt = totalContainers.length;
+  const myContainerCnt = totalContainers.filter((containers: containerDataType) => {
     return containers.owner === userInfo?.email;
   }).length;
-
-  const shareContainerCnt = containers.filter((containers: containerDataType) => {
+  const searchContainer = useRecoilValue(isSearchContainer);
+  const shareContainerCnt = totalContainers.filter((containers: containerDataType) => {
     return containers.owner !== userInfo?.email;
   }).length;
 
@@ -53,6 +59,12 @@ function Space() {
       spaceCount: shareContainerCnt,
     },
   ];
+  const { requestContainerData } = useContainerAPI();
+  useEffect(() => {
+    if (searchContainer === "") {
+      requestContainerData(searchContainer, setTotalContainers);
+    }
+  }, []);
 
   return (
     <div>

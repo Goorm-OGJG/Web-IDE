@@ -65,6 +65,10 @@ export const containersState = atom<containerDataType[]>({
   //   userImg: [],
   // },
 });
+export const totalContainersState = atom<containerDataType[]>({
+  key: "totalContainersState",
+  default: [],
+});
 export const isOrdered = atom<string>({
   key: "isOrdered",
   default: "updated",

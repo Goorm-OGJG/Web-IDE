@@ -1,6 +1,6 @@
 import * as S from "./BodyHeader.style";
 import * as Icon from "../../../../components/Icon";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   isOrdered,
   isUpdateModal,
@@ -15,7 +15,8 @@ function BodyHeader() {
   const [isRecentUpdateModal, setIsRecentUpdateModal] = useRecoilState(isUpdateModal);
   const [searchText, setSearchText] = useState<string>("");
   const [searchContainer, setSearchContainer] = useRecoilState(isSearchContainer);
-  const setContainers = useSetRecoilState(containersState);
+  const [containers, setContainers] = useRecoilState(containersState);
+  const [totalContainers, setTotalContainers] = useRecoilState(containersState);
   const ordered = useRecoilValue(isOrdered);
   const { requestContainerData } = useContainerAPI();
 
@@ -35,6 +36,12 @@ function BodyHeader() {
     // 🔥 컨테이너 API 호출: 검색 컨테이너, ordered는 (생성일, 수정일인지) 보내고 setContainers 로 받아온다.
     requestContainerData(searchContainer, setContainers);
   }, [searchContainer]);
+  useEffect(() => {
+    if (searchContainer === "" && containers) {
+      requestContainerData(searchContainer, setTotalContainers);
+    }
+  }, []);
+  console.log(totalContainers);
   return (
     <div>
       <S.BodyHeaderWrapper>
