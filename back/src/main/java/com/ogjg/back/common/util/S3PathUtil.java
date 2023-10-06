@@ -5,24 +5,30 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 public class S3PathUtil {
 
     public static final String DELIMITER = "/";
-    public static final char S3_EMAIL_DELIMETER = '-';
+    public static final char S3_EMAIL_DELIMITER = '-';
+    public static final String EXTENSION_DOT = ".";
 
-    /**
-     * email을 s3 prefix로 사용하기 위해 특수문자를 '-'로 대체한다.
-     */
     public static String createContainerPrefix(String loginEmail, String containerName) {
-        loginEmail = loginEmail
-                .replace('.', S3_EMAIL_DELIMETER)
-                .replace('@', S3_EMAIL_DELIMETER);
-        return (DELIMITER + loginEmail + DELIMITER + containerName + DELIMITER);
+        return (DELIMITER + toS3Email(loginEmail) + DELIMITER + containerName + DELIMITER);
 
     }
 
     public static String givenPathToS3Path(String loginEmail, String filePath) {
-        loginEmail = loginEmail
-                .replace('.', S3_EMAIL_DELIMETER)
-                .replace('@', S3_EMAIL_DELIMETER);
-        return (DELIMITER + loginEmail + filePath);
+        return (DELIMITER + toS3Email(loginEmail) + filePath);
+    }
+
+    public static String createImagePrefix(String email) {
+        return DELIMITER + toS3Email(email) + DELIMITER + "image.";
+    }
+
+    /**
+     * email을 s3 prefix로 사용하기 위해 특수문자를 '-'로 대체한다.
+     */
+    private static String toS3Email(String email) {
+        String S3Email = email
+                .replace('.', S3_EMAIL_DELIMITER)
+                .replace('@', S3_EMAIL_DELIMITER);
+        return S3Email;
     }
 
     /**
@@ -39,7 +45,7 @@ public class S3PathUtil {
     }
 
     public static boolean isFile(String path) {
-        return path.contains(".");
+        return path.contains(EXTENSION_DOT);
     }
 
     public static String createNewFilePath(String originPath, String newFilename) {
@@ -76,12 +82,8 @@ public class S3PathUtil {
         return directoryPath.substring(secondLastDelimiterIndex + 1);
     }
 
-    public static String createImagePrefix(String email) {
-        return DELIMITER + email + DELIMITER + "image.";
-    }
-
     public static String extractExtension(String originalName) {
-        int index = originalName.lastIndexOf('.');
+        int index = originalName.lastIndexOf(EXTENSION_DOT);
         return originalName.substring(index + 1); // .제외한 확장자만 추출한다.
     }
 

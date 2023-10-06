@@ -9,7 +9,11 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static com.ogjg.back.common.util.S3PathUtil.DELIMITER;
 
 @Slf4j
 @Repository
@@ -18,20 +22,23 @@ public class S3ImageUploadRepository {
 
     @Value("${cloud.aws.credentials.bucket-name}")
     private String bucketName;
+
+    @Value("${cloud.aws.region.static}")
+    private String region;
     private final S3Client s3Client;
 
-    public Optional<String> uploadFile(MultipartFile file, String filename) {
+    public Optional<String> uploadFile(MultipartFile file, String filePath) {
         String accessUrl = null;
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
-                    .key(filename)
+                    .key(filePath)
                     .build();
 
             s3Client.putObject(putObjectRequest,
                     RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
-            accessUrl = getUrl(filename);
+            accessUrl = makeUrl(filePath);
             log.info("accessUrl={}",accessUrl);
 
         } catch (Exception e) {
@@ -41,14 +48,11 @@ public class S3ImageUploadRepository {
         return Optional.of(accessUrl);
     }
 
-    private String getUrl(String fileName) {
-        GetUrlRequest getUrlRequest = GetUrlRequest.builder()
-                .bucket(bucketName)
-                .key(fileName)
-                .build();
-
-        return s3Client.utilities()
-                .getUrl(getUrlRequest).toString();
+    /**
+     * key 저장시 맨 앞에 /를 붙이도록 저장한 방식때문에 url을 보면 .com 앞에 구분자가 하나 더들어간다.
+     */
+    private String makeUrl(String filePath) {
+        return  "https://" + bucketName + ".s3." + region +".amazonaws.com" + DELIMITER +  filePath;
     }
 
     public void deleteObjectsWithPrefix(String prefix) {
@@ -63,7 +67,7 @@ public class S3ImageUploadRepository {
                     .forEach((request) -> s3Client.deleteObject(request));
 
         } catch (Exception e) {
-            log.error("error message={}",e.getMessage());
+            log.error("error message={}", e.getMessage());
         }
     }
 

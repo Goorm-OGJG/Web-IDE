@@ -29,9 +29,9 @@ public class S3ProfileImageService {
 
         s3ImageUploadRepository.deleteObjectsWithPrefix(prefix);
 
-        String fileName = prefix + extractExtension(originalName);
-
-        return s3ImageUploadRepository.uploadFile(multipartFile, fileName)
+        String filePath = prefix + extractExtension(originalName);
+        log.info("fileName={}",filePath);
+        return s3ImageUploadRepository.uploadFile(multipartFile, filePath)
                 .orElseThrow(() -> new S3ImageUploadException());
     }
 }
