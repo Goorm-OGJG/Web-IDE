@@ -35,8 +35,8 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         String errorResponse = objectMapper.writeValueAsString(jsonResponse);
 
+        response.setContentType("application/json; charset=utf-8");
         response.setCharacterEncoding("utf-8");
-
         response.getWriter().write(errorResponse);
 
         log.error("에러메시지 =", new JwtAuthFailure(tokenException.getErrorType().getMessage()));
