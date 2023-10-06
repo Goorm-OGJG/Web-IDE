@@ -1,9 +1,6 @@
 package com.ogjg.back.config.security.emailauth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ogjg.back.common.exception.ErrorCode;
-import com.ogjg.back.common.response.ApiResponse;
-import com.ogjg.back.config.security.exception.EmailAuthFailure;
+import com.ogjg.back.config.security.exception.EmailAuthTokenException;
 import com.ogjg.back.user.service.EmailAuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -24,6 +22,7 @@ public class EmailAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
     private final EmailAuthService emailAuthService;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
 
     @Override
     protected void doFilterInternal(
@@ -54,14 +53,8 @@ public class EmailAuthenticationFilter extends OncePerRequestFilter {
 
         } catch (Exception e) {
             log.error("이메일 인증도중 에러발생 = {}", e.getMessage());
-//todo 구조적 개선필요
-            response.setStatus(ErrorCode.EMAIL_AUTH_FAIL.getStatusCode().value());
-            ApiResponse<?> jsonResponse = new ApiResponse<>(ErrorCode.EMAIL_AUTH_FAIL.changeMessage("이메일 인증 실패"));
-            ObjectMapper objectMapper = new ObjectMapper();
-            String errorResponse = objectMapper.writeValueAsString(jsonResponse);
-            response.setCharacterEncoding("utf-8");
-            response.getWriter().write(errorResponse);
-            throw new EmailAuthFailure("이메일 인증 실패");
+            authenticationEntryPoint.commence(request, response, new EmailAuthTokenException());
+            return;
         }
 
         EmailAuthUserDetails principal = (EmailAuthUserDetails) authenticate.getPrincipal();

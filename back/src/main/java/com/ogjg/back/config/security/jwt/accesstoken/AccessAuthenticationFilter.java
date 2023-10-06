@@ -1,9 +1,6 @@
 package com.ogjg.back.config.security.jwt.accesstoken;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ogjg.back.common.exception.ErrorCode;
-import com.ogjg.back.common.response.ApiResponse;
-import com.ogjg.back.config.security.exception.JwtAuthFailure;
+import com.ogjg.back.config.security.exception.AccessTokenException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -24,6 +22,7 @@ import java.util.regex.Pattern;
 public class AccessAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
     private final List<String> permitUrlList;
 
     private final String PREFIX = "Bearer ";
@@ -48,16 +47,10 @@ public class AccessAuthenticationFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext().setAuthentication(authenticate);
         } catch (Exception e) {
-// todo 구조적 개선 필요
-            response.setStatus(ErrorCode.AUTH_FAIL.getStatusCode().value());
-            ApiResponse<?> jsonResponse = new ApiResponse<>(ErrorCode.AUTH_FAIL.changeMessage("AccessToken 인증 실패"));
-            ObjectMapper objectMapper = new ObjectMapper();
-            String errorResponse = objectMapper.writeValueAsString(jsonResponse);
-            response.setCharacterEncoding("utf-8");
-            response.getWriter().write(errorResponse);
-            log.info("에러메시지={}", new JwtAuthFailure());
-//            throw new JwtAuthFailure("AccessToken 인증 실패");
-//            return;
+
+            authenticationEntryPoint.commence(request, response, new AccessTokenException());
+            return;
+
         }
 
         filterChain.doFilter(request, response);
@@ -79,14 +72,18 @@ public class AccessAuthenticationFilter extends OncePerRequestFilter {
     /*
      * 헤더에서 토큰값 가져오기
      * */
-    private String getAccessToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private String getAccessToken(
+            HttpServletRequest request, HttpServletResponse response
+    ) throws IOException, ServletException {
+
         String jwt = request.getHeader("Authorization");
 
         if (jwt != null && jwt.startsWith(PREFIX)) {
             return jwt.substring(PREFIX.length());
         }
 
-        throw new JwtAuthFailure("유효하지 않은 JWT 입니다.");
+        authenticationEntryPoint.commence(request, response, new AccessTokenException());
+        return jwt;
     }
 
 }

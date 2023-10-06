@@ -1,6 +1,6 @@
 package com.ogjg.back.config.security.jwt.accesstoken;
 
-import com.ogjg.back.config.security.exception.JwtAuthFailure;
+import com.ogjg.back.config.security.exception.AccessTokenException;
 import com.ogjg.back.config.security.jwt.JwtUserDetails;
 import com.ogjg.back.config.security.jwt.JwtUtils;
 import com.ogjg.back.user.dto.request.JwtUserClaimsDto;
@@ -24,7 +24,7 @@ public class AccessAuthenticationProvider implements AuthenticationProvider {
         String accessToken = String.valueOf(authentication.getCredentials());
 
         if (!jwtUtils.isValidToken(accessToken)) {
-            throw new JwtAuthFailure("AccessToken 인증 실패");
+            throw new AccessTokenException();
         }
         JwtUserDetails jwtUserDetails = getJwtUserDetails(accessToken);
 

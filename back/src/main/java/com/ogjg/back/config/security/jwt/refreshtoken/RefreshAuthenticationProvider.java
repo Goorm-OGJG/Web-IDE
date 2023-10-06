@@ -1,6 +1,6 @@
 package com.ogjg.back.config.security.jwt.refreshtoken;
 
-import com.ogjg.back.config.security.exception.JwtAuthFailure;
+import com.ogjg.back.config.security.exception.RefreshTokenException;
 import com.ogjg.back.config.security.jwt.JwtUserDetails;
 import com.ogjg.back.config.security.jwt.JwtUtils;
 import com.ogjg.back.user.dto.request.JwtUserClaimsDto;
@@ -23,7 +23,7 @@ public class RefreshAuthenticationProvider implements AuthenticationProvider {
         String refreshToken = (String) authentication.getCredentials();
 
         if (jwtUtils.isValidToken(refreshToken)) {
-            throw new JwtAuthFailure("RefreshToken 인증 실패");
+            throw new RefreshTokenException();
         }
 
         Claims claims = jwtUtils.getClaims(refreshToken);

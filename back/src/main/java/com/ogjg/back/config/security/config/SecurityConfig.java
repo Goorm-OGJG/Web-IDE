@@ -17,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -37,6 +38,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     private final EmailAuthService emailAuthService;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
     private final JwtUtils jwtUtils;
 
 
@@ -96,17 +98,17 @@ public class SecurityConfig {
 
     @Bean
     public EmailAuthenticationFilter emailAuthenticationFilter() throws Exception {
-        return new EmailAuthenticationFilter(new ProviderManager(Collections.singletonList(emailAuthenticationProvider())), emailAuthService);
+        return new EmailAuthenticationFilter(new ProviderManager(Collections.singletonList(emailAuthenticationProvider())), emailAuthService, authenticationEntryPoint);
     }
 
     @Bean
     public AccessAuthenticationFilter accessAuthenticationFilter() throws Exception {
-        return new AccessAuthenticationFilter(new ProviderManager(Collections.singletonList(accessAuthenticationProvider())), permitUrlList);
+        return new AccessAuthenticationFilter(new ProviderManager(Collections.singletonList(accessAuthenticationProvider())), authenticationEntryPoint, permitUrlList);
     }
 
     @Bean
     public RefreshTokenAuthenticationFilter refreshTokenAuthenticationFilter() throws Exception {
-        return new RefreshTokenAuthenticationFilter(new ProviderManager(Collections.singletonList(refreshAuthenticationProvider())), jwtUtils);
+        return new RefreshTokenAuthenticationFilter(new ProviderManager(Collections.singletonList(refreshAuthenticationProvider())), authenticationEntryPoint, jwtUtils);
     }
 
     @Bean

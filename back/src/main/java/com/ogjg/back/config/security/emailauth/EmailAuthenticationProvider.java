@@ -1,7 +1,6 @@
 package com.ogjg.back.config.security.emailauth;
 
-import com.ogjg.back.common.exception.ErrorCode;
-import com.ogjg.back.config.security.exception.EmailAuthFailure;
+import com.ogjg.back.config.security.exception.EmailAuthTokenException;
 import com.ogjg.back.config.security.jwt.JwtUtils;
 import com.ogjg.back.user.dto.request.JwtEmailAuthClaimsDto;
 import io.jsonwebtoken.Claims;
@@ -24,7 +23,7 @@ public class EmailAuthenticationProvider implements AuthenticationProvider {
         String jwt = String.valueOf(authentication.getCredentials());
 
         if (!jwtUtils.isValidToken(jwt)) {
-            throw new EmailAuthFailure();
+            throw new EmailAuthTokenException();
         }
 
         EmailAuthUserDetails emailAuthUserDetails = emailAuthUserDetails(jwt);

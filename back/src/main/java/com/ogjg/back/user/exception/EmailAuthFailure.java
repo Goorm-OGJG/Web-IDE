@@ -1,4 +1,4 @@
-package com.ogjg.back.config.security.exception;
+package com.ogjg.back.user.exception;
 
 import com.ogjg.back.common.exception.CustomException;
 import com.ogjg.back.common.exception.ErrorCode;
