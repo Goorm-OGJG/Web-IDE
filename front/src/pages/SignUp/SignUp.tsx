@@ -15,6 +15,7 @@ const Signup = () => {
   const { requestSignUp, requestSendEmail } = useUserAPI();
   const passwordRef = useRef<HTMLInputElement>(null);
   const passwordConfirmRef = useRef<HTMLInputElement>(null);
+  const [isAuthButtonDisabled, setIsAuthButtonDisabled] = useState(false);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -26,6 +27,7 @@ const Signup = () => {
       email,
     };
     requestSendEmail(payload, setIsEmailSent);
+    setIsAuthButtonDisabled(true);
   };
 
   const changeNameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +45,28 @@ const Signup = () => {
       PASSWORD_REG.test(passwordRef.current!.value) &&
       passwordRef.current!.value === passwordConfirmRef.current!.value &&
       isEmailSent === 2
-    ) {
+    )
+      if (email.trim() === "") {
+        alert("이메일을 입력하세요.");
+        return;
+      }
+
+    if (passwordRef.current!.value.trim() === "") {
+      alert("비밀번호를 입력하세요.");
+      return;
+    }
+
+    if (passwordConfirmRef.current!.value.trim() === "") {
+      alert("비밀번호 확인을 입력하세요.");
+      return;
+    }
+
+    if (name.trim() === "") {
+      alert("이름을 입력하세요.");
+      return;
+    }
+
+    {
       const payload: T.SignUpType = {
         email,
         password: passwordRef.current!.value,
@@ -67,7 +90,10 @@ const Signup = () => {
             disabled={isEmailSent !== 0}
             onChange={handleEmailChange}
           />
-          <S.AuthButton onClick={handleSendEmailClick} disabled={isButtonDisabled}>
+          <S.AuthButton
+            onClick={handleSendEmailClick}
+            disabled={isButtonDisabled || isAuthButtonDisabled}
+          >
             인증
           </S.AuthButton>
         </S.EmailInputWrapper>
