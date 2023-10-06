@@ -4,12 +4,18 @@ import { useNavigate } from "react-router";
 import { Desktop, Mobile } from "../../Responsive";
 import { userInfoState } from "../../../recoil/userState";
 import { useRecoilValue } from "recoil";
+import { useMyAPI } from "../../../api/useMyAPI";
 
 function UserModal() {
   const userInfo = useRecoilValue(userInfoState);
   const navigate = useNavigate();
+  const { requestLogout } = useMyAPI();
   const handleNavigate = (destination: string) => {
     navigate(destination);
+  };
+
+  const handleLogout = () => {
+    requestLogout();
   };
   return (
     <>
@@ -36,7 +42,7 @@ function UserModal() {
               <S.SettingDiv>내 설정</S.SettingDiv>
             </S.SettingBox>
             <S.LineDiv />
-            <S.LogoutBox>
+            <S.LogoutBox onClick={handleLogout}>
               <S.LogoutIcon>
                 <Icon.LogOut />
               </S.LogoutIcon>
@@ -68,7 +74,7 @@ function UserModal() {
               <S.SettingDiv>내 설정</S.SettingDiv>
             </S.SettingBox>
             <S.LineDiv />
-            <S.LogoutBox>
+            <S.LogoutBox onClick={handleLogout}>
               <S.LogoutIcon>
                 <Icon.LogOut />
               </S.LogoutIcon>

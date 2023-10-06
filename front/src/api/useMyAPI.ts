@@ -1,11 +1,12 @@
 import { useAxios } from "./useAxios";
 import { useSetRecoilState } from "recoil";
 import { userInfoState } from "../recoil/userState";
+import { useNavigate } from "react-router";
 
 export function useMyAPI() {
   const axios = useAxios();
   const setUserInfo = useSetRecoilState(userInfoState);
-
+  const navigate = useNavigate();
   const requestEditProfile = (
     img: File,
     setFile: React.Dispatch<React.SetStateAction<File | null>>,
@@ -44,8 +45,8 @@ export function useMyAPI() {
     const payload = { currentPassword, newPassword };
     axios
       .patch(`${import.meta.env.VITE_API_URL}/api/users/password`, payload)
-      .then((response) => {
-        console.log(response);
+      .then(() => {
+        alert("비밀번호 변경이 완료되었습니다");
       })
       .catch((error) => {
         console.error(error);
@@ -77,11 +78,22 @@ export function useMyAPI() {
       .catch((error) => console.error(error));
   };
 
+  const requestLogout = () => {
+    axios
+      .post(`${import.meta.env.VITE_API_URL}/api/users/logout`)
+      .then(() => {
+        localStorage.removeItem("accessToken");
+        navigate("/login");
+      })
+      .catch((error) => console.error(error));
+  };
+
   return {
     requestEditProfile,
     requestEditUserName,
     requestPwChange,
     requestDeleteUser,
     requestUserInfo,
+    requestLogout,
   };
 }

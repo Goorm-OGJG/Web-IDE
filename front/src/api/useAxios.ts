@@ -3,7 +3,6 @@ import { useNavigate } from "react-router";
 
 export function useAxios() {
   const navigate = useNavigate();
-
   const instance = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
     timeout: 5000,
@@ -28,25 +27,26 @@ export function useAxios() {
     (response) => response,
     async (error) => {
       const originalRequest = error.config;
-
-      if (error.response.status === 401) {
+      // console.log(originalRequest);
+      // console.log(error);
+      if (error.response.data.status.code === "401") {
         return await instance
           .post(`${import.meta.env.VITE_API_URL}/api/users/token`)
           .then((response) => {
+            // console.log("response", response.headers.authorization);
             localStorage.setItem("accessToken", response.headers.authorization);
             originalRequest.headers.authorization = response.headers.authorization;
             // console.log("originalRequest:", originalRequest);
             return instance(originalRequest);
           })
           .catch((error) => {
+            console.log("error", error.response);
             // 리프레시 토큰이 없어서 발급 실패
-            if (error.response.status === 401) {
-              // 데이터 삭제
-              localStorage.removeItem("accessToken");
+            // 데이터 삭제
+            localStorage.removeItem("accessToken");
 
-              // 로그인 페이지로 이동
-              navigate("/login");
-            }
+            // // 로그인 페이지로 이동
+            navigate("/login");
             return Promise.reject(error);
           });
       }
