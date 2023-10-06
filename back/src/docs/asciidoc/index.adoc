@@ -80,7 +80,7 @@ include::{snippets}/container/get/path-parameters.adoc[]
 
 include::{snippets}/container/get/http-response.adoc[]
 include::{snippets}/container/get/response-fields.adoc[]
-include::{snippets}/container/check/http-response.adoc[]
+include::{snippets}/container/get/http-response.adoc[]
 
 == 파일 API
 

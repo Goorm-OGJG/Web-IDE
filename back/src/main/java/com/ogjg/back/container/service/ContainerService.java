@@ -83,11 +83,13 @@ public class ContainerService {
     }
 
     @Transactional
-    public ContainerGetResponse getAllFilesAndDirectories(Long containerId, String loginEmail) {
+    public ContainerGetResponse getAllFilesAndDirectories(Long containerId) {
         Container container = containerRepository.findById(containerId)
                 .orElseThrow(() -> new NotFoundContainer());
 
-        String prefix = createContainerPrefix(loginEmail, container.getName());
+        String email = container.getUser().getEmail();
+
+        String prefix = createContainerPrefix(email, container.getName());
         List<String> allKeys = s3ContainerService.getAllKeysByPrefix(prefix);
 
         for (String key : allKeys) {
@@ -95,12 +97,12 @@ public class ContainerService {
         }
 
         // 맨 앞에 이메일 부분이 절삭된 key 목록을 만든다.
-        List<String> emailRemovedKeys = parse(allKeys, loginEmail);
+        List<String> emailRemovedKeys = parse(allKeys, email);
 
         return ContainerGetResponse.builder()
                 .language(container.getLanguage())
                 .treeData(s3ContainerService.buildTreeFromKeys(emailRemovedKeys))
-                .fileData(getFileData(containerId, loginEmail, allKeys))
+                .fileData(getFileData(containerId, email, allKeys))
                 .directories(getDirectories(containerId, emailRemovedKeys))
                 .build();
     }

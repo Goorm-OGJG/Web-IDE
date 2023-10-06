@@ -54,7 +54,7 @@ public class ContainerController {
     ) {
         return new ApiResponse<>(
                 ErrorCode.SUCCESS,
-                containerService.getAllFilesAndDirectories(containerId, user.getEmail())
+                containerService.getAllFilesAndDirectories(containerId)
         );
     }
 }

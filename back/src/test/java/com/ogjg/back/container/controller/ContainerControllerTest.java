@@ -137,7 +137,7 @@ public class ContainerControllerTest extends ControllerTest {
                 .directories(directories)
                 .build();
 
-        given(containerService.getAllFilesAndDirectories(anyLong(), anyString()))
+        given(containerService.getAllFilesAndDirectories(anyLong()))
                 .willReturn(response);
 
         //when
