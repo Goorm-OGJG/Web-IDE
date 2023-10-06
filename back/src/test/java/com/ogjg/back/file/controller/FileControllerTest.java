@@ -8,17 +8,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.doNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class PathControllerTest extends ControllerTest {
+public class FileControllerTest extends ControllerTest {
+
+
+    public static final String PREFIX = "/api/containers/{containerId}/files";
 
     @DisplayName("파일 생성")
     @Test
@@ -28,11 +30,11 @@ public class PathControllerTest extends ControllerTest {
                 .uuid("uuid")
                 .build();
 
-        doNothing().when(fileService).createFile(any(String.class), any(String.class), any(String.class));
+        doNothing().when(fileService).createFile(anyLong(), anyString(), anyString());
 
         //when
         ResultActions result = this.mockMvc.perform(
-                post("/api/files")
+                post(PREFIX, 1L)
                         .queryParam("filePath", "{filePath}")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -43,6 +45,9 @@ public class PathControllerTest extends ControllerTest {
         result.andDo(document("file/create",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
+                pathParameters(
+                        parameterWithName("containerId").description("컨테이너 ID")
+                ),
                 queryParameters(
                         parameterWithName("filePath").description("생성할 파일 전체 경로")
                 ),
@@ -61,11 +66,11 @@ public class PathControllerTest extends ControllerTest {
     @Test
     public void deleteFile() throws Exception {
         //given
-        doNothing().when(fileService).deleteFile(any(String.class), any(String.class));
+        doNothing().when(fileService).deleteFile(anyLong(), anyString());
 
         //when
         ResultActions result = this.mockMvc.perform(
-                delete("/api/files")
+                delete(PREFIX, 1L)
                         .queryParam("filePath", "{filePath}")
                         .accept(MediaType.APPLICATION_JSON)
         );
@@ -74,6 +79,9 @@ public class PathControllerTest extends ControllerTest {
         result.andDo(document("file/delete",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
+                pathParameters(
+                        parameterWithName("containerId").description("컨테이너 ID")
+                ),
                 queryParameters(
                         parameterWithName("filePath").description("삭제할 파일 전체 경로")
                 ),
@@ -94,11 +102,11 @@ public class PathControllerTest extends ControllerTest {
                         "do you know?")
                 .build();
 
-        doNothing().when(fileService).updateFile(any(String.class), any(String.class), any(UpdateFileRequest.class));
+        doNothing().when(fileService).updateFile(anyLong(), anyString(), any(UpdateFileRequest.class));
 
         //when
         ResultActions result = this.mockMvc.perform(
-                put("/api/files")
+                put(PREFIX, 1L)
                         .queryParam("filePath", "{filePath}")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -109,6 +117,9 @@ public class PathControllerTest extends ControllerTest {
         result.andDo(document("file/update",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
+                pathParameters(
+                        parameterWithName("containerId").description("컨테이너 ID")
+                ),
                 queryParameters(
                         parameterWithName("filePath").description("수정할 파일의 전체 경로")
                 ),
@@ -127,11 +138,11 @@ public class PathControllerTest extends ControllerTest {
     @Test
     public void updateFilename() throws Exception {
         //given
-        doNothing().when(fileService).updateFilename(any(String.class), any(String.class), any(String.class));
+        doNothing().when(fileService).updateFilename(anyLong(), anyString(), anyString());
 
         //when
         ResultActions result = this.mockMvc.perform(
-                put("/api/files/rename")
+                put(PREFIX + "/rename", 1L)
                         .queryParam("filePath","{filePath}")
                         .queryParam("newFilename", "{newFilename}")
                         .accept(MediaType.APPLICATION_JSON)
@@ -141,6 +152,9 @@ public class PathControllerTest extends ControllerTest {
         result.andDo(document("file/rename",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
+                pathParameters(
+                        parameterWithName("containerId").description("컨테이너 ID")
+                ),
                 queryParameters(
                         parameterWithName("filePath").description("수정할 파일의 전체 경로"),
                         parameterWithName("newFilename").description("새로 지정할 파일 이름")

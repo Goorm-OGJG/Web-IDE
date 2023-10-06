@@ -14,22 +14,18 @@ public class S3FileService {
     private final S3FileRepository s3FileRepository;
 
     @Transactional
-    public void createFile(String email, String filePath) {
-        s3FileRepository.putFilePath(
-                givenPathToS3Path(email, filePath)
-        );
+    public void createFile(String s3Path) {
+        s3FileRepository.putFilePath(s3Path);
     }
 
     @Transactional
-    public void deleteFile(String email, String filePath) {
-        s3FileRepository.deleteFile(
-                givenPathToS3Path(email, filePath)
-        );
+    public void deleteFile(String s3Path) {
+        s3FileRepository.deleteFile(s3Path);
     }
     @Transactional
-    public void updateFile(String email, String filePath, String content) {
+    public void updateFile(String s3Path, String content) {
         s3FileRepository.putFile(
-                givenPathToS3Path(email, filePath),
+                s3Path,
                 content
         );
     }

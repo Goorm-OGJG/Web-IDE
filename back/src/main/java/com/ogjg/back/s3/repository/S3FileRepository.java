@@ -70,15 +70,15 @@ public class S3FileRepository {
         }
     }
 
-    public void rename(String s3Path, String newFilePath) {
+    public void rename(String s3Path, String newS3FilePath) {
         log.info("nowFilePath={}", s3Path);
-        log.info("newFilePath={}", newFilePath);
+        log.info("newS3FilePath={}", newS3FilePath);
         try {
             CopyObjectRequest copyObjectRequest = CopyObjectRequest.builder()
                     .sourceBucket(bucketName)
                     .sourceKey(s3Path)
                     .destinationBucket(bucketName)
-                    .destinationKey(newFilePath)
+                    .destinationKey(newS3FilePath)
                     .build();
 
             s3Client.copyObject(copyObjectRequest);
