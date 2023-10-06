@@ -126,6 +126,7 @@ include::{snippets}/file/rename/http-response.adoc[]
 해당 경로의 파일을 생성합니다.
 
 include::{snippets}/directory/create/http-request.adoc[]
+include::{snippets}/directory/create/path-parameters.adoc[]
 include::{snippets}/directory/create/query-parameters.adoc[]
 include::{snippets}/directory/create/request-body.adoc[]
 include::{snippets}/directory/create/request-fields.adoc[]
@@ -136,6 +137,7 @@ include::{snippets}/directory/create/http-response.adoc[]
 해당 경로의 파일을 생성합니다.
 
 include::{snippets}/directory/delete/http-request.adoc[]
+include::{snippets}/directory/delete/path-parameters.adoc[]
 include::{snippets}/directory/delete/query-parameters.adoc[]
 
 include::{snippets}/directory/delete/http-response.adoc[]
@@ -144,6 +146,7 @@ include::{snippets}/directory/delete/http-response.adoc[]
 해당 경로의 파일을 생성합니다.
 
 include::{snippets}/directory/rename/http-request.adoc[]
+include::{snippets}/directory/rename/path-parameters.adoc[]
 include::{snippets}/directory/rename/query-parameters.adoc[]
 
 include::{snippets}/directory/rename/http-response.adoc[]

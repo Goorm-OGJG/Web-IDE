@@ -7,17 +7,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.doNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class DirectoryControllerTest extends ControllerTest {
+
+    public static final String PREFIX = "/api/containers/{containerId}/directories";
 
     @DisplayName("디렉토리 생성 - 해당 컨테이너가 존재하고, 해당 경로가 존재하지 않는다면 디렉토리를 생성한다.")
     @Test
@@ -27,11 +30,11 @@ public class DirectoryControllerTest extends ControllerTest {
                 .uuid("uuid")
                 .build();
 
-        doNothing().when(directoryService).createDirectory(any(String.class), any(String.class), any(CreateDirectoryRequest.class));
+        doNothing().when(directoryService).createDirectory(anyLong(), anyString(), any(CreateDirectoryRequest.class));
 
         //when
         ResultActions result = this.mockMvc.perform(
-                post("/api/directories")
+                post(PREFIX, 1L)
                         .queryParam("directoryPath", "{directoryPath}")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -42,6 +45,9 @@ public class DirectoryControllerTest extends ControllerTest {
         result.andDo(document("directory/create",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
+                pathParameters(
+                  parameterWithName("containerId").description("수정할 컨테이너의 ID")
+                ),
                 queryParameters(
                         parameterWithName("directoryPath").description("생성할 디렉토리 전체 경로")
                 ),
@@ -60,11 +66,11 @@ public class DirectoryControllerTest extends ControllerTest {
     @Test
     public void deleteDirectory() throws Exception {
         //given
-        doNothing().when(directoryService).deleteDirectory(any(String.class), any(String.class));
+        doNothing().when(directoryService).deleteDirectory(anyLong(), anyString());
 
         //when
         ResultActions result = this.mockMvc.perform(
-                delete("/api/directories")
+                delete(PREFIX, 1L)
                         .queryParam("directoryPath", "{directoryPath}")
                         .accept(MediaType.APPLICATION_JSON)
         );
@@ -73,6 +79,9 @@ public class DirectoryControllerTest extends ControllerTest {
         result.andDo(document("directory/delete",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
+                pathParameters(
+                        parameterWithName("containerId").description("수정할 컨테이너의 ID")
+                ),
                 queryParameters(
                         parameterWithName("directoryPath").description("삭제할 디렉토리 전체 경로")
                 ),
@@ -88,11 +97,11 @@ public class DirectoryControllerTest extends ControllerTest {
     @Test
     public void updateDirectoryName() throws Exception {
         //given
-        doNothing().when(directoryService).updateDirectoryName(any(String.class), any(String.class), any(String.class));
+        doNothing().when(directoryService).updateDirectoryName(anyLong(), anyString(), anyString());
 
         //when
         ResultActions result = this.mockMvc.perform(
-                put("/api/directories/rename")
+                put(PREFIX + "/rename", 1L)
                         .queryParam("directoryPath", "{directoryPath}")
                         .queryParam("newDirectoryName", "{newDirectoryName}")
                         .accept(MediaType.APPLICATION_JSON)
@@ -102,6 +111,9 @@ public class DirectoryControllerTest extends ControllerTest {
         result.andDo(document("directory/rename",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
+                pathParameters(
+                        parameterWithName("containerId").description("수정할 컨테이너의 ID")
+                ),
                 queryParameters(
                         parameterWithName("directoryPath").description("수정할 디렉토리의 기존 전체 경로"),
                         parameterWithName("newDirectoryName").description("새로 지은 디렉토리의 이름")

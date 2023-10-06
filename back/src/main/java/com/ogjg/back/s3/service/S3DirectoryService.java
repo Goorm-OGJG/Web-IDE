@@ -8,8 +8,6 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 
 import java.util.List;
 
-import static com.ogjg.back.common.util.S3PathUtil.givenPathToS3Path;
-
 @Service
 @RequiredArgsConstructor
 public class S3DirectoryService {
@@ -17,10 +15,8 @@ public class S3DirectoryService {
     private final S3DirectoryRepository s3DirectoryRepository;
 
     @Transactional
-    public void createDirectory(String email, String directoryPath) {
-        s3DirectoryRepository.putDirectoryPath(
-                givenPathToS3Path(email, directoryPath)
-        );
+    public void createDirectory(String s3Path) {
+        s3DirectoryRepository.putDirectoryPath(s3Path);
     }
 
     @Transactional(readOnly = true)
@@ -29,10 +25,8 @@ public class S3DirectoryService {
     }
 
     @Transactional
-    public void deleteDirectory(String email, String directoryPath) {
-        s3DirectoryRepository.deleteObjectsWithPrefix(
-                givenPathToS3Path(email, directoryPath)
-        );
+    public void deleteDirectory(String s3Path) {
+        s3DirectoryRepository.deleteObjectsWithPrefix(s3Path);
     }
 
     @Transactional

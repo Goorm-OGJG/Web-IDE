@@ -30,62 +30,56 @@ public class DirectoryService {
     private final PathRepository pathRepository;
 
     @Transactional
-    public void createDirectory(String loginEmail, String directoryPath, CreateDirectoryRequest request) {
-        String s3Path = givenPathToS3Path(loginEmail, directoryPath);
+    public void createDirectory(Long containerId, String directoryPath, CreateDirectoryRequest request) {
+        Container findContainer = findContainerById(containerId);
+        String email = findContainer.getUser().getEmail();
+        String s3Path = givenPathToS3Path(email, directoryPath);
 
-        String containerName = extractContainerName(directoryPath);
-        if (!isContainerExist(loginEmail, containerName)) throw new NotFoundContainer();
+//        if (!isContainerExist(email, findContainer.getName())) throw new NotFoundContainer();
         if (s3DirectoryService.isDirectoryAlreadyExist(s3Path)) throw new DirectoryAlreadyExists();
 
-        Container container = findContainerByNameAndEmail(containerName, loginEmail);
-
         directoryRepository.save(Path.builder()
-                .container(container)
+                .container(findContainer)
                 .path(extractDirectoryPrefix(directoryPath))
                 .name(extractDirectoryName(directoryPath))
                 .uuid(request.getUuid())
                 .build());
 
-        s3DirectoryService.createDirectory(loginEmail, directoryPath);
+        s3DirectoryService.createDirectory(s3Path);
     }
 
     @Transactional
-    public void deleteDirectory(String loginEmail, String directoryPath) {
-        String s3Path = givenPathToS3Path(loginEmail, directoryPath);
-        String containerName = extractContainerName(directoryPath);
+    public void deleteDirectory(Long containerId, String directoryPath) {
+        Container findContainer = findContainerById(containerId);
+        String email = findContainer.getUser().getEmail();
+        String s3Path = givenPathToS3Path(email, directoryPath);
 
-        if (!isContainerExist(loginEmail, containerName)) throw new NotFoundContainer();
         if (!s3DirectoryService.isDirectoryAlreadyExist(s3Path)) throw new NotFoundDirectory();
 
         // db 삭제
-        Container container = findContainerByNameAndEmail(containerName, loginEmail);
-
-        List<Path> deleteTargetList = pathRepository.findByPathStartsWith(directoryPath);
-        deleteTargetList.stream()
+        pathRepository.findByPathStartsWith(directoryPath).stream()
                 .forEach(pathRepository::delete);
 
-        Path findPath = container.findPath(
+        Path findPath = findContainer.findPath(
                 extractDirectoryPrefix(directoryPath),
                 extractDirectoryName(directoryPath)
         );
         pathRepository.delete(findPath);
 
-        s3DirectoryService.deleteDirectory(loginEmail, directoryPath);
+        s3DirectoryService.deleteDirectory(s3Path);
     }
 
     @Transactional
-    public void updateDirectoryName(String loginEmail, String directoryPath, String newDirectoryName) {
-        String originS3Path = givenPathToS3Path(loginEmail, directoryPath);
-        String newS3Path = createNewDirectoryPath(originS3Path, newDirectoryName);
-        String containerName = extractContainerName(directoryPath);
+    public void updateDirectoryName(Long containerId, String directoryPath, String newDirectoryName) {
+        Container findContainer = findContainerById(containerId);
+        String email = findContainer.getUser().getEmail();
 
-        if (!isContainerExist(loginEmail, containerName)) throw new NotFoundContainer();
+        String originS3Path = givenPathToS3Path(email, directoryPath);
+        String newS3Path = createNewDirectoryPath(originS3Path, newDirectoryName);
+
         if (!s3DirectoryService.isDirectoryAlreadyExist(originS3Path)) throw new NotFoundDirectory();
 
         // db rename
-        Container container = findContainerByNameAndEmail(containerName, loginEmail);
-
-        // dPath  /my-container1/bird/bird/
         List<Path> changeTargetList = pathRepository.findByPathStartsWith(directoryPath);
 
         String newAncestorPath = createNewDirectoryPath(directoryPath, newDirectoryName);
@@ -95,7 +89,7 @@ public class DirectoryService {
                         newAncestorPath
                 )).toList();
 
-        Path findPath = container.findPath(
+        Path findPath = findContainer.findPath(
                 extractDirectoryPrefix(directoryPath),
                 extractDirectoryName(directoryPath)
         );
@@ -104,14 +98,8 @@ public class DirectoryService {
         s3DirectoryService.updateDirectoryName(originS3Path, newS3Path);
     }
 
-    private boolean isContainerExist(String loginEmail, String containerName) {
-        return containerRepository.findByNameAndEmail(containerName, loginEmail)
-                .isPresent();
-    }
-
-    private Container findContainerByNameAndEmail(String containerName, String loginEmail) {
-        Container container = containerRepository.findByNameAndEmail(containerName, loginEmail)
+    private Container findContainerById(Long containerId) {
+        return containerRepository.findById(containerId)
                 .orElseThrow(NotFoundContainer::new);
-        return container;
     }
 }
