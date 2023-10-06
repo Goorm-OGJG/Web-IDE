@@ -22,7 +22,7 @@ public class RefreshAuthenticationProvider implements AuthenticationProvider {
 
         String refreshToken = (String) authentication.getCredentials();
 
-        if (jwtUtils.isValidToken(refreshToken)) {
+        if (!jwtUtils.isValidToken(refreshToken)) {
             throw new RefreshTokenException();
         }
 
