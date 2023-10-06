@@ -2,9 +2,11 @@ import { useAxios } from "./useAxios";
 import * as T from "../types/filesAPIType";
 import { InfoType } from "../types/FileTree";
 import { useFileManage } from "../hooks/CodeEditor/useFileManage";
+import { useParams } from "react-router-dom";
 
 export function useFilesAPI() {
   const axios = useAxios();
+  const { containerId } = useParams();
 
   const {
     setFilesData,
@@ -36,7 +38,7 @@ export function useFilesAPI() {
   ): void => {
     axios
       .post(
-        `${import.meta.env.VITE_API_URL}/api/files?filePath=${
+        `${import.meta.env.VITE_API_URL}/api/containers/${containerId}/files?filePath=${
           payload.filePath
         }${fileName}`,
         {
@@ -58,7 +60,9 @@ export function useFilesAPI() {
   ): void => {
     axios
       .post(
-        `${import.meta.env.VITE_API_URL}/api/directories?directoryPath=${
+        `${
+          import.meta.env.VITE_API_URL
+        }/api/containers/${containerId}/directories?directoryPath=${
           payload.directoryPath
         }/`,
         { uuid: payload.uuid },
@@ -77,7 +81,9 @@ export function useFilesAPI() {
   ): void => {
     axios
       .put(
-        `${import.meta.env.VITE_API_URL}/api/files/rename?filePath=${
+        `${
+          import.meta.env.VITE_API_URL
+        }/api/containers/${containerId}/files/rename?filePath=${
           payload.filePath
         }&newFilename=${payload.newFileName}`,
       )
@@ -94,7 +100,7 @@ export function useFilesAPI() {
   ): void => {
     axios
       .put(
-        `/api/directories/rename?directoryPath=${payload.directoryPath}&newDirectoryName=${payload.newDirectoryName}`,
+        `/api/containers/${containerId}/directories/rename?directoryPath=${payload.directoryPath}&newDirectoryName=${payload.newDirectoryName}`,
       )
       .then(() => {
         renameDirectory(info, payload.newDirectoryName);
@@ -106,7 +112,11 @@ export function useFilesAPI() {
 
   const requestDeleteFile = (filePath: string, info: InfoType): void => {
     axios
-      .delete(`${import.meta.env.VITE_API_URL}/api/files?filePath=${filePath}`)
+      .delete(
+        `${
+          import.meta.env.VITE_API_URL
+        }/api/containers/${containerId}/files?filePath=${filePath}`,
+      )
       .then(() => {
         deleteFile(info);
       })
@@ -118,7 +128,9 @@ export function useFilesAPI() {
   const requestDeleteDirectory = (directoryPath: string, info: InfoType): void => {
     axios
       .delete(
-        `${import.meta.env.VITE_API_URL}/api/directories?directoryPath=${directoryPath}`,
+        `${
+          import.meta.env.VITE_API_URL
+        }/api/containers/${containerId}/directories?directoryPath=${directoryPath}`,
       )
       .then(() => {
         deleteDirectory(info);
@@ -134,7 +146,12 @@ export function useFilesAPI() {
     payload: T.RequestSavePayload,
   ): void => {
     axios
-      .put(`${import.meta.env.VITE_API_URL}/api/files?filePath=${filePath}}`, payload)
+      .put(
+        `${
+          import.meta.env.VITE_API_URL
+        }/api/containers/${containerId}/files?filePath=${filePath}}`,
+        payload,
+      )
       .then(() => {
         saveFile(info);
       })
@@ -145,7 +162,12 @@ export function useFilesAPI() {
 
   const requestSaveActiveTabFile = (filePath: string, payload: T.RequestSavePayload) => {
     axios
-      .put(`${import.meta.env.VITE_API_URL}/api/files?filePath=${filePath}}`, payload)
+      .put(
+        `${
+          import.meta.env.VITE_API_URL
+        }/api/containers/${containerId}/files?filePath=${filePath}}`,
+        payload,
+      )
       .then(() => {
         saveActiveTabFile();
       })
