@@ -312,7 +312,10 @@ export const useFileManage = () => {
     const directoryPath = info.node.key as string;
 
     // 탭 삭제
-    const childrenFile = info.node.children!.map((file) => file.key);
+    // const childrenFile = info.node.children!.map((file) => file.key);
+    const childrenFile: (string | number)[] = [];
+    getChildrenFile(info.node as T.FileType, childrenFile);
+
     const newTabs = { ...tabs };
     newTabs.files = newTabs.files.filter((file, index) => {
       if (!childrenFile.includes(file)) {
@@ -342,6 +345,13 @@ export const useFileManage = () => {
     // 원격 데이터 삭제
     const newTreeData = deleteByPath([...treeData], directoryPath);
     setTreeData(newTreeData as T.FileTreeType);
+  };
+
+  const getChildrenFile = (directory: T.FileType, childrenFile: (string | number)[]) => {
+    directory.children!.forEach((fs) => {
+      if (!fs.children) childrenFile.push(fs.key);
+      if (fs.children) getChildrenFile(fs, childrenFile);
+    });
   };
 
   const deleteByPath = (
