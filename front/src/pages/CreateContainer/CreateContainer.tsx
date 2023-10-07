@@ -27,7 +27,7 @@ function CreateContainer() {
     navigate(-1);
   };
   const createHandler = () => {
-    console.log(isNameValid.current);
+    // console.log(isNameValid.current);
     if (isNameValid.current) {
       const payload: CreateContainerType = {
         name: nameRef.current!.value,

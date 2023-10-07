@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import { useAxios } from "./useAxios";
+import { CONTAINER_NAME_REG } from "../constants/regExp";
 
 export interface CreateContainerType {
   name: string;
@@ -38,7 +39,7 @@ export function useCreateContainerAPI() {
       .then((response) => {
         const responseData = response.data;
 
-        if (!responseData.data.duplicated) {
+        if (!responseData.data.duplicated && CONTAINER_NAME_REG.test(name)) {
           setIsOk(1);
           isNameValid.current = true;
         } else {
