@@ -29,7 +29,7 @@ export function useAxios() {
       const originalRequest = error.config;
       // console.log(originalRequest);
       // console.log(error);
-      if (error.response.data.status.code === "401") {
+      if (error.response.data.status.message === "AccessToken 인증 오류") {
         return await instance
           .post(`${import.meta.env.VITE_API_URL}/api/users/token`)
           .then((response) => {
@@ -40,7 +40,7 @@ export function useAxios() {
             return instance(originalRequest);
           })
           .catch((error) => {
-            console.log("error", error.response);
+            // console.log("error", error.response);
             // 리프레시 토큰이 없어서 발급 실패
             // 데이터 삭제
             localStorage.removeItem("accessToken");
@@ -49,6 +49,9 @@ export function useAxios() {
             navigate("/login");
             return Promise.reject(error);
           });
+      } else if (error.response.data.status.message === "RefreshToken 인증 오류") {
+        localStorage.removeItem("accessToken");
+        navigate("/login");
       }
     },
   );

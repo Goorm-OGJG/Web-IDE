@@ -1,5 +1,5 @@
 import "./App.css";
-import { Route, Routes, useLocation, useNavigate } from "react-router";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router";
 import Main from "./pages/Main/Main";
 import MyPage from "./pages/MyPage/MyPage";
 import CreateContainer from "./pages/CreateContainer/CreateContainer";
@@ -8,7 +8,6 @@ import Login from "./pages/Login/Login";
 import SignUp from "./pages/SignUp/SignUp";
 import FindPassword from "./pages/FindPassword/FindPassword";
 import { useEffect } from "react";
-import { useMyAPI } from "./api/useMyAPI";
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
 
@@ -26,19 +25,16 @@ function App() {
     { path: "/help/password", element: <FindPassword /> },
   ];
 
-  const { requestUserInfo } = useMyAPI();
   const token = localStorage.getItem("accessToken");
   const auth = token != null;
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    requestUserInfo();
-
     if (location.pathname === "/") {
       navigate(auth ? "/main" : "/login");
     }
-  }, []);
+  }, [location.pathname]);
 
   return (
     <Routes>
@@ -57,6 +53,7 @@ function App() {
           element={<PublicRoute element={element} authenticated={auth} />}
         />
       ))}
+      <Route path="*" element={<Navigate to={"/"} />} />
     </Routes>
   );
 }
