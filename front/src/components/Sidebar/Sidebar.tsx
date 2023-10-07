@@ -1,7 +1,7 @@
 import * as S from "./Sidebar.style";
 import * as Icon from "../Icon";
 import UserInfo from "./components/UserInfo";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   isMSidebarOpenState,
   isMenuHoverState,
@@ -10,14 +10,17 @@ import {
 import Space from "./components/Space";
 import { Desktop, Mobile } from "../Responsive";
 import { useNavigate } from "react-router";
+import { isUserInfo } from "../../recoil/SidebarState";
 function Sidebar() {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(isSidebarOpenState);
   const [isMSidebarOpen, setIsMSidebarOpen] = useRecoilState(isMSidebarOpenState);
   const [isMenuHover, setIsMenuHover] = useRecoilState(isMenuHoverState);
+  const setInfoOpen = useSetRecoilState<boolean>(isUserInfo);
   const handleSidebarClose = () => {
     setIsSidebarOpen(false);
     setIsMSidebarOpen(false);
+    setInfoOpen(false);
   };
   const handleHoverMenu = () => {
     setIsMenuHover(true);

@@ -32,7 +32,7 @@ function RecentUpdateModal() {
             handleRecentBtn();
           }}
         >
-          최근 생성순
+          이름순
           {ordered === "recent" && (
             <S.DotIconDiv>
               <Icon.Dot />

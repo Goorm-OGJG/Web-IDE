@@ -1,6 +1,6 @@
 import * as S from "./BodyHeader.style";
 import * as Icon from "../../../../components/Icon";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   isOrdered,
   isUpdateModal,
@@ -16,7 +16,7 @@ function BodyHeader() {
   const [searchText, setSearchText] = useState<string>("");
   const [searchContainer, setSearchContainer] = useRecoilState(isSearchContainer);
   const [containers, setContainers] = useRecoilState(containersState);
-  const [totalContainers, setTotalContainers] = useRecoilState(containersState);
+  const setTotalContainers = useSetRecoilState(containersState);
   const ordered = useRecoilValue(isOrdered);
   const { requestContainerData } = useContainerAPI();
 
@@ -41,7 +41,7 @@ function BodyHeader() {
       requestContainerData(searchContainer, setTotalContainers);
     }
   }, []);
-  console.log(totalContainers);
+
   return (
     <div>
       <S.BodyHeaderWrapper>
@@ -59,9 +59,7 @@ function BodyHeader() {
           <S.RecentIcon>
             <Icon.SortRecent size={16} />
           </S.RecentIcon>
-          <S.RecentDiv>
-            {ordered === "updated" ? "최근 수정순" : "최근 생성순"}
-          </S.RecentDiv>
+          <S.RecentDiv>{ordered === "updated" ? "최근 수정순" : "이름순"}</S.RecentDiv>
           {isRecentUpdateModal && <RecentUpdateModal />}
         </S.RecentBtn>
       </S.BodyHeaderWrapper>

@@ -8,11 +8,11 @@ export default function useContainerAPI() {
   const axios = useAxios();
 
   //🔥 containerData 요청
-  const requestContainerData = (
+  const requestContainerData = async (
     searchContainer: string,
     setContainers: SetterOrUpdater<T.containerDataType[]>,
   ) => {
-    axios
+    await axios
       .get(`${profileURL}/containers?search=${searchContainer}`)
       .then((response) => {
         setContainers(response.data.data);
@@ -31,7 +31,7 @@ export default function useContainerAPI() {
     await axios
       .put(`${profileURL}/containers/${containerId}/private`, requestData)
       .then((response) => {
-        setPrivated(response.data.data.private);
+        setPrivated(response.data.data.isPrivate);
       })
       .catch((error) => {
         alert(error);
@@ -69,7 +69,6 @@ export default function useContainerAPI() {
       .put(`${profileURL}/containers/${containerId}/pin`, requestData)
       .then((response) => {
         setPinned(response.data.data.pinned);
-        console.log(response.data.data.pinned);
       })
       .catch((error) => {
         alert(error);

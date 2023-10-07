@@ -24,9 +24,8 @@ function BodyContainers() {
         const dateB: Date = new Date(b.updatedDate);
         return dateB.getTime() - dateA.getTime();
       } else {
-        const dateA: Date = new Date(a.createdDate);
-        const dateB: Date = new Date(b.createdDate);
-        return dateB.getTime() - dateA.getTime();
+        return a.name.localeCompare(b.name);
+        // 이름순으로 정렬
       }
     }
   });

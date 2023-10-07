@@ -142,7 +142,7 @@ function Container(props: BodyContainerPops) {
                 return (
                   <>
                     <S.UserImgContainer>
-                      <S.UserName>{user.userName}</S.UserName>
+                      <S.UserName>{user.userName.slice(0, 4)}</S.UserName>
                       <S.UserImgDiv>
                         <S.UserImg src={user.imgUrl} />
                       </S.UserImgDiv>

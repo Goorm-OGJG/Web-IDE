@@ -41,8 +41,9 @@ function ContainerSettingModal({
     setDeleteModal(true);
   };
   const handleCopyUrl = () => {
+    const API_URL = import.meta.env.VITE_API_URL;
     window.navigator.clipboard
-      .writeText(`http://localhost:5173/container/${containerData.containerId}`)
+      .writeText(`${API_URL}/container/${containerData.containerId}`)
       .then(() => {
         alert("컨테이너 링크가 복사되었습니다.");
         setContainerSettingModal(false);
@@ -52,9 +53,9 @@ function ContainerSettingModal({
     // 🔥 핀 상태값 변경 요청
     try {
       await requestPutContainerPinned(containerData.containerId, setPinned);
+      requestContainerData(searchContainer, setContainers);
       setContainerSettingModal(false);
       setDeleteModal(false);
-      requestContainerData(searchContainer, setContainers);
     } catch (error) {
       alert(error);
     }
