@@ -22,10 +22,10 @@ public class S3FileRepository {
 
     private final S3Client s3Client;
 
-    public void putFilePath(String s3Path) {
+    public void putFileKey(String S3Key) {
         try {
             // 파일 확장자를 통해 MIME 타입을 가져옴
-            String mimeType = URLConnection.guessContentTypeFromName(s3Path);
+            String mimeType = URLConnection.guessContentTypeFromName(S3Key);
             if (mimeType == null) {
                 mimeType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
             }
@@ -33,7 +33,7 @@ public class S3FileRepository {
             // S3에 파일 업로드
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
-                    .key(s3Path)
+                    .key(S3Key)
                     .contentType(mimeType)
                     .build();
 
@@ -44,11 +44,11 @@ public class S3FileRepository {
         }
     }
 
-    public void deleteFile(String s3Path) {
+    public void deleteFile(String S3Key) {
         try {
             DeleteObjectRequest request = DeleteObjectRequest.builder()
                     .bucket(bucketName)
-                    .key(s3Path)
+                    .key(S3Key)
                     .build();
 
             s3Client.deleteObject(request);
@@ -57,11 +57,11 @@ public class S3FileRepository {
         }
     }
 
-    public void putFile(String s3Path, String content) {
+    public void putFile(String S3Key, String content) {
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
-                    .key(s3Path)
+                    .key(S3Key)
                     .build();
 
             s3Client.putObject(putObjectRequest, RequestBody.fromString(content));
@@ -70,32 +70,32 @@ public class S3FileRepository {
         }
     }
 
-    public void rename(String s3Path, String newS3FilePath) {
-        log.info("nowFilePath={}", s3Path);
-        log.info("newS3FilePath={}", newS3FilePath);
+    public void renameKey(String S3Key, String newS3Key) {
+        log.info("S3Key={}", S3Key);
+        log.info("newS3Key={}", newS3Key);
         try {
             CopyObjectRequest copyObjectRequest = CopyObjectRequest.builder()
                     .sourceBucket(bucketName)
-                    .sourceKey(s3Path)
+                    .sourceKey(S3Key)
                     .destinationBucket(bucketName)
-                    .destinationKey(newS3FilePath)
+                    .destinationKey(newS3Key)
                     .build();
 
             s3Client.copyObject(copyObjectRequest);
 
             // 기존 파일 삭
-            deleteFile(s3Path);
+            deleteFile(S3Key);
 
         } catch (Exception e) {
             log.error("error message={}", e.getMessage());
         }
     }
 
-    public boolean isFileExist(String s3Path) {
+    public boolean isFileExist(String S3Key) {
         try {
             HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
                     .bucket(bucketName)
-                    .key(s3Path)
+                    .key(S3Key)
                     .build();
 
             s3Client.headObject(headObjectRequest);

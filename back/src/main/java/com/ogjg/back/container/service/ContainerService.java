@@ -14,7 +14,7 @@ import com.ogjg.back.directory.exception.NotFoundDirectory;
 import com.ogjg.back.directory.repository.DirectoryRepository;
 import com.ogjg.back.file.domain.Path;
 import com.ogjg.back.file.exception.NotFoundFile;
-import com.ogjg.back.file.repository.PathRepository;
+import com.ogjg.back.path.repository.PathRepository;
 import com.ogjg.back.s3.repository.S3ContainerRepository;
 import com.ogjg.back.s3.service.S3ContainerService;
 import com.ogjg.back.s3.service.S3DirectoryService;
@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-import static com.ogjg.back.common.util.S3PathUtil.*;
+import static com.ogjg.back.common.util.PathUtil.*;
 
 @Slf4j
 @Service

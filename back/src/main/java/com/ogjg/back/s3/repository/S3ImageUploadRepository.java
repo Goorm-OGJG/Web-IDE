@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.ogjg.back.common.util.S3PathUtil.DELIMITER;
+import static com.ogjg.back.common.util.PathUtil.DELIMITER;
 
 @Slf4j
 @Repository

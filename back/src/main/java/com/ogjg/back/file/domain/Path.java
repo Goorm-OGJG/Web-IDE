@@ -41,8 +41,8 @@ public class Path {
         return this;
     }
 
-    public Path renameAncestor(String ancestorPath, String newAncestorPath) {
-        this.path = this.path.replace(ancestorPath, newAncestorPath);
+    public Path rename(String directoryPath, String newPrefix) {
+        this.path = (this.path).replace(directoryPath, newPrefix);
         return this;
     }
 }

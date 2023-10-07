@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ogjg.back.common.util.S3PathUtil.isFile;
+import static com.ogjg.back.common.util.PathUtil.isFile;
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter

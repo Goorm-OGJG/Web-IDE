@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.ogjg.back.common.util.S3PathUtil.createEmailRemovedKey;
-import static com.ogjg.back.common.util.S3PathUtil.isFile;
+import static com.ogjg.back.common.util.PathUtil.createEmailRemovedKey;
+import static com.ogjg.back.common.util.PathUtil.isFile;
 
 @Slf4j
 @Service
@@ -59,7 +59,6 @@ public class S3ContainerService {
         return fileData;
     }
 
-    // todo: 병렬처리 등 요청수 줄일 방법 고려하기
     private List<ContainerGetFileResponse> createFileResponse(List<String> keys, String email) {
         return keys.stream()
                 .map((key) -> toFileResponse(key, email))
@@ -71,17 +70,6 @@ public class S3ContainerService {
                 .filePath(createEmailRemovedKey(key, email))
                 .content(s3ContainerRepository.getFileContent(key))
                 .build();
-    }
-
-    /**
-     * 컨테이너 모든 구조 가져오기 - 디렉토리 데이터 생성
-     * 이메일 경로를 제외한 구조를 응답값에 포함해야 하므로 절삭된 키 사용
-     */
-    @Transactional(readOnly = true)
-    public List<String> getDirectories(List<String> parsedKeys) {
-        return parsedKeys.stream()
-                .filter((key) -> !isFile(key))
-                .toList();
     }
 
     @Transactional

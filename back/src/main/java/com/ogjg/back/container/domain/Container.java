@@ -107,13 +107,13 @@ public class Container {
         }
     }
 
-    public Path findPath(String filePath, String name) {
+    public Path findPathBy(String prefix, String name) {
         // todo: 1) s3와 구분되는 에러코드 고려하기
         //       2) 쿼리문 활용 최적화 필요
         return paths.stream()
-                .filter((file -> file.getPath().equals(filePath)))
+                .filter((file -> file.getPath().equals(prefix)))
                 .filter((file -> file.getName().equals(name)))
                 .findAny()
-                .orElseThrow(() -> new NotFoundFile("DB에 존재하지 않는 파일입니다."));
+                .orElseThrow(() -> new NotFoundFile("DB에 해당 경로가 존재하지 않습니다."));
     }
 }

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.ogjg.back.common.util.S3PathUtil.createImagePrefix;
-import static com.ogjg.back.common.util.S3PathUtil.extractExtension;
+import static com.ogjg.back.common.util.PathUtil.createImagePrefix;
+import static com.ogjg.back.common.util.PathUtil.extractExtension;
 
 @Slf4j
 @Service

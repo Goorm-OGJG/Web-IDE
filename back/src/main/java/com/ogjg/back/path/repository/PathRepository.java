@@ -1,4 +1,4 @@
-package com.ogjg.back.file.repository;
+package com.ogjg.back.path.repository;
 
 import com.ogjg.back.file.domain.Path;
 import org.springframework.data.jpa.repository.JpaRepository;

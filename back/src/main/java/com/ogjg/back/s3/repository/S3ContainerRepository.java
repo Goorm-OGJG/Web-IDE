@@ -9,6 +9,7 @@ import software.amazon.awssdk.core.sync.ResponseTransformer;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,21 +53,35 @@ public class S3ContainerRepository {
     }
 
     public List<S3Object> getAllObjectsByPrefix(String prefix) {
-        ListObjectsV2Request listObjectsV2Request = ListObjectsV2Request.builder()
-                .bucket(bucketName)
-                .prefix(prefix)
-                .build();
+        List<S3Object> s3Objects = new ArrayList<>();
+        try {
+            ListObjectsV2Request listObjectsV2Request = ListObjectsV2Request.builder()
+                    .bucket(bucketName)
+                    .prefix(prefix)
+                    .build();
 
-        return s3Client.listObjectsV2(listObjectsV2Request).contents();
+            s3Objects = s3Client.listObjectsV2(listObjectsV2Request).contents();
+        } catch (Exception e) {
+            log.error("error message={}", e.getMessage());
+        }
+
+        return s3Objects;
     }
 
     public String getFileContent(String key) {
-        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                .bucket(bucketName)
-                .key(key)
-                .build();
+        String content = "";
+        try {
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .build();
 
-        return s3Client.getObject(getObjectRequest, ResponseTransformer.toBytes()).asUtf8String();
+            content = s3Client.getObject(getObjectRequest, ResponseTransformer.toBytes()).asUtf8String();
+        } catch (Exception e) {
+            log.error("error message={}", e.getMessage());
+        }
+
+        return content;
     }
 
     public void deleteObjectsWithPrefix(String prefix) {

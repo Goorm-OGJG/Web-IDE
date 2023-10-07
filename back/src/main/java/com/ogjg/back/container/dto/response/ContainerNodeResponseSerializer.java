@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
 
-import static com.ogjg.back.common.util.S3PathUtil.isFile;
+import static com.ogjg.back.common.util.PathUtil.isFile;
 
 public class ContainerNodeResponseSerializer extends JsonSerializer<ContainerGetNodeResponse> {
 
