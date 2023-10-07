@@ -80,6 +80,7 @@ export function useUserAPI() {
 
     eventSource.onerror = function () {
       alert("이미 가입된 계정 또는 일시적 오류가 발생했습니다.");
+      setIsEmailSent(0);
       eventSource.close();
     };
   };

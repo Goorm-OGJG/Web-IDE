@@ -50,11 +50,17 @@ export default function LoginForm() {
     requestLogin(payload);
   };
 
+  const enterHandler = (e: React.KeyboardEvent) => {
+    if (e.code === "Enter") {
+      handleLogin();
+    }
+  };
+
   return (
     <React.Fragment>
       {/* 데스크탑 버전 */}
       <Desktop>
-        <S.RightBackground>
+        <S.RightBackground onKeyDown={enterHandler}>
           <S.Rightwrapper>
             <S.LoginTitle>Login</S.LoginTitle>
             <S.Logininfo> 하나의 아이디로 OGJG 서비스를 이용하세요. </S.Logininfo>

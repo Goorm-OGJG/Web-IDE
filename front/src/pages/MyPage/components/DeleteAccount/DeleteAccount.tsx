@@ -39,7 +39,7 @@ function DeleteAccount() {
                 <S.Li>프로젝트, 컨테이너 정보, 채팅, 편집 이력 등</S.Li>
               </S.InfoWrapper>
               <S.InfoWrapper>
-                <PasswordInput placeholder="비밀번호" ref={ref} />
+                <PasswordInput placeholder="비밀번호" ref={ref} check={false} />
               </S.InfoWrapper>
               <S.EndWrapper>
                 <S.CancelButton onClick={cancelHandler}>취소</S.CancelButton>

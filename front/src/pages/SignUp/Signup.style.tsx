@@ -99,7 +99,7 @@ export const StyledButton = styled.button`
   font-size: ${FONT.M};
   cursor: pointer;
   width: 100%;
-  margin-top: 35px;
+  margin-top: 20px;
 
   &:hover {
     background-color: ${COLOR.Purple2};
@@ -134,7 +134,6 @@ export const AlertP = styled.p`
   position: absolute;
   color: ${COLOR.Red1};
   font-size: ${FONT.XS};
-  bottom: px;
   /* padding-top: 15px; */
 `;
 
@@ -149,6 +148,10 @@ export const EmailCorrectP = styled(CorrectP)`
 
 export const EmailSuccessP = styled(EmailCorrectP)`
   color: ${COLOR.Green1};
+`;
+
+export const EmailAlertP = styled(EmailCorrectP)`
+  color: ${COLOR.Red1};
 `;
 
 export const Wrapper = styled.div``;

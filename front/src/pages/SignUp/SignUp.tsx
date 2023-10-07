@@ -23,14 +23,12 @@ const Signup = () => {
   };
 
   const handleSendEmailClick = () => {
-    if (isEmailSent === 0) {
+    if (isEmailSent === 0 && emailOk === 1) {
       const payload: T.SendEmail = {
         email,
       };
       requestSendEmail(payload, setIsEmailSent);
     }
-
-    // setIsAuthButtonDisabled(true);
   };
 
   const changeNameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,6 +95,12 @@ const Signup = () => {
           >
             {isEmailSent === 1 ? <Spinner /> : "인증"}
           </S.AuthButton>
+          {emailOk === 1 && isEmailSent === 0 && (
+            <S.EmailSuccessP>사용 가능한 이름입니다.</S.EmailSuccessP>
+          )}
+          {emailOk === 0 && isEmailSent === 0 && (
+            <S.EmailAlertP>이름 형식이 올바르지 않습니다.</S.EmailAlertP>
+          )}
           {isEmailSent === 1 && (
             <S.EmailCorrectP>이메일 발송 중입니다. 잠시만 기다려 주세요.</S.EmailCorrectP>
           )}
@@ -118,7 +122,7 @@ const Signup = () => {
           <PasswordInput placeholder="비밀번호 확인" ref={passwordConfirmRef} />
         </S.Wrapper>
 
-        <React.Fragment>
+        {/* <React.Fragment>
           <S.NameBOX>
             <S.StyledInputBox
               placeholder="이름"
@@ -129,7 +133,17 @@ const Signup = () => {
             {nameOk === 1 && <S.CorrectP>사용 가능한 이름입니다.</S.CorrectP>}
             {nameOk === 0 && <S.AlertP>이름 형식이 올바르지 않습니다.</S.AlertP>}
           </S.NameBOX>
-        </React.Fragment>
+        </React.Fragment> */}
+        <S.EmailInputWrapper>
+          <S.EmailInput
+            placeholder="이름"
+            minLength={2}
+            maxLength={30}
+            onChange={changeNameHandler}
+          />
+          {nameOk === 1 && <S.EmailSuccessP>사용 가능한 이름입니다.</S.EmailSuccessP>}
+          {nameOk === 0 && <S.EmailAlertP>이름 형식이 올바르지 않습니다.</S.EmailAlertP>}
+        </S.EmailInputWrapper>
 
         <S.StyledButton onClick={handleSignup}>회원가입</S.StyledButton>
 

@@ -23,11 +23,19 @@ function PasswordChange() {
   return (
     <S.Wrapper>
       <S.InfoTitle>현재 비밀번호</S.InfoTitle>
-      <PasswordInput placeholder="현재 비밀번호" ref={nowRef} />
+      <PasswordInput placeholder="현재 비밀번호" ref={nowRef} check={true} />
       <S.InfoTitle>새로운 비밀번호</S.InfoTitle>
-      <PasswordInput placeholder="영문, 숫자, 특수문자 혼합하여 8~30자." ref={newRef} />
+      <PasswordInput
+        placeholder="영문, 숫자, 특수문자 혼합하여 8~30자."
+        ref={newRef}
+        check={true}
+      />
       <S.InfoTitle>새로운 비밀번호 확인</S.InfoTitle>
-      <PasswordInput placeholder="새로운 비밀번호 확인" ref={newConfirmRef} />
+      <PasswordInput
+        placeholder="새로운 비밀번호 확인"
+        ref={newConfirmRef}
+        check={true}
+      />
       <S.Button onClick={changePasswordHandler}>비밀번호 변경</S.Button>
     </S.Wrapper>
   );

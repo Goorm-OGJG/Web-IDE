@@ -6,10 +6,11 @@ import { PASSWORD_REG } from "../../../../constants/regExp";
 
 interface Props {
   placeholder: string;
+  check: boolean;
 }
 
 const PasswordInput = forwardRef(function PasswordInput(
-  { placeholder }: Props,
+  { placeholder, check = true }: Props,
   ref: React.ForwardedRef<HTMLInputElement>,
 ) {
   const [show, setShow] = useState(false);
@@ -57,8 +58,8 @@ const PasswordInput = forwardRef(function PasswordInput(
         )}
       </S.IconWrapper>
       <React.Fragment>
-        {isOk === 1 && <S.CorrectP>사용가능한 비밀번호 입니다</S.CorrectP>}
-        {isOk === 0 && <S.AlertP>올바르지 않은 비밀번호 입니다</S.AlertP>}
+        {check && isOk === 1 && <S.CorrectP>사용가능한 비밀번호 입니다</S.CorrectP>}
+        {check && isOk === 0 && <S.AlertP>올바르지 않은 비밀번호 입니다</S.AlertP>}
       </React.Fragment>
     </S.PasswordBox>
   );
