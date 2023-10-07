@@ -1,12 +1,9 @@
 import ConnectLive, { ILocalMedia, IRoom } from "@connectlive/connectlive-web-sdk";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import * as Icon from "../Icon";
 import * as S from "./VoiceChat.style";
 import { Desktop, Mobile } from "../Responsive";
 import { useParams } from "react-router";
-import VoiceUser from "./VoiceUser";
-import { useRecoilValue } from "recoil";
-import { userInfoState } from "../../recoil/userState";
 import Spinner from "../Spinner/Spinner";
 
 function VoiceChat() {
@@ -15,11 +12,8 @@ function VoiceChat() {
   const roomId = param.containerId;
   const localMedia = useRef<ILocalMedia>();
   const room = useRef<IRoom>();
-  const [users, setUsers] = useState<string[]>([]);
   const [isConnect, setIsConnect] = useState(0);
 
-  const [isListOpen, setIsListOpen] = useState(false);
-  const userInfo = useRecoilValue(userInfoState);
   const connectRoom = async () => {
     if (!isConnect) {
       await ConnectLive.signIn({
@@ -37,28 +31,14 @@ function VoiceChat() {
       });
       room.current.on("connected", () => {
         setIsConnect(2);
-        setIsListOpen(true);
-        // console.log("커넥트 라이브에 로그인");
-        // room.current!.localParticipant.id = userInfo!.name;
-        // console.log(room.current?.localParticipant.id);
-        console.log("커넥트!!!!!!!!!!!!");
-        console.log(userInfo && userInfo.name);
-        setUsers([userInfo!.name]);
       });
 
-      room.current.on("participantEntered", (evt) => {
-        console.log(userInfo!.name);
-        setUsers((prev) => [...prev, evt.remoteParticipant.id]);
-      });
+      room.current.on("participantEntered", () => {});
 
-      room.current.on("participantLeft", () => {
-        setUsers((prev) => [room.current!.localParticipant.id, ...prev]);
-      });
+      room.current.on("participantLeft", () => {});
       await room.current.connect(roomId as string);
 
       room.current.publish([localMedia.current]);
-    } else {
-      setIsListOpen(!isListOpen);
     }
   };
 
@@ -69,8 +49,6 @@ function VoiceChat() {
     localMedia.current!.stop();
     ConnectLive.signOut();
     setIsConnect(0);
-    setUsers([]);
-    setIsListOpen(false);
   };
 
   const phoneHandler = () => {
@@ -97,42 +75,6 @@ function VoiceChat() {
           </S.MButton>
         </Mobile>
       </S.IconBox>
-      {/* {isListOpen && (
-        <React.Fragment>
-          <Desktop>
-            <S.RoomBox>
-              <S.RoomName>
-                <S.NameWrapper>
-                  <Icon.Speaker size={24} />
-                  음성 채팅
-                </S.NameWrapper>
-                <S.IconBox onClick={disconnectRoom}>
-                  <Icon.PhoneX size={24} />
-                </S.IconBox>
-              </S.RoomName>
-              {users.map((user) => (
-                <VoiceUser user={user} key={user} />
-              ))}
-            </S.RoomBox>
-          </Desktop>
-          <Mobile>
-            <S.MRoomBox>
-              <S.RoomName>
-                <S.NameWrapper>
-                  <Icon.Speaker size={24} />
-                  음성 채팅
-                </S.NameWrapper>
-                <S.IconBox onClick={disconnectRoom}>
-                  <Icon.PhoneX size={24} />
-                </S.IconBox>
-              </S.RoomName>
-              {users.map((user) => (
-                <VoiceUser user={user} key={user} />
-              ))}
-            </S.MRoomBox>
-          </Mobile>
-        </React.Fragment>
-      )} */}
     </S.Wrapper>
   );
 }
