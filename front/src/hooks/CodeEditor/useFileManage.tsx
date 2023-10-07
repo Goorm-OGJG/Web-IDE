@@ -33,7 +33,7 @@ export const useFileManage = () => {
 
   const getFileMap = (fileData: ResponseFileData): FileData => {
     return fileData.reduce((result: FileData, data: FileType) => {
-      result[data.filePath] = data.uuid; // content -> uuid 수정 필요
+      result[data.filePath || data.directory] = data.uuid; // content -> uuid 수정 필요
       return result;
     }, {});
   };
@@ -70,7 +70,7 @@ export const useFileManage = () => {
       codes: [...prevTabs.codes, ""],
     }));
 
-    // 2. 로컬 데이터 추가
+    // 2. 파일 데이터 추가
     setFileData((prevFileData: T.FileData) => ({
       ...prevFileData,
       [newFilePath]: uuid,
@@ -109,10 +109,11 @@ export const useFileManage = () => {
     });
   };
 
-  const createDirectory = (info: T.InfoType, directoryName: string) => {
+  const createDirectory = (info: T.InfoType, directoryName: string, uuid: string) => {
     const parentPath = info.node.key as string;
     const newDirectoryPath = `${parentPath}${directoryName}/`;
 
+    // 1. 트리 데이터 추가
     setTreeData(
       (prevTreeData) =>
         createDirectoryByPath(
@@ -122,6 +123,11 @@ export const useFileManage = () => {
           directoryName,
         ) as T.FileTreeType,
     );
+
+    // 2. 디렉토리 데이터 추가
+    setDirectoryData((prevDirectoryData) => {
+      return { ...prevDirectoryData, [newDirectoryPath]: uuid };
+    });
   };
 
   const createDirectoryByPath = (
@@ -172,7 +178,7 @@ export const useFileManage = () => {
       };
     });
 
-    // 2. 로컬 데이터 이름 변경
+    // 2. 파일 데이터 이름 변경
     setFileData((prevFileData: T.FileData) => {
       const { [targetPath]: oldContent, ...rest } = prevFileData;
       return {
@@ -239,7 +245,7 @@ export const useFileManage = () => {
       };
     });
 
-    // 2. 로컬 데이터 변경
+    // 2. 파일 데이터 변경
     const newFileData = { ...fileData };
     for (const [filePath, code] of Object.entries(newFileData)) {
       if (filePath.startsWith(targetPath)) {
@@ -251,7 +257,15 @@ export const useFileManage = () => {
     }
     setFileData(newFileData);
 
-    // 3. 트리 데이터 변경
+    // 3. 디렉토리 데이터 변경
+    setDirectoryData((prevDirectoryData) => {
+      const newDirectroyData = { ...prevDirectoryData };
+      newDirectroyData[newDirectoryPath] = newDirectroyData[targetPath];
+      delete newDirectroyData[targetPath];
+      return newDirectroyData;
+    });
+
+    // 4. 트리 데이터 변경
     setTreeData((prevTreeData) => {
       return renameInTree(prevTreeData, targetPath, newDirectoryPath) as T.FileTreeType;
     });
@@ -293,17 +307,17 @@ export const useFileManage = () => {
   };
 
   const deleteFile = (info: T.InfoType) => {
-    // 탭 삭제
+    // 1. 탭 삭제
     const filePath = info.node.key as string;
     const tabIndex = tabs.files.indexOf(filePath);
     if (tabs.files.includes(filePath)) tabClose(tabs, tabIndex);
 
-    // 로컬 데이터 삭제
+    //2. 파일 데이터 삭제
     const newFileData = { ...fileData };
     delete newFileData[filePath];
     setFileData(newFileData);
 
-    // 원격 데이터 삭제
+    //3. 트리 데이터 삭제
     const newTreeData = deleteByPath([...treeData], filePath);
     setTreeData(newTreeData as T.FileTreeType);
   };
@@ -311,8 +325,7 @@ export const useFileManage = () => {
   const deleteDirectory = (info: T.InfoType) => {
     const directoryPath = info.node.key as string;
 
-    // 탭 삭제
-    // const childrenFile = info.node.children!.map((file) => file.key);
+    // 1. 탭 삭제
     const childrenFile: (string | number)[] = [];
     getChildrenFile(info.node as T.FileType, childrenFile);
 
@@ -331,18 +344,25 @@ export const useFileManage = () => {
     }
     setTabs(newTabs);
 
-    // 로컬 데이터 삭제
-    const newDirectoriesData = { ...directoriesData };
-    delete newDirectoriesData[directoryPath];
-    setDirectoriesData(newDirectoriesData);
-
+    // 2. 파일 데이터 삭제
     const newFileData = { ...fileData };
-    childrenFile.forEach((filePath) => {
-      delete newFileData[filePath];
+    Object.keys(newFileData).forEach((path) => {
+      if (path.startsWith(directoryPath)) {
+        delete newFileData[path];
+      }
     });
     setFileData(newFileData);
 
-    // 원격 데이터 삭제
+    // 3. 디렉토리 데이터 삭제
+    const newDirectoriesData = { ...directoriesData };
+    Object.keys(newDirectoriesData).forEach((path) => {
+      if (path.startsWith(directoryPath)) {
+        delete newDirectoriesData[path];
+      }
+    });
+    setDirectoriesData(newDirectoriesData);
+
+    // 4. 트리 데이터 삭제
     const newTreeData = deleteByPath([...treeData], directoryPath);
     setTreeData(newTreeData as T.FileTreeType);
   };

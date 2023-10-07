@@ -64,11 +64,11 @@ export function useFilesAPI() {
           import.meta.env.VITE_API_URL
         }/api/containers/${containerId}/directories?directoryPath=${
           payload.directoryPath
-        }/`,
+        }`,
         { uuid: payload.uuid },
       )
       .then(() => {
-        createDirectory(info, directoryName);
+        createDirectory(info, directoryName, payload.uuid);
       })
       .catch((error) => {
         console.log(error);

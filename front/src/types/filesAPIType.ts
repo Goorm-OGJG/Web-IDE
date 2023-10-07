@@ -11,6 +11,7 @@ export type ResponseFileData = FileType[];
 
 export type FileType = {
   filePath: string;
+  directory: string;
   content?: string;
   uuid: string;
 };
