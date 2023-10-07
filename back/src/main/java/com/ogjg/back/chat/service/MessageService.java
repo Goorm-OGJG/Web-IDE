@@ -49,19 +49,23 @@ public class MessageService {
     }
 
     @Transactional
-    public void saveAndSendMessage(MessageDto message) {
-        saveMessage(message);
-        sendMessage(message);
-    }
-
-    private void saveMessage(MessageDto message) {
+    public void saveMessage(MessageDto message) {
+        log.info("Message Email: {}", message.getEmail());
         User user = userRepository.findByEmail(message.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
         Container container = containerRepository.findById(message.getContainerId())
                 .orElseThrow(() -> new IllegalArgumentException("컨테이너가 존재하지 않습니다."));
 
+        if (roomRepository.findByContainerContainerId(container.getContainerId()).isEmpty()) {
+            Room room = new Room(container);
+            roomRepository.save(room);
+        }
+
+        Room room = roomRepository.findByContainerContainerId(container.getContainerId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 채팅방이 존재하지 않습니다."));
+
         Message chatMessage = Message.builder()
-                .room(new Room(container))
+                .room(room)
                 .user(user)
                 .type(message.getType())
                 .content(message.getContent())
@@ -70,8 +74,11 @@ public class MessageService {
         messageRepository.save(chatMessage);
     }
 
-    private void sendMessage(MessageDto message) {
-        template.convertAndSend("/sub/chat/room/" + message.getContainerId(), message.getContent());
+    @Transactional
+    public void sendMessage(MessageDto message) {
+        log.info("접속 채팅방 ID: {}", message.getContainerId());
+        log.info("접속 채팅방 Content: {}", message.getContent());
+        template.convertAndSend("/sub/room/" + message.getContainerId(), message);
     }
 
     public void addUserInfoInSessionAttribute(MessageDto message, SimpMessageHeaderAccessor headerAccessor) {
@@ -159,5 +166,11 @@ public class MessageService {
                         .content(message.getContent())
                         .build())
                 .toList();
+    }
+
+    @Transactional
+    public void saveAndSendMessage(MessageDto message) {
+        saveMessage(message);
+        sendMessage(message);
     }
 }
