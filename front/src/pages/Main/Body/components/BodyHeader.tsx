@@ -59,7 +59,7 @@ function BodyHeader() {
           <S.RecentIcon>
             <Icon.SortRecent size={16} />
           </S.RecentIcon>
-          <S.RecentDiv>{ordered === "updated" ? "최근 수정순" : "이름순"}</S.RecentDiv>
+          <S.RecentDiv>{ordered === "updated" ? "최근 생성순" : "이름순"}</S.RecentDiv>
           {isRecentUpdateModal && <RecentUpdateModal />}
         </S.RecentBtn>
       </S.BodyHeaderWrapper>
