@@ -67,7 +67,7 @@ function CreateDirectoryModal() {
       <S.Explain>
         <S.Path>{path}</S.Path> 에 생성팔 폴더명을 입력해주세요.
       </S.Explain>
-      <InputFsName ref={inputRef} placeholder="영어와 숫자만 지원 (최대 255자)" />
+      <InputFsName ref={inputRef} placeholder='특수 문자 /:*\?"<>| 불가' />
       {isNotOK && <S.Warning>올바르지 않은 폴더명 입니다.</S.Warning>}
       <S.ButtonWrapper>
         <S.Button onClick={handlerOK}>확인</S.Button>

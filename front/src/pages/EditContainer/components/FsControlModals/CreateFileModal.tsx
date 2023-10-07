@@ -25,7 +25,11 @@ function CreateFileModal() {
         filePath: selectedInfo?.node.key as string,
         uuid: crypto.randomUUID(),
       };
-      requestCreateFile(payload, selectedInfo as T.InfoType, inputRef.current!.value);
+      requestCreateFile(
+        payload,
+        selectedInfo as T.InfoType,
+        inputRef.current!.value.trim(),
+      );
 
       setMode("EDIT");
       return;
@@ -62,10 +66,7 @@ function CreateFileModal() {
       <S.Explain>
         <S.Path>{path}</S.Path> 에 생성팔 파일명을 입력해주세요.
       </S.Explain>
-      <InputFsName
-        ref={inputRef}
-        placeholder="영어와 숫자만 지원, 확장자 필수 입력, 최대 255자"
-      />
+      <InputFsName ref={inputRef} placeholder='확장자 필수 입력, 특수문자 /:*\?"<>| 불가' />
       {isNotOK && <S.Warning>올바르지 않은 파일명 입니다.</S.Warning>}
       <S.ButtonWrapper>
         <S.Button onClick={handlerOK}>확인</S.Button>

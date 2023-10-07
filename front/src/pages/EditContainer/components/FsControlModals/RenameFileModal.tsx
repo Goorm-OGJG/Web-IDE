@@ -63,7 +63,7 @@ function RenameFileModal() {
       </S.Explain>
       <InputFsName
         ref={inputRef}
-        placeholder="영어와 숫자만 지원, 확장자 필수 입력, 최대 255자"
+        placeholder='확장자 필수 입력, 특수문자 /:*\?"<>| 불가'
       />
       {isNotOK && <S.Warning>올바르지 않은 파일명 입니다.</S.Warning>}
       <S.ButtonWrapper>
