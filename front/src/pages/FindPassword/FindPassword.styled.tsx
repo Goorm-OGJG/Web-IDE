@@ -76,6 +76,9 @@ export const StyledButton = styled.button`
   cursor: pointer;
   width: 100%;
   margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     background-color: ${COLOR.Purple2};

@@ -1,11 +1,9 @@
-import { useAxios } from "./useAxios";
 import * as T from "../types/userAPIType";
 import { useNavigate } from "react-router";
-// import React from "react";
-// import axios from "axios";
+import axios from "axios";
 
 export function useUserAPI() {
-  const axios = useAxios();
+  // const axios = useAxios();
   const navigate = useNavigate();
   const requestLogin = (payload: T.LoginType) => {
     axios
@@ -14,12 +12,10 @@ export function useUserAPI() {
         if (response) {
           navigate("/main");
           localStorage.setItem("accessToken", response.headers.authorization);
-        } else {
-          alert("존재하는 계정이 없습니다.");
         }
       })
       .catch((error) => {
-        alert(error);
+        alert(error.response.data.status.message);
       });
   };
 
@@ -35,12 +31,16 @@ export function useUserAPI() {
         }
       })
       .catch((error) => {
-        alert(error);
+        alert(error.response.data.status.message);
       });
   };
 
-  const requestFindPassword = (payload: T.FindPassword) => {
+  const requestFindPassword = (
+    payload: T.FindPassword,
+    setIsEmailSent: React.Dispatch<React.SetStateAction<boolean>>,
+  ) => {
     const email = payload.email;
+    setIsEmailSent(true);
     axios
       .post(`${import.meta.env.VITE_API_URL}/api/users/find-password/${email}`, payload)
       .then((response) => {
@@ -52,7 +52,8 @@ export function useUserAPI() {
         }
       })
       .catch((error) => {
-        alert(error);
+        setIsEmailSent(false);
+        alert(error.response.data.status.message);
       });
   };
 
@@ -61,7 +62,7 @@ export function useUserAPI() {
     setIsEmailSent: React.Dispatch<React.SetStateAction<number>>,
   ) => {
     const clientId = crypto.randomUUID();
-
+    setIsEmailSent(1);
     const eventSource = new EventSource(
       `${import.meta.env.VITE_API_URL}/api/users/email-auth/${clientId}/${payload.email}`,
     );
@@ -70,15 +71,15 @@ export function useUserAPI() {
       const data = JSON.parse(event.data);
       // console.log(data);
       if (data.status.message === "email-sending") {
-        setIsEmailSent(1);
-      } else if (data.status.message === "email-completed") {
         setIsEmailSent(2);
+      } else if (data.status.message === "email-completed") {
+        setIsEmailSent(3);
         eventSource.close();
       }
     };
 
     eventSource.onerror = function () {
-      alert("이미 가입된 계정이 또는 일시적 오류가 발생했습니다.");
+      alert("이미 가입된 계정 또는 일시적 오류가 발생했습니다.");
       eventSource.close();
     };
   };

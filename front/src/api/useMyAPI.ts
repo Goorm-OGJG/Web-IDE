@@ -32,8 +32,8 @@ export function useMyAPI() {
     const payload = { name };
     axios
       .patch(`${import.meta.env.VITE_API_URL}/api/users/info`, payload)
-      .then((response) => {
-        console.log(response);
+      .then(() => {
+        alert("이름 변경이 완료되었습니다.");
       })
       .catch((error) => {
         console.error(error);

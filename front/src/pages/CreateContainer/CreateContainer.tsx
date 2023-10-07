@@ -12,6 +12,8 @@ import {
   CreateContainerType,
   useCreateContainerAPI,
 } from "../../api/useCreateContainerAPI";
+import Sidebar from "../../components/Sidebar/Sidebar";
+import Header from "../../components/Header/Header";
 
 function CreateContainer() {
   const navigate = useNavigate();
@@ -38,36 +40,40 @@ function CreateContainer() {
   };
 
   return (
-    <S.BackGround>
-      {/* Desktop */}
-      {/* <Desktop> */}
-      <S.Wrapper>
-        <S.Header>
-          <S.IconBox onClick={backHandler}>
-            <Icon.DownArrow2 size={24} />
-          </S.IconBox>
-          <S.Title>컨테이너 생성하기</S.Title>
-        </S.Header>
-        <ContainerContent name="이름">
-          <NameInput ref={nameRef} isNameValid={isNameValid} />
-        </ContainerContent>
-        <ContainerContent name="설명(선택사항)">
-          <Description ref={descRef} />
-        </ContainerContent>
-        <ContainerContent name="공개범위">
-          <Share isPrivate={isPrivate} />
-        </ContainerContent>
-        <ContainerContent name="소프트웨어 스택">
-          <LanguageStacks language={language} />
-        </ContainerContent>
-        <Desktop>
-          <S.Button onClick={createHandler}>생성하기</S.Button>
-        </Desktop>
-        <Mobile>
-          <S.MButton onClick={createHandler}>생성하기</S.MButton>
-        </Mobile>
-      </S.Wrapper>
-    </S.BackGround>
+    <>
+      <Header />
+      <Sidebar />
+      <S.BackGround>
+        {/* Desktop */}
+        {/* <Desktop> */}
+        <S.Wrapper>
+          <S.Header>
+            <S.IconBox onClick={backHandler}>
+              <Icon.DownArrow2 size={24} />
+            </S.IconBox>
+            <S.Title>컨테이너 생성하기</S.Title>
+          </S.Header>
+          <ContainerContent name="이름">
+            <NameInput ref={nameRef} isNameValid={isNameValid} />
+          </ContainerContent>
+          <ContainerContent name="설명(선택사항)">
+            <Description ref={descRef} />
+          </ContainerContent>
+          <ContainerContent name="공개범위">
+            <Share isPrivate={isPrivate} />
+          </ContainerContent>
+          <ContainerContent name="소프트웨어 스택">
+            <LanguageStacks language={language} />
+          </ContainerContent>
+          <Desktop>
+            <S.Button onClick={createHandler}>생성하기</S.Button>
+          </Desktop>
+          <Mobile>
+            <S.MButton onClick={createHandler}>생성하기</S.MButton>
+          </Mobile>
+        </S.Wrapper>
+      </S.BackGround>
+    </>
   );
 }
 

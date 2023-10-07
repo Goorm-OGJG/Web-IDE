@@ -29,7 +29,7 @@ function Sidebar() {
     navigate(destination);
   };
   return (
-    <div>
+    <>
       <Desktop>
         <S.SidebarWrapper
           issidebaropen={isSidebarOpen}
@@ -85,7 +85,7 @@ function Sidebar() {
           <Space />
         </S.MSidebarWrapper>
       </Mobile>
-    </div>
+    </>
   );
 }
 

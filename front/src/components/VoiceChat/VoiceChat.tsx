@@ -7,6 +7,7 @@ import { useParams } from "react-router";
 import VoiceUser from "./VoiceUser";
 import { useRecoilValue } from "recoil";
 import { userInfoState } from "../../recoil/userState";
+import Spinner from "../Spinner/Spinner";
 
 function VoiceChat() {
   const param = useParams();
@@ -15,7 +16,7 @@ function VoiceChat() {
   const localMedia = useRef<ILocalMedia>();
   const room = useRef<IRoom>();
   const [users, setUsers] = useState<string[]>([]);
-  const [isConnect, setIsConnect] = useState(false);
+  const [isConnect, setIsConnect] = useState(0);
 
   const [isListOpen, setIsListOpen] = useState(false);
   const userInfo = useRecoilValue(userInfoState);
@@ -31,19 +32,22 @@ function VoiceChat() {
       if (!room) {
         throw new Error("Failed to create room");
       }
+      room.current.on("connecting", () => {
+        setIsConnect(1);
+      });
       room.current.on("connected", () => {
-        setIsConnect(true);
+        setIsConnect(2);
         setIsListOpen(true);
         // console.log("커넥트 라이브에 로그인");
-        room.current!.localParticipant.id = userInfo!.name;
+        // room.current!.localParticipant.id = userInfo!.name;
         // console.log(room.current?.localParticipant.id);
-        // const tmpUser = room.current!.remoteParticipants.map((user) => user.id);
-        setUsers((prev) => [room.current!.localParticipant.id, ...prev]);
+        console.log("커넥트!!!!!!!!!!!!");
+        console.log(userInfo && userInfo.name);
+        setUsers([userInfo!.name]);
       });
 
       room.current.on("participantEntered", (evt) => {
-        // evt.remoteParticipant.id = "tmp_user2";
-        // console.log("user: " + evt.remoteParticipant.id + " is entered.");
+        console.log(userInfo!.name);
         setUsers((prev) => [...prev, evt.remoteParticipant.id]);
       });
 
@@ -64,9 +68,17 @@ function VoiceChat() {
     room.current!.disconnect();
     localMedia.current!.stop();
     ConnectLive.signOut();
-    setIsConnect(false);
+    setIsConnect(0);
     setUsers([]);
     setIsListOpen(false);
+  };
+
+  const phoneHandler = () => {
+    if (isConnect === 0) {
+      connectRoom();
+    } else if (isConnect === 2) {
+      disconnectRoom();
+    }
   };
 
   return (
@@ -78,12 +90,14 @@ function VoiceChat() {
           </S.Button>
         </Desktop>
         <Mobile>
-          <S.MButton onClick={connectRoom} isConnect={isConnect}>
-            <Icon.Phone size={25} />
+          <S.MButton onClick={phoneHandler} isConnect={isConnect}>
+            {isConnect === 0 && <Icon.Phone size={25} />}
+            {isConnect === 1 && <Spinner />}
+            {isConnect === 2 && <Icon.PhoneX size={25} />}
           </S.MButton>
         </Mobile>
       </S.IconBox>
-      {isListOpen && (
+      {/* {isListOpen && (
         <React.Fragment>
           <Desktop>
             <S.RoomBox>
@@ -118,7 +132,7 @@ function VoiceChat() {
             </S.MRoomBox>
           </Mobile>
         </React.Fragment>
-      )}
+      )} */}
     </S.Wrapper>
   );
 }

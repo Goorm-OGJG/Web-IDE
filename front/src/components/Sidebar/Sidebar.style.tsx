@@ -24,6 +24,7 @@ export const SidebarWrapper = styled.div<SidebarProps>`
   ${(props) => props.ismenuhover && `box-shadow: 8px 10px 12px rgba(43, 45, 54, 0.3);`}
   padding: 12px;
   opacity: ${(props) => (props.issidebaropen || props.ismenuhover ? 1 : 0)};
+
   transform: ${(props) =>
     props.issidebaropen || props.ismenuhover ? "translateX(0)" : "translateX(-100%)"};
   z-index: ${(props) => (props.ismenuhover ? 100 : 1)};
@@ -31,6 +32,9 @@ export const SidebarWrapper = styled.div<SidebarProps>`
     opacity 0.7s ease-in-out,
     transform 0.7s ease-in-out,
     height 1s ease-in-out;
+
+  /* hsj 수정한 것 */
+  position: absolute;
 `;
 
 export const SidebarTop = styled.div`
@@ -111,11 +115,14 @@ export const MSidebarWrapper = styled.div<MSidebarProps>`
   opacity: ${(props) => (props.ismsidebaropen || props.ismmenuhover ? 1 : 0)};
   transform: ${(props) =>
     props.ismsidebaropen || props.ismmenuhover ? "translateX(0)" : "translateX(-100%)"};
-  z-index: ${(props) => (props.ismmenuhover ? 100 : 1)};
+  z-index: ${(props) => (props.ismmenuhover ? 10000 : 1)};
   transition:
     opacity 0.7s ease-in-out,
     transform 0.7s ease-in-out,
     height 1s ease-in-out;
+
+  /* hsj 수정한 것 */
+  position: absolute;
 `;
 
 export const MSidebarTop = styled.div`

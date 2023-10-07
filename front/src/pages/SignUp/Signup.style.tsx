@@ -78,10 +78,15 @@ export const AuthButton = styled.button`
   transform: translateY(-50%);
   background-color: ${(props) =>
     props.disabled ? `${COLOR.Gray1}` : `${COLOR.Purple1}`};
-  padding: 5px 10px;
+  /* padding: 5px 10px; */
+  width: 50px;
+  height: 28px;
   color: white;
   border: none;
   border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
 `;
 
@@ -129,10 +134,20 @@ export const AlertP = styled.p`
   position: absolute;
   color: ${COLOR.Red1};
   font-size: ${FONT.XS};
+  bottom: px;
   /* padding-top: 15px; */
 `;
 
 export const CorrectP = styled(AlertP)`
+  color: ${COLOR.Green1};
+`;
+
+export const EmailCorrectP = styled(CorrectP)`
+  bottom: 0;
+  color: ${COLOR.Purple1};
+`;
+
+export const EmailSuccessP = styled(EmailCorrectP)`
   color: ${COLOR.Green1};
 `;
 

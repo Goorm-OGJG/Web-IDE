@@ -5,6 +5,7 @@ import { EMAIL_REG, NAME_REG, PASSWORD_REG } from "../../constants/regExp";
 import useRegTest from "../../hooks/useRegTest";
 import { useUserAPI } from "../../api/useUserAPI";
 import * as T from "../../types/userAPIType";
+import Spinner from "../../components/Spinner/Spinner";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +16,6 @@ const Signup = () => {
   const { requestSignUp, requestSendEmail } = useUserAPI();
   const passwordRef = useRef<HTMLInputElement>(null);
   const passwordConfirmRef = useRef<HTMLInputElement>(null);
-  const [isAuthButtonDisabled, setIsAuthButtonDisabled] = useState(false);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -23,11 +23,14 @@ const Signup = () => {
   };
 
   const handleSendEmailClick = () => {
-    const payload: T.SendEmail = {
-      email,
-    };
-    requestSendEmail(payload, setIsEmailSent);
-    setIsAuthButtonDisabled(true);
+    if (isEmailSent === 0) {
+      const payload: T.SendEmail = {
+        email,
+      };
+      requestSendEmail(payload, setIsEmailSent);
+    }
+
+    // setIsAuthButtonDisabled(true);
   };
 
   const changeNameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,15 +39,13 @@ const Signup = () => {
     setNameOk(NAME_REG, nameValue);
   };
 
-  const isButtonDisabled = emailOk !== 1;
-
   const handleSignup = () => {
     if (
       emailOk === 1 &&
       nameOk === 1 &&
       PASSWORD_REG.test(passwordRef.current!.value) &&
       passwordRef.current!.value === passwordConfirmRef.current!.value &&
-      isEmailSent === 2
+      isEmailSent === 3
     )
       if (email.trim() === "") {
         alert("이메일을 입력하세요.");
@@ -92,10 +93,21 @@ const Signup = () => {
           />
           <S.AuthButton
             onClick={handleSendEmailClick}
-            disabled={isButtonDisabled || isAuthButtonDisabled}
+            disabled={isEmailSent === 2 || isEmailSent === 3}
           >
-            인증
+            {isEmailSent === 1 ? <Spinner /> : "인증"}
           </S.AuthButton>
+          {isEmailSent === 1 && (
+            <S.EmailCorrectP>이메일 발송 중입니다. 잠시만 기다려 주세요.</S.EmailCorrectP>
+          )}
+          {isEmailSent === 2 && (
+            <S.EmailCorrectP>
+              이메일 발송이 완료되었습니다. 메일을 확인해 주세요.
+            </S.EmailCorrectP>
+          )}
+          {isEmailSent === 3 && (
+            <S.EmailSuccessP>이메일 인증이 완료되었습니다.</S.EmailSuccessP>
+          )}
         </S.EmailInputWrapper>
 
         <S.Wrapper>

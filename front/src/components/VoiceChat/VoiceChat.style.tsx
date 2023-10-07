@@ -3,7 +3,7 @@ import * as COLOR from "../../constants/color";
 import * as FONT from "../../constants/font";
 
 interface Style {
-  isConnect: boolean;
+  isConnect: number;
 }
 
 export const Wrapper = styled.div`
@@ -16,14 +16,14 @@ export const Button = styled.button<Style>`
   border: none;
   cursor: pointer;
   background-color: ${(props) =>
-    props.isConnect ? `${COLOR.Green1}` : `${COLOR.Gray10}`};
+    props.isConnect === 2 ? `${COLOR.Green1}` : `${COLOR.Gray10}`};
   color: ${COLOR.White};
 `;
 export const MButton = styled(Button)`
   padding: 10px;
 
   background-color: ${(props) =>
-    props.isConnect ? `${COLOR.Green1}` : `${COLOR.Gray10}`};
+    props.isConnect === 2 ? `${COLOR.Green1}` : `${COLOR.Gray10}`};
   &:hover {
     background-color: ${COLOR.Gray11};
   }

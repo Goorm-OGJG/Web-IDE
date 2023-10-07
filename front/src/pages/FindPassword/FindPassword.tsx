@@ -2,11 +2,12 @@ import { useState } from "react";
 import * as S from "./FindPassword.styled";
 import { useUserAPI } from "../../api/useUserAPI";
 import * as T from "../../types/userAPIType";
+import Spinner from "../../components/Spinner/Spinner";
 
 const FindPassword = () => {
   const [email, setEmail] = useState("");
   const { requestFindPassword } = useUserAPI();
-
+  const [isEmailSent, setIsEmailSent] = useState(false);
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
@@ -15,7 +16,7 @@ const FindPassword = () => {
     const payload: T.FindPassword = {
       email,
     };
-    requestFindPassword(payload);
+    requestFindPassword(payload, setIsEmailSent);
   };
 
   return (
@@ -32,8 +33,9 @@ const FindPassword = () => {
           value={email}
           onChange={handleEmailChange}
         />
-
-        <S.StyledButton onClick={handleFindPassword}>인증 메일 전송</S.StyledButton>
+        <S.StyledButton onClick={handleFindPassword}>
+          {isEmailSent ? <Spinner /> : "인증 메일 전송"}
+        </S.StyledButton>
 
         <S.LinkWrapper>
           <S.LinkWrapper>
