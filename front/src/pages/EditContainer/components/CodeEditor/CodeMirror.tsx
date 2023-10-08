@@ -131,10 +131,7 @@ function CodeMirror() {
             vscodeDark,
             ...(langExtension ? [langExtension] : []),
             autocompletion(),
-            keymap.of([
-              { key: isMac ? "Cmd-Space" : "Ctrl-Space", run: startCompletion },
-              ...searchKeymap,
-            ]),
+            keymap.of([{ key: "Shift-Space", run: startCompletion }, ...searchKeymap]),
             // EditorState.transactionFilter.of((transaction) => {
             //   if (transaction.docChanged) {
             //     handleCode(transaction);
