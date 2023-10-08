@@ -1,5 +1,5 @@
-import React from "react";
-import { useRecoilValue } from "recoil";
+import React, { useEffect } from "react";
+import { useRecoilState } from "recoil";
 import { tabsState } from "../../../../recoil/CodeEditorState";
 import * as S from "./CodeEditor.style";
 import { Desktop, Mobile } from "../../../../components/Responsive";
@@ -11,7 +11,7 @@ import CodeMirror from "./CodeMirror";
 import VoiceChat from "../../../../components/VoiceChat/VoiceChat";
 
 function CodeEditer() {
-  const tabs = useRecoilValue(tabsState);
+  const [tabs, setTabs] = useRecoilState(tabsState);
   const { saveActiveTabFile } = useFileManage();
 
   const handleSave = () => {
@@ -23,6 +23,15 @@ function CodeEditer() {
 
     navigator.clipboard.writeText(webAddress);
   };
+
+  useEffect(() => {
+    const tabsDefulteValue = {
+      active: -1,
+      files: [],
+      codes: [],
+    };
+    setTabs(tabsDefulteValue);
+  }, []);
 
   return (
     <React.Fragment>
