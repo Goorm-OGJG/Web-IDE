@@ -69,7 +69,7 @@ export const Intro = styled.span`
 `;
 
 export const Shortcuts = styled.div`
-  width: 150px;
+  width: 180px;
 `;
 
 export const ShortcutWrapper = styled.div`
