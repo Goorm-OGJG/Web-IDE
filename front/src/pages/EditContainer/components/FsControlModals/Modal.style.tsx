@@ -43,4 +43,24 @@ export const ButtonWrapper = styled.div`
   margin-top: 10px;
 `;
 
-export const Button = styled.button``;
+export const Button = styled.button`
+  background-color: ${COLOR.Purple1};
+  color: ${COLOR.White};
+  border: none;
+  padding: 3px 7px;
+  border-radius: 5px;
+  &:hover {
+    background-color: ${COLOR.Purple3};
+  }
+`;
+
+export const CancelButton = styled.button`
+  background-color: ${COLOR.Gray3};
+  color: ${COLOR.Gray8};
+  border: none;
+  padding: 3px 7px;
+  border-radius: 5px;
+  &:hover {
+    background-color: ${COLOR.Gray1};
+  }
+`;

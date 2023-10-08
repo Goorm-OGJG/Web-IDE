@@ -20,6 +20,7 @@ export const Gray13 = "#1E1E1E";
 // Purple
 export const Purple1 = "#5C7CEE";
 export const Purple2 = "#5E5BFF";
+export const Purple3 = "rgb(70, 95, 184)";
 
 // Red
 export const Red1 = "#EC4E60";

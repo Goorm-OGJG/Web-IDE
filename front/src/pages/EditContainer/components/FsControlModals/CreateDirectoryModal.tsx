@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import * as S from "./CreateFileModal.style";
+import * as S from "./Modal.style";
 import InputFsName from "./InputFsName";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
@@ -84,7 +84,7 @@ function CreateDirectoryModal() {
       {isNotUnique && <S.Warning>이미 존재하는 폴더명 입니다.</S.Warning>}
       <S.ButtonWrapper>
         <S.Button onClick={handlerOK}>확인</S.Button>
-        <S.Button onClick={handlerCancel}>취소</S.Button>
+        <S.CancelButton onClick={handlerCancel}>취소</S.CancelButton>
       </S.ButtonWrapper>
     </S.Container>
   );
