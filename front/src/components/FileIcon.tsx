@@ -15,12 +15,12 @@ function getIconHelper() {
   const cache = new Map<string, ReactNode>();
 
   cache.set("js", <SiJavascript color="#fbcb38" />);
-  cache.set("jsx", <SiJavascript color="#fbcb38" />);
+  cache.set("jsx", <SiJavascript color="#f6fe0f" />);
   cache.set("java", <FaJava color="#e83936" />);
   cache.set("py", <SiPython color="#4ba1c0" />);
   cache.set("ts", <SiTypescript color="#388faf" />);
-  cache.set("tsx", <SiTypescript color="#c84f12" />);
-  cache.set("css", <SiCss3 color="#c84f12" />);
+  cache.set("tsx", <SiTypescript color="#4f649d" />);
+  cache.set("css", <SiCss3 color="#0048ff" />);
   cache.set("json", <SiJson color="#5656e6" />);
   cache.set("html", <SiHtml5 color="#e04e2c" />);
   cache.set("png", <FcPicture />);
