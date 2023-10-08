@@ -6,7 +6,9 @@ import com.ogjg.back.config.security.jwt.JwtUserDetails;
 import com.ogjg.back.container.dto.request.ContainerCreateRequest;
 import com.ogjg.back.container.dto.response.ContainerCheckNameResponse;
 import com.ogjg.back.container.dto.response.ContainerGetResponse;
+import com.ogjg.back.container.dto.response.ContainerResponse;
 import com.ogjg.back.container.service.ContainerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +24,14 @@ public class ContainerController {
      * 컨테이너 생성
      */
     @PostMapping("")
-    public ApiResponse<Void> create(
-            @RequestBody ContainerCreateRequest request,
+    public ApiResponse<ContainerResponse> create(
+            @Valid @RequestBody ContainerCreateRequest request,
             @AuthenticationPrincipal JwtUserDetails user
     ) {
-        containerService.createContainer(user.getEmail(), request);
-        return new ApiResponse<>(ErrorCode.SUCCESS);
+        return new ApiResponse<>(
+                ErrorCode.SUCCESS,
+                containerService.createContainer(user.getEmail(), request)
+        );
     }
 
     /**

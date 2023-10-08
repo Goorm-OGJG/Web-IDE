@@ -5,8 +5,7 @@ import com.ogjg.back.container.dto.request.ContainerCreateRequest;
 import com.ogjg.back.container.dto.response.ContainerCheckNameResponse;
 import com.ogjg.back.container.exception.DuplicatedContainerName;
 import com.ogjg.back.container.repository.ContainerRepository;
-import com.ogjg.back.directory.repository.DirectoryRepository;
-import com.ogjg.back.file.domain.Path;
+import com.ogjg.back.path.service.PathService;
 import com.ogjg.back.s3.service.S3ContainerService;
 import com.ogjg.back.user.domain.User;
 import com.ogjg.back.user.domain.UserStatus;
@@ -39,10 +38,10 @@ public class ContainerServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    S3ContainerService s3ContainerService;
+    private PathService pathService;
 
     @Mock
-    private DirectoryRepository directoryRepository;
+    S3ContainerService s3ContainerService;
 
     private User user;
 
@@ -72,22 +71,19 @@ public class ContainerServiceTest {
         given(userRepository.findByEmail(loginEmail))
                 .willReturn(Optional.of(user));
 
-        given(s3ContainerService.createContainer(anyString()))
-                .willReturn("directory");
+        given(containerRepository.findByNameAndEmail(anyString(), anyString()))
+                .willReturn(Optional.of(Container.builder().build()));
 
         given(containerRepository.findByNameAndEmail(request.getName(), loginEmail))
                 .willReturn(Optional.empty());
-
-        given(directoryRepository.save(any(Path.class)))
-                .willReturn(Path.builder().build());
 
         // when
         containerService.createContainer(loginEmail, request);
 
         // then
+        then(s3ContainerService).should().createContainer(anyString());
         then(containerRepository).should().save(any(Container.class));
-        then(directoryRepository).should().save(any(Path.class));
-
+        then(pathService).should().saveDirectoryPath(any(Container.class), anyString(), anyString());
     }
 
     @DisplayName("컨테이너 생성 예외 - 유저가 존재하지 않는 경우")

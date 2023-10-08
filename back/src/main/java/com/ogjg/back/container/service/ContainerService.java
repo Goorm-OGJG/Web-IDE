@@ -3,18 +3,13 @@ package com.ogjg.back.container.service;
 import com.ogjg.back.container.domain.Container;
 import com.ogjg.back.container.dto.request.ContainerCreateRequest;
 import com.ogjg.back.container.dto.request.ContainerGetDirectoryResponse;
-import com.ogjg.back.container.dto.response.ContainerCheckNameResponse;
-import com.ogjg.back.container.dto.response.ContainerGetFileResponse;
-import com.ogjg.back.container.dto.response.ContainerGetResponse;
-import com.ogjg.back.container.dto.response.ContainersResponse;
+import com.ogjg.back.container.dto.response.*;
 import com.ogjg.back.container.exception.DuplicatedContainerName;
 import com.ogjg.back.container.exception.NotFoundContainer;
 import com.ogjg.back.container.repository.ContainerRepository;
 import com.ogjg.back.directory.exception.NotFoundDirectory;
-import com.ogjg.back.directory.repository.DirectoryRepository;
-import com.ogjg.back.file.domain.Path;
 import com.ogjg.back.file.exception.NotFoundFile;
-import com.ogjg.back.path.repository.PathRepository;
+import com.ogjg.back.path.service.PathService;
 import com.ogjg.back.s3.repository.S3ContainerRepository;
 import com.ogjg.back.s3.service.S3ContainerService;
 import com.ogjg.back.s3.service.S3DirectoryService;
@@ -37,14 +32,13 @@ import static com.ogjg.back.common.util.PathUtil.*;
 public class ContainerService {
     private final UserRepository userRepository;
     private final ContainerRepository containerRepository;
-    private final PathRepository pathRepository;
+    private final PathService pathService;
     private final S3ContainerService s3ContainerService;
     private final S3ContainerRepository s3ContainerRepository;
     private final S3DirectoryService s3DirectoryService;
-    private final DirectoryRepository directoryRepository;
 
     @Transactional
-    public void createContainer(String loginEmail, ContainerCreateRequest request) {
+    public ContainerResponse createContainer(String loginEmail, ContainerCreateRequest request) {
         User user = userRepository.findByEmail(loginEmail)
                 .orElseThrow(() -> new NotFoundUser());
 
@@ -62,12 +56,9 @@ public class ContainerService {
         containerRepository.save(container);
 
         String containerPath = DELIMITER + request.getName() + DELIMITER;
-        directoryRepository.save(Path.builder()
-                .container(container)
-                .path(extractDirectoryPrefix(containerPath))
-                .name(extractDirectoryName(containerPath))
-                .uuid(UUID.randomUUID().toString())
-                .build());
+        pathService.saveDirectoryPath(container, containerPath, UUID.randomUUID().toString());
+
+        return new ContainerResponse(container);
     }
 
     protected boolean isContainerNameDuplicated(String containerName, String loginEmail) {
@@ -120,7 +111,7 @@ public class ContainerService {
                 .map((key) -> ContainerGetFileResponse.builder()
                         .filePath(createEmailRemovedKey(key, loginEmail))
                         .content(s3ContainerRepository.getFileContent(key))
-                        .uuid(pathRepository.findUuid(
+                        .uuid(pathService.findUuid(
                                 containerId,
                                 extractFilePrefix(
                                         createEmailRemovedKey(key, loginEmail)
@@ -137,7 +128,7 @@ public class ContainerService {
                 .filter((parsedKey) -> !isFile(parsedKey))
                 .map((emailRemovedKey) -> ContainerGetDirectoryResponse.builder()
                         .directory(emailRemovedKey)
-                        .uuid(pathRepository.findUuid(
+                        .uuid(pathService.findUuid(
                                 containerId,
                                 extractDirectoryPrefix(emailRemovedKey),
                                 extractDirectoryName(emailRemovedKey)

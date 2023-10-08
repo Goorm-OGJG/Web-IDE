@@ -3,21 +3,20 @@ package com.ogjg.back.container.controller;
 import com.ogjg.back.common.ControllerTest;
 import com.ogjg.back.container.dto.request.ContainerCreateRequest;
 import com.ogjg.back.container.dto.request.ContainerGetDirectoryResponse;
-import com.ogjg.back.container.dto.response.ContainerGetFileResponse;
-import com.ogjg.back.container.dto.response.ContainerCheckNameResponse;
-import com.ogjg.back.container.dto.response.ContainerGetNodeResponse;
-import com.ogjg.back.container.dto.response.ContainerGetResponse;
+import com.ogjg.back.container.dto.response.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -30,22 +29,33 @@ public class ContainerControllerTest extends ControllerTest {
     public void create() throws Exception {
         //given
         ContainerCreateRequest request = ContainerCreateRequest.builder()
-                .name("이회장")
+                .name("my-container")
                 .description("자바 연습 할거야")
                 .isPrivate(false)
                 .language("Java")
                 .build();
 
-        doNothing()
-                .when(containerService)
-                .createContainer(anyString(), eq(request));
+        ContainerResponse response = ContainerResponse.builder()
+                .containerId(1L)
+                .email("ogjg1234@naver.com")
+                .containerName("my-container")
+                .description("자바 연습 할거야")
+                .language("Java")
+                .containerUrl("url")
+                .isPrivate(false)
+                .availableStorage(10L)
+                .isPinned(false)
+                .modifiedAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now()).build();
+
+        given(containerService.createContainer(anyString(), any(ContainerCreateRequest.class)))
+                .willReturn(response);
 
         // when
         ResultActions result = this.mockMvc.perform(
                 post("/api/containers")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
         );
 
         // then
@@ -57,6 +67,22 @@ public class ContainerControllerTest extends ControllerTest {
                         fieldWithPath("description").description("컨테이너 설명").optional(),
                         fieldWithPath("private").description("비공개 여부"),
                         fieldWithPath("language").description("프로그래밍 언어")
+                ),
+                responseFields(
+                        fieldWithPath("status.code").description("응답 코드"),
+                        fieldWithPath("status.message").description("응답 메시지"),
+
+                        fieldWithPath("data.containerId").description("컨테이너 ID"),
+                        fieldWithPath("data.email").description("컨테이너 생성한 회원의 이메일"),
+                        fieldWithPath("data.containerName").description("컨테이너 이름"),
+                        fieldWithPath("data.description").description("컨테이너 설명"),
+                        fieldWithPath("data.language").description("컨테이너 언어"),
+                        fieldWithPath("data.containerUrl").description("컨테이너 url"),
+                        fieldWithPath("data.isPrivate").description("컨테이너 공개 여부"),
+                        fieldWithPath("data.availableStorage").description("사용 가능 용량"),
+                        fieldWithPath("data.isPinned").description("고정 여부"),
+                        fieldWithPath("data.modifiedAt").description("수정 일시"),
+                        fieldWithPath("data.createdAt").description("생성 일시")
                 )
         )).andExpect(status().isOk());
      }

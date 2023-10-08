@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.ogjg.back.common.util.PathUtil.*;
 import static com.ogjg.back.common.util.PathUtil.extractDirectoryName;
@@ -88,5 +89,9 @@ public class PathService {
         toChangePaths.stream()
                 .map((path) -> path.rename(directoryPath, newPrefix))
                 .toList();
+    }
+
+    public Optional<String> findUuid(Long containerId, String filePrefix, String filename) {
+        return pathRepository.findUuid(containerId, filePrefix, filename);
     }
 }
