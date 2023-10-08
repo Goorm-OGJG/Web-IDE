@@ -69,6 +69,7 @@ public class MessageService {
                 .user(user)
                 .type(message.getType())
                 .content(message.getContent())
+                .createdAt(message.getCreatedAt())
                 .build();
 
         messageRepository.save(chatMessage);

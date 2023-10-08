@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -36,11 +37,14 @@ public class MessageController {
             SimpMessageHeaderAccessor headerAccessor
     ) {
 
+        // TODO UserRoom 저장 로직 수정
+
         messageService.addUserInfoInSessionAttribute(message, headerAccessor);
         messageService.saveUserRoom(message);
 
         message.setType(MessageType.ENTER);
         message.setContent(message.getSender() + "님이 입장하셨습니다.");
+        message.setCreatedAt(LocalDateTime.now());
 
         messageService.saveMessage(message);
         return message;

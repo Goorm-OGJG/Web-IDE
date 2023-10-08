@@ -36,10 +36,11 @@ public class Message {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Builder
-    public Message(Room room, User user, MessageType type, String content) {
+    public Message(Room room, User user, MessageType type, String content, LocalDateTime createdAt) {
         this.room = room;
         this.user = user;
         this.type = type;
         this.content = content;
+        this.createdAt = createdAt;
     }
 }
