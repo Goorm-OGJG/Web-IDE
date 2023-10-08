@@ -4,9 +4,12 @@ import BodyHeader from "./components/BodyHeader";
 import BodyContainers from "./components/BodyContainers";
 import { useNavigate } from "react-router";
 import { Desktop, Mobile } from "../../../components/Responsive";
+import { isSpaceItemId } from "../../../recoil/SidebarState";
+import { useRecoilValue } from "recoil";
 
 function Body() {
   const navigate = useNavigate();
+  const isContainerType = useRecoilValue(isSpaceItemId);
   const handleNavigate = (destination: string) => {
     navigate(`${destination}`);
   };
@@ -15,7 +18,13 @@ function Body() {
       <Desktop>
         <S.BodyWrapper>
           <S.BodyTitleBox>
-            <S.BodyTitle>모든 컨테이너</S.BodyTitle>
+            <S.BodyTitle>
+              {isContainerType === 1
+                ? "모든 컨테이너"
+                : isContainerType === 2
+                ? "내 컨테이너"
+                : "공유된 컨테이너"}
+            </S.BodyTitle>
             <S.CreateContainerBtn
               onClick={() => {
                 handleNavigate(`/container`);
@@ -34,7 +43,13 @@ function Body() {
       <Mobile>
         <S.BodyWrapper>
           <S.BodyTitleBox>
-            <S.BodyTitle>모든 컨테이너</S.BodyTitle>
+            <S.BodyTitle>
+              {isContainerType === 1
+                ? "모든 컨테이너"
+                : isContainerType === 2
+                ? "내 컨테이너"
+                : "공유된 컨테이너"}
+            </S.BodyTitle>
             <S.CreateContainerBtn
               onClick={() => {
                 handleNavigate(`/container`);

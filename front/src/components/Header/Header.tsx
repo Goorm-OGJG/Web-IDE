@@ -8,12 +8,14 @@ import {
 } from "../../recoil/homeState";
 import { Desktop, Mobile } from "../Responsive";
 import { userInfoState } from "../../recoil/userState";
+import { isSpaceItemId } from "../../recoil/SidebarState";
 
 function Header() {
   const userInfo = useRecoilValue(userInfoState);
   const [isMenuHover, setIsMenuHover] = useRecoilState(isMenuHoverState);
   const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(isSidebarOpenState);
   const [isMSidebarOpen, setIsMSidebarOpen] = useRecoilState(isMSidebarOpenState);
+  const isContainerType = useRecoilValue(isSpaceItemId);
   const handleHoverMenu = () => {
     setIsMenuHover(true);
   };
@@ -35,7 +37,14 @@ function Header() {
             {!isSidebarOpen &&
               (isMenuHover ? <Icon.MenuOpen size={18} /> : <Icon.Menu size={18} />)}
           </S.MenuIcon>
-          <S.HeaderContentBox>{userInfo?.name} / 모든 컨테이너 </S.HeaderContentBox>
+          <S.HeaderContentBox>
+            {userInfo?.name} /{" "}
+            {isContainerType === 1
+              ? "모든 컨테이너"
+              : isContainerType === 2
+              ? "내 컨테이너"
+              : "공유된 컨테이너"}
+          </S.HeaderContentBox>
         </S.HeaderWrapper>
       </Desktop>
       <Mobile>
@@ -52,7 +61,14 @@ function Header() {
             {!isMSidebarOpen &&
               (isMenuHover ? <Icon.RightArrow2 size={18} /> : <Icon.Menu size={18} />)}
           </S.MenuIcon>
-          <S.HeaderContentBox>{userInfo?.name} / 모든 컨테이너 </S.HeaderContentBox>
+          <S.HeaderContentBox>
+            {userInfo?.name} /{" "}
+            {isContainerType === 1
+              ? "모든 컨테이너"
+              : isContainerType === 2
+              ? "내 컨테이너"
+              : "공유된 컨테이너"}
+          </S.HeaderContentBox>
         </S.HeaderWrapper>
       </Mobile>
     </div>

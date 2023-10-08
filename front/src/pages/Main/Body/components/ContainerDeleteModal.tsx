@@ -69,7 +69,7 @@ function ContainerDeleteModal({
                 handleDelete(e);
               }}
             >
-              컨테이너 삭제하기
+              삭제하기
             </S.DeleteContainerBtn>
           </S.DeleteFooter>
         </S.DeleteModalWrapper>
@@ -96,7 +96,7 @@ function ContainerDeleteModal({
                 handleDelete(e);
               }}
             >
-              컨테이너 삭제하기
+              삭제하기
             </S.MDeleteContainerBtn>
           </S.MDeleteFooter>
         </S.MDeleteModalWrapper>

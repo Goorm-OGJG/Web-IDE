@@ -37,6 +37,7 @@ function Space() {
   const handleItemActive = (id: number) => {
     setSpaceItemId(id);
     ScrollTop();
+    console.log(spaceItemId);
   };
   const ScrollTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });

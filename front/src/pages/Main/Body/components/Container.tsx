@@ -20,23 +20,27 @@ function Container(props: BodyContainerPops) {
   // 🔥 PUT 요청시 api로 받아온 데이터의 값을 컨테이너 마다 반영이 필요해서 상태관리가 필요
   const [privated, setPrivated] = useState<boolean>(props.data.private);
   const [infoText, setInfoText] = useState<string>(props.data.info);
+  const [prevInfoText, setPrevInfoText] = useState<string>(props.data.info);
   const [pinned, setPinned] = useState<boolean>(props.data.pinned);
   const { requestPutContainerInfo } = useContainerAPI();
   const handleEdit = () => {
+    setPrevInfoText(infoText);
     setEditInfo(true);
   };
   const handleSave = () => {
     // 🔥 info 글 저장 -> 이전의 받아온 데이터와 달라졌다면 request요청보냄
-    if (props.data.info !== infoText) {
+    try {
       requestPutContainerInfo(props.data.containerId, infoText, setInfoText);
+      // 저장 후 현재 정보를 이전 정보로 업데이트
+      setPrevInfoText(infoText);
+    } catch (error) {
+      alert(error);
     }
     setEditInfo(false);
   };
 
   const handleEditCancel = () => {
-    if (props.data.info) {
-      setInfoText(props.data.info);
-    }
+    setInfoText(prevInfoText);
     setEditInfo(false);
   };
   const handleChangeInfo = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
