@@ -38,7 +38,7 @@ function Header() {
               (isMenuHover ? <Icon.MenuOpen size={18} /> : <Icon.Menu size={18} />)}
           </S.MenuIcon>
           <S.HeaderContentBox>
-            {userInfo?.name} /{" "}
+            {`${userInfo?.name} / `}
             {isContainerType === 1
               ? "모든 컨테이너"
               : isContainerType === 2
@@ -62,7 +62,7 @@ function Header() {
               (isMenuHover ? <Icon.RightArrow2 size={18} /> : <Icon.Menu size={18} />)}
           </S.MenuIcon>
           <S.HeaderContentBox>
-            {userInfo?.name} /{" "}
+            {`${userInfo?.name} / `}
             {isContainerType === 1
               ? "모든 컨테이너"
               : isContainerType === 2
