@@ -2,12 +2,12 @@ import { useAxios } from "./useAxios";
 import * as T from "../types/filesAPIType";
 import { InfoType } from "../types/FileTree";
 import { useFileManage } from "../hooks/CodeEditor/useFileManage";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export function useFilesAPI() {
   const axios = useAxios();
   const { containerId } = useParams();
-
+  const navigate = useNavigate();
   const {
     setFilesData,
     createFile,
@@ -26,8 +26,9 @@ export function useFilesAPI() {
       .then((response) => {
         setFilesData(response.data.data);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
+        alert("존재하지 않는 컨테이너 입니다.");
+        navigate("/main");
       });
   };
 
