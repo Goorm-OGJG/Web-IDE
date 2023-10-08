@@ -71,5 +71,9 @@ public class User {
         this.userStatus = UserStatus.INACTIVE;
         return this;
     }
+
+    public boolean isAlreadyDeactivated() {
+        return this.userStatus == UserStatus.INACTIVE;
+    }
 }
 

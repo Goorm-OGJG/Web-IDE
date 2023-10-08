@@ -1,6 +1,7 @@
 package com.ogjg.back.user.controller;
 
 import com.ogjg.back.common.ControllerTest;
+import com.ogjg.back.user.dto.request.DeactivateRequest;
 import com.ogjg.back.user.dto.request.InfoUpdateRequest;
 import com.ogjg.back.user.dto.request.PasswordUpdateRequest;
 import com.ogjg.back.user.dto.response.ImgUpdateResponse;
@@ -134,18 +135,26 @@ public class UserControllerTest extends ControllerTest {
     public void deactivate() throws Exception {
         //given
         String loginEmail = "ogjg1234@naver.com";
+        DeactivateRequest request = DeactivateRequest.builder()
+                .password("1q2w3e4r!")
+                .build();
 
-        doNothing().when(userService).deactivate(eq(loginEmail));
+        doNothing().when(userService).deactivate(any(DeactivateRequest.class), anyString());
 
         //when
         ResultActions result = this.mockMvc.perform(
                 patch("/api/users/deactivate")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
         );
 
         //then
         result.andDo(document("user/deactivate",
                 preprocessRequest(prettyPrint()),
-                preprocessResponse(prettyPrint())
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                    fieldWithPath("password").description("본인 확인을 위한 비밀번호")
+                )
         )).andExpect(status().isOk());
     }
 }

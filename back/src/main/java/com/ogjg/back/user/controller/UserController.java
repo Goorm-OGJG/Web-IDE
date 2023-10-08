@@ -3,10 +3,7 @@ package com.ogjg.back.user.controller;
 import com.ogjg.back.common.exception.ErrorCode;
 import com.ogjg.back.common.response.ApiResponse;
 import com.ogjg.back.config.security.jwt.JwtUserDetails;
-import com.ogjg.back.user.dto.request.InfoUpdateRequest;
-import com.ogjg.back.user.dto.request.LoginRequest;
-import com.ogjg.back.user.dto.request.PasswordUpdateRequest;
-import com.ogjg.back.user.dto.request.SignUpRequest;
+import com.ogjg.back.user.dto.request.*;
 import com.ogjg.back.user.dto.response.ImgUpdateResponse;
 import com.ogjg.back.user.dto.response.UserResponse;
 import com.ogjg.back.user.service.EmailAuthService;
@@ -114,9 +111,10 @@ public class UserController {
      */
     @PatchMapping("/deactivate")
     public ApiResponse<Void> deactivate(
+            @RequestBody DeactivateRequest request,
             @AuthenticationPrincipal JwtUserDetails user
     ) {
-        userService.deactivate(user.getEmail());
+        userService.deactivate(request, user.getEmail());
         return new ApiResponse<>(ErrorCode.SUCCESS);
     }
 

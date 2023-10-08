@@ -8,10 +8,7 @@ import com.ogjg.back.user.dto.SignUpSaveDto;
 import com.ogjg.back.user.dto.request.*;
 import com.ogjg.back.user.dto.response.ImgUpdateResponse;
 import com.ogjg.back.user.dto.response.UserResponse;
-import com.ogjg.back.user.exception.InvalidCurrentPassword;
-import com.ogjg.back.user.exception.LoginFailure;
-import com.ogjg.back.user.exception.NotFoundUser;
-import com.ogjg.back.user.exception.SignUpFailure;
+import com.ogjg.back.user.exception.*;
 import com.ogjg.back.user.repository.EmailAuthRepository;
 import com.ogjg.back.user.repository.UserRepository;
 import jakarta.mail.MessagingException;
@@ -76,8 +73,16 @@ public class UserService {
     }
 
     @Transactional
-    public void deactivate(String loginEmail) {
+    public void deactivate(DeactivateRequest request, String loginEmail) {
         User findUser = findByEmail(loginEmail);
+
+        if (findUser.isAlreadyDeactivated()) {
+            throw new NotFoundUser();
+        }
+
+        if (!passwordEncoder.matches(request.getPassword(), findUser.getPassword())) {
+            throw new InvalidCurrentPassword();
+        }
         findUser.deactivate();
     }
 

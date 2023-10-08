@@ -34,6 +34,9 @@ include::{snippets}/user/password/http-response.adoc[]
 회원 정보를 변경합니다. 현재는 변경 가능한 정보가 이름 뿐입니다.
 
 include::{snippets}/user/deactivate/http-request.adoc[]
+include::{snippets}/user/deactivate/request-body.adoc[]
+include::{snippets}/user/deactivate/request-fields.adoc[]
+
 include::{snippets}/user/deactivate/http-response.adoc[]
 
 
