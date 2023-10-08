@@ -76,7 +76,7 @@ function CreateFileModal() {
     <S.Container ref={modalRef}>
       <S.Title>파일 추가</S.Title>
       <S.Explain>
-        <S.Path>{path}</S.Path> 에 생성팔 파일명을 입력해주세요.
+        <S.Path>{path}</S.Path> 에 생성할 파일명을 입력해주세요.
       </S.Explain>
       <InputFsName
         ref={inputRef}

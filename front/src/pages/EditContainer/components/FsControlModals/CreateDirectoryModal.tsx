@@ -77,7 +77,7 @@ function CreateDirectoryModal() {
     <S.Container ref={modalRef}>
       <S.Title>폴더 추가</S.Title>
       <S.Explain>
-        <S.Path>{path}</S.Path> 에 생성팔 폴더명을 입력해주세요.
+        <S.Path>{path}</S.Path> 에 생성할 폴더명을 입력해주세요.
       </S.Explain>
       <InputFsName ref={inputRef} placeholder='특수 문자 /:*\?"<>|. 불가' />
       {isNotOK && <S.Warning>올바르지 않은 폴더명 입니다.</S.Warning>}
