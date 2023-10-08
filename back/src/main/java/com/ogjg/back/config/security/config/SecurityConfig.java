@@ -8,6 +8,7 @@ import com.ogjg.back.config.security.jwt.accesstoken.AccessAuthenticationProvide
 import com.ogjg.back.config.security.jwt.refreshtoken.RefreshAuthenticationProvider;
 import com.ogjg.back.config.security.jwt.refreshtoken.RefreshTokenAuthenticationFilter;
 import com.ogjg.back.user.service.EmailAuthService;
+import com.ogjg.back.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,8 +16,6 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -38,9 +37,9 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     private final EmailAuthService emailAuthService;
+    private final UserService userService;
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final JwtUtils jwtUtils;
-
 
     private final List<String> permitUrlList = new ArrayList<>(
             List.of(
@@ -103,12 +102,20 @@ public class SecurityConfig {
 
     @Bean
     public AccessAuthenticationFilter accessAuthenticationFilter() throws Exception {
-        return new AccessAuthenticationFilter(new ProviderManager(Collections.singletonList(accessAuthenticationProvider())), authenticationEntryPoint, permitUrlList);
+        return new AccessAuthenticationFilter(
+                new ProviderManager(Collections.singletonList(accessAuthenticationProvider()))
+                , authenticationEntryPoint
+                , userService
+                , permitUrlList);
     }
 
     @Bean
     public RefreshTokenAuthenticationFilter refreshTokenAuthenticationFilter() throws Exception {
-        return new RefreshTokenAuthenticationFilter(new ProviderManager(Collections.singletonList(refreshAuthenticationProvider())), authenticationEntryPoint, jwtUtils);
+        return new RefreshTokenAuthenticationFilter(
+                new ProviderManager(Collections.singletonList(refreshAuthenticationProvider()))
+                , userService
+                , authenticationEntryPoint
+                , jwtUtils);
     }
 
     @Bean
@@ -124,11 +131,6 @@ public class SecurityConfig {
     @Bean
     public EmailAuthenticationProvider emailAuthenticationProvider() {
         return new EmailAuthenticationProvider(jwtUtils);
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
 }

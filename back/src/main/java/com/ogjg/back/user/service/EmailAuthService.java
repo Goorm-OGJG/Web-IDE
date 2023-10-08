@@ -4,12 +4,13 @@ import com.ogjg.back.common.exception.ErrorCode;
 import com.ogjg.back.common.response.ApiResponse;
 import com.ogjg.back.config.security.emailauth.EmailAuthUserDetails;
 import com.ogjg.back.config.security.jwt.JwtUtils;
-import com.ogjg.back.user.domain.EmailAuth;
+import com.ogjg.back.user.domain.*;
 import com.ogjg.back.user.dto.EmailAuthSaveDto;
 import com.ogjg.back.user.dto.request.JwtEmailAuthClaimsDto;
 import com.ogjg.back.user.exception.EmailAuthFailure;
 import com.ogjg.back.user.exception.SignUpFailure;
 import com.ogjg.back.user.repository.EmailAuthRepository;
+import com.ogjg.back.user.repository.EmailHistoryRepository;
 import com.ogjg.back.user.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -34,19 +35,20 @@ import java.util.Map;
 public class EmailAuthService {
 
     private final EmailAuthRepository emailAuthRepository;
+    private final EmailHistoryRepository emailHistoryRepository;
     private final UserRepository userRepository;
     private final JavaMailSender mailSender;
     private final JwtUtils jwtUtils;
     private final Map<String, SseEmitter> clients;
+
     private static final String EMAIL_AUTH_ADDRESS = "https://ogjg.store/api/users/email-auth/success";
 
     /*
      * 이메일 중복 체크 후 인증관련 데이터 저장 후 인증 메일 발송
      * */
-    @Transactional
     public void emailAuth(String email, String clientId) {
 
-        if (userRepository.findByEmail(email).isPresent())
+        if (userRepository.findByEmail(email).isPresent() && userRepository.findByEmail(email).get().getUserStatus() == UserStatus.ACTIVE)
             throw new SignUpFailure("이미 가입된 이메일 입니다.");
 
         EmailAuth emailAuth = saveEmailAuth(email, clientId);
@@ -59,6 +61,7 @@ public class EmailAuthService {
      * 이미 인증기록이 존재하면 삭제후 다시 생성
      * 삭제가 아니라 업데이트를 사용한다면 성능개선 가능
      * */
+    @Transactional
     private EmailAuth saveEmailAuth(String email, String clientId) {
 
         if (emailAuthRepository.findByEmail(email).isPresent())
@@ -112,9 +115,19 @@ public class EmailAuthService {
             helper.setText(htmlContent, true);
 
             mailSender.send(mimeMessage);
+
+            emailHistory(email, EmailStatus.SUCCESS, EmailMessage.EMAIL_AUTH);
         } catch (MessagingException e) {
+            emailHistory(email, EmailStatus.FAIL, EmailMessage.EMAIL_AUTH);
             throw new EmailAuthFailure("인증 이메일을 발송하는데 오류가 발생했습니다");
+
         }
+    }
+
+    public void emailHistory(String email, EmailStatus emailStatus, EmailMessage emailMessage) {
+        emailHistoryRepository.save(
+                new EmailHistory(email, emailStatus, emailMessage)
+        );
     }
 
     /*

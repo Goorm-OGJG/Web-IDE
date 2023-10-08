@@ -23,7 +23,7 @@ public class EmailAuthenticationProvider implements AuthenticationProvider {
         String jwt = String.valueOf(authentication.getCredentials());
 
         if (!jwtUtils.isValidToken(jwt)) {
-            throw new EmailAuthTokenException();
+            throw new EmailAuthTokenException("이메일 인증 토큰 인증 실패");
         }
 
         EmailAuthUserDetails emailAuthUserDetails = emailAuthUserDetails(jwt);

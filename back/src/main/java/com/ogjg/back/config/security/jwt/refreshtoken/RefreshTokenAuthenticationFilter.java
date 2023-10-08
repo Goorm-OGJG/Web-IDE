@@ -7,6 +7,8 @@ import com.ogjg.back.config.security.exception.RefreshTokenException;
 import com.ogjg.back.config.security.jwt.JwtUserDetails;
 import com.ogjg.back.config.security.jwt.JwtUtils;
 import com.ogjg.back.user.dto.request.JwtUserClaimsDto;
+import com.ogjg.back.user.exception.UnauthorizedUserAccessException;
+import com.ogjg.back.user.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -27,6 +29,7 @@ import java.util.Arrays;
 public class RefreshTokenAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final JwtUtils jwtUtils;
 
@@ -53,12 +56,19 @@ public class RefreshTokenAuthenticationFilter extends OncePerRequestFilter {
             authenticate = authenticationManager.authenticate(refreshAuthenticationToken);
 
         } catch (Exception e) {
-//            todo 구조적 개선필요
-            authenticationEntryPoint.commence(request, response, new RefreshTokenException());
+            authenticationEntryPoint.commence(request, response, new RefreshTokenException("RefreshToken 인증 오류"));
             return;
         }
 
         JwtUserDetails user = (JwtUserDetails) authenticate.getPrincipal();
+
+        try {
+            userService.deactivateUser(user.getEmail());
+        } catch (UnauthorizedUserAccessException e) {
+            authenticationEntryPoint.commence(request, response, new RefreshTokenException("탈퇴한 회원입니다"));
+            return;
+        }
+
         JwtUserClaimsDto jwtUserClaimsDto = new JwtUserClaimsDto(user.getEmail());
 
         String accessToken = jwtUtils.generateAccessToken(jwtUserClaimsDto);

@@ -6,6 +6,8 @@ import com.ogjg.back.user.dto.request.JwtUserClaimsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -32,6 +34,11 @@ public class JwtTokenConfig {
     @Bean
     public Map<String, SseEmitter> clients() {
         return new ConcurrentHashMap<>();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }

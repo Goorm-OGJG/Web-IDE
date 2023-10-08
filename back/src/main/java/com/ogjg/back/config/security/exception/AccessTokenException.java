@@ -5,7 +5,11 @@ import com.ogjg.back.common.exception.ErrorCode;
 public class AccessTokenException extends CustomTokenException {
 
     public AccessTokenException() {
-        super(ErrorCode.AUTH_FAIL.changeMessage("AccessToken 인증 오류"));
+        super(ErrorCode.AUTH_FAIL);
+    }
+
+    public AccessTokenException(String message) {
+        super(ErrorCode.AUTH_FAIL, message);
     }
 
 }

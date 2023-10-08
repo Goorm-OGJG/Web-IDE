@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-class ErrorResult implements ErrorType {
+public class ErrorResult implements ErrorType {
 
     private final HttpStatus statusCode;
     private final String code;

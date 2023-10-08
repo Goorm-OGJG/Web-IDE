@@ -2,8 +2,7 @@ package com.ogjg.back.user.service;
 
 import com.ogjg.back.config.security.jwt.JwtUtils;
 import com.ogjg.back.s3.service.S3ProfileImageService;
-import com.ogjg.back.user.domain.EmailAuth;
-import com.ogjg.back.user.domain.User;
+import com.ogjg.back.user.domain.*;
 import com.ogjg.back.user.dto.SignUpSaveDto;
 import com.ogjg.back.user.dto.request.*;
 import com.ogjg.back.user.dto.response.ImgUpdateResponse;
@@ -106,7 +105,6 @@ public class UserService {
         ));
     }
 
-
     /*
      * 회원가입시 로그인 중복 , 이메일 인증 확인
      * */
@@ -143,6 +141,8 @@ public class UserService {
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new LoginFailure();
         }
+
+        deactivateUser(loginRequest.getEmail());
 
         JwtUserClaimsDto jwtUserClaimsDto = new JwtUserClaimsDto(user.getEmail());
 
@@ -185,7 +185,10 @@ public class UserService {
             helper.setText(htmlContent, true);
 
             mailSender.send(mimeMessage);
+            emailAuthService.emailHistory(email, EmailStatus.SUCCESS, EmailMessage.EMAIL_PASSWORD);
+
         } catch (MessagingException e) {
+            emailAuthService.emailHistory(email, EmailStatus.FAIL, EmailMessage.EMAIL_PASSWORD);
             throw new IllegalArgumentException("임시 비밀번호를 발송하는데 오류가 발생했습니다");
         }
     }
@@ -208,6 +211,12 @@ public class UserService {
 
         } catch (IOException e) {
             throw new IllegalArgumentException("임시 비밀번호 템플릿을 불러올 수 없습니다");
+        }
+    }
+
+    public void deactivateUser(String email) {
+        if (findByEmail(email).getUserStatus() == UserStatus.INACTIVE) {
+            throw new UnauthorizedUserAccessException("탈퇴한 회원입니다");
         }
     }
 

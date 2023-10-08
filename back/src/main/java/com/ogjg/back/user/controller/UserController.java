@@ -136,6 +136,7 @@ public class UserController {
 
         clients.put(clientId, emitter);
         emailAuthService.emailAuth(email, clientId);
+
         ApiResponse<?> apiResponse = new ApiResponse<>(
                 ErrorCode.SUCCESS
                         .changeMessage("email-sending")

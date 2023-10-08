@@ -1,5 +1,6 @@
 package com.ogjg.back.config.security.exception;
 
+import com.ogjg.back.common.exception.ErrorCode;
 import com.ogjg.back.common.exception.ErrorData;
 import com.ogjg.back.common.exception.ErrorType;
 import lombok.Getter;
@@ -12,12 +13,17 @@ public abstract class CustomTokenException extends AuthenticationException {
     private ErrorData errorData;
 
 
-    public CustomTokenException(ErrorType errorType) {
+    public CustomTokenException(ErrorCode errorType) {
         super(errorType.getMessage());
         this.errorType = errorType;
     }
 
-    public CustomTokenException(ErrorType errorType, ErrorData errorData) {
+    public CustomTokenException(ErrorCode errorCode, String message) {
+        super(errorCode.changeMessage(message).getMessage());
+        this.errorType = errorCode.changeMessage(message);
+    }
+
+    public CustomTokenException(ErrorCode errorType, ErrorData errorData) {
         super(errorType.getMessage());
         this.errorType = errorType;
         this.errorData = errorData;

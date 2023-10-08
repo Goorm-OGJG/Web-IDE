@@ -34,7 +34,6 @@ public class EmailAuthenticationFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI();
 
         if (uri.startsWith("/favicon")) {
-//            todo favicon 어떻게 처리할지 고민해보기
             return;
         }
 
@@ -53,7 +52,7 @@ public class EmailAuthenticationFilter extends OncePerRequestFilter {
 
         } catch (Exception e) {
             log.error("이메일 인증도중 에러발생 = {}", e.getMessage());
-            authenticationEntryPoint.commence(request, response, new EmailAuthTokenException());
+            authenticationEntryPoint.commence(request, response, new EmailAuthTokenException("이메일 인증 토큰 인증 실패"));
             return;
         }
 

@@ -1,6 +1,9 @@
 package com.ogjg.back.config.security.jwt.accesstoken;
 
 import com.ogjg.back.config.security.exception.AccessTokenException;
+import com.ogjg.back.config.security.jwt.JwtUserDetails;
+import com.ogjg.back.user.exception.UnauthorizedUserAccessException;
+import com.ogjg.back.user.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,8 +26,8 @@ public class AccessAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
     private final AuthenticationEntryPoint authenticationEntryPoint;
+    private final UserService userService;
     private final List<String> permitUrlList;
-
     private final String PREFIX = "Bearer ";
 
     @Override
@@ -39,18 +42,28 @@ public class AccessAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        JwtUserDetails accessUserDetails = null;
+
         try {
             String accessToken = getAccessToken(request, response);
             AccessAuthenticationToken accessAuthenticationToken = new AccessAuthenticationToken(accessToken);
 
             Authentication authenticate = authenticationManager.authenticate(accessAuthenticationToken);
 
+            accessUserDetails = (JwtUserDetails) authenticate.getPrincipal();
+
             SecurityContextHolder.getContext().setAuthentication(authenticate);
         } catch (Exception e) {
-
-            authenticationEntryPoint.commence(request, response, new AccessTokenException());
+            log.error("AccessFilterErrorMessage = {}",e.getMessage());
+            authenticationEntryPoint.commence(request, response, new AccessTokenException("AccessToken 인증 오류"));
             return;
 
+        }
+
+        try {
+            userService.deactivateUser(accessUserDetails.getEmail());
+        } catch (UnauthorizedUserAccessException e) {
+            authenticationEntryPoint.commence(request, response, new AccessTokenException(e.getMessage()));
         }
 
         filterChain.doFilter(request, response);
@@ -82,7 +95,7 @@ public class AccessAuthenticationFilter extends OncePerRequestFilter {
             return jwt.substring(PREFIX.length());
         }
 
-        authenticationEntryPoint.commence(request, response, new AccessTokenException());
+        authenticationEntryPoint.commence(request, response, new AccessTokenException("AccessToken 인증 오류"));
         return jwt;
     }
 

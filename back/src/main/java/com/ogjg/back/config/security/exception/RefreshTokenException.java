@@ -5,7 +5,11 @@ import com.ogjg.back.common.exception.ErrorCode;
 public class RefreshTokenException extends CustomTokenException {
 
     public RefreshTokenException() {
-        super(ErrorCode.AUTH_FAIL.changeMessage("RefreshToken 인증 오류"));
+        super(ErrorCode.AUTH_FAIL);
+    }
+
+    public RefreshTokenException(String message) {
+        super(ErrorCode.AUTH_FAIL, message);
     }
 
 }
