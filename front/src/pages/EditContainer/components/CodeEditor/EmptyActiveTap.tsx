@@ -47,8 +47,12 @@ function EmptyActiveTap() {
                 <S.Shortcut>⌘F</S.Shortcut>
               </S.ShortcutWrapper>
               <S.ShortcutWrapper>
-                <S.Label>파일 저장</S.Label>
-                <S.Shortcut>⌘S</S.Shortcut>
+                <S.Label>Zoom</S.Label>
+                <S.Shortcut>⌘Wheel</S.Shortcut>
+              </S.ShortcutWrapper>
+              <S.ShortcutWrapper>
+                <S.Label>자동 완성</S.Label>
+                <S.Shortcut>Shift+Space</S.Shortcut>
               </S.ShortcutWrapper>
             </S.Shortcuts>
           </S.CircleWrapper>
