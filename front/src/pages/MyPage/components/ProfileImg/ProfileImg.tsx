@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as S from "./ProfileImg.style";
 import { useMyAPI } from "../../../../api/useMyAPI";
 
@@ -8,9 +8,9 @@ interface Props {
 
 function ProfileImg({ img }: Props) {
   const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState("");
+  const [preview, setPreview] = useState(img);
   const { requestEditProfile } = useMyAPI();
-
+  // console.log(preview);
   const fileHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const maxSize = 1024 ** 2;
     const files = e.target.files;
@@ -27,6 +27,12 @@ function ProfileImg({ img }: Props) {
     }
   };
 
+  useEffect(() => {
+    if (!img) {
+      setPreview("images/default.png");
+    }
+  }, []);
+
   const saveHandler = () => {
     if (file) {
       // alert("프로필 이미지 저장");
@@ -37,7 +43,7 @@ function ProfileImg({ img }: Props) {
   return (
     <S.Wrapper>
       <S.ImgBox>
-        <S.Img src={preview === "" ? "/images/default.png" : img} />
+        <S.Img src={preview} />
       </S.ImgBox>
       <S.ProfileDesc>
         <S.Buttons>
