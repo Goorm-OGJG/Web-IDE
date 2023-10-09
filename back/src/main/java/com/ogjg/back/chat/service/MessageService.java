@@ -43,7 +43,7 @@ public class MessageService {
 
     @Transactional
     public void saveUserRoom(MessageDto message) {
-        UserRoom.UserRoomPK userRoomPK = new UserRoom.UserRoomPK(message.getSender(), message.getContainerId());
+        UserRoom.UserRoomPK userRoomPK = new UserRoom.UserRoomPK(message.getEmail(), message.getContainerId());
         UserRoom userRoom = new UserRoom(userRoomPK);
         userRoomRepository.save(userRoom);
     }

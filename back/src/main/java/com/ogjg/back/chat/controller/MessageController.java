@@ -37,8 +37,6 @@ public class MessageController {
             SimpMessageHeaderAccessor headerAccessor
     ) {
 
-        // TODO UserRoom 저장 로직 수정
-
         messageService.addUserInfoInSessionAttribute(message, headerAccessor);
         messageService.saveUserRoom(message);
 
