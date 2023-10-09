@@ -42,15 +42,15 @@ public class MessageService {
     private final ContainerRepository containerRepository;
 
 
-    @Transactional
-    public void saveUserRoom(MessageDto message) {
+
+    private void saveUserRoom(MessageDto message) {
         UserRoom.UserRoomPK userRoomPK = new UserRoom.UserRoomPK(message.getEmail(), message.getContainerId());
         UserRoom userRoom = new UserRoom(userRoomPK);
         userRoomRepository.save(userRoom);
     }
 
-    @Transactional
-    public void saveMessage(MessageDto message) {
+
+    private void saveMessage(MessageDto message) {
         log.info("Message Email: {}", message.getEmail());
         User user = userRepository.findByEmail(message.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
@@ -76,14 +76,14 @@ public class MessageService {
         messageRepository.save(chatMessage);
     }
 
-    @Transactional
-    public void sendMessage(MessageDto message) {
+
+    private void sendMessage(MessageDto message) {
         log.info("접속 채팅방 ID: {}", message.getContainerId());
         log.info("접속 채팅방 Content: {}", message.getContent());
         template.convertAndSend("/sub/room/" + message.getContainerId(), message);
     }
 
-    public void addUserInfoInSessionAttribute(MessageDto message, SimpMessageHeaderAccessor headerAccessor) {
+    private void addUserInfoInSessionAttribute(MessageDto message, SimpMessageHeaderAccessor headerAccessor) {
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
         if (sessionAttributes == null) {
             throw new IllegalArgumentException("STOMP SessionHeader Error.");
@@ -174,5 +174,17 @@ public class MessageService {
     public void saveAndSendMessage(MessageDto message) {
         saveMessage(message);
         sendMessage(message);
+    }
+
+    @Transactional
+    public void enterRoom(Long roomId, MessageDto message, SimpMessageHeaderAccessor headerAccessor) {
+        addUserInfoInSessionAttribute(message, headerAccessor);
+        saveUserRoom(message);
+
+        message.setType(MessageType.ENTER);
+        message.setContent(message.getSender() + "님이 입장하셨습니다.");
+        message.setCreatedAt(LocalDateTime.now());
+
+        saveMessage(message);
     }
 }

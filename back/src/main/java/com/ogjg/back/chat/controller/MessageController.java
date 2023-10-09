@@ -1,6 +1,5 @@
 package com.ogjg.back.chat.controller;
 
-import com.ogjg.back.chat.domain.MessageType;
 import com.ogjg.back.chat.dto.ChattingRoomUserInfoDto;
 import com.ogjg.back.chat.dto.MessageDto;
 import com.ogjg.back.chat.service.MessageService;
@@ -37,14 +36,7 @@ public class MessageController {
             SimpMessageHeaderAccessor headerAccessor
     ) {
 
-        messageService.addUserInfoInSessionAttribute(message, headerAccessor);
-        messageService.saveUserRoom(message);
-
-        message.setType(MessageType.ENTER);
-        message.setContent(message.getSender() + "님이 입장하셨습니다.");
-        message.setCreatedAt(LocalDateTime.now());
-
-        messageService.saveMessage(message);
+        messageService.enterRoom(roomId, message, headerAccessor);
         return message;
     }
 
