@@ -142,17 +142,12 @@ public class MessageService {
         return users;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<MessageDto> getMessagesInChattingRoom(Long containerId) {
 
-        if (!roomRepository.existsByContainer_ContainerId(containerId)) {
-            throw new NotFoundContainer();
-        }
+        ensureChatRoomExists(containerId);
 
         Optional<List<Message>> messages = messageRepository.findByRoom_Container_ContainerId(containerId);
-        if (messages.isEmpty()) {
-            return new ArrayList<>();
-        }
 
         return messages.orElseGet(ArrayList::new)
                 .stream()
