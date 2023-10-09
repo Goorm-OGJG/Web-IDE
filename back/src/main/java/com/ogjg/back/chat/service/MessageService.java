@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +70,7 @@ public class MessageService {
                 .user(user)
                 .type(message.getType())
                 .content(message.getContent())
-                .createdAt(message.getCreatedAt())
+                .createdAt(LocalDateTime.now())
                 .build();
 
         messageRepository.save(chatMessage);
