@@ -92,7 +92,7 @@ public class S3ContainerRepository {
                     .build();
 
             s3Client.listObjectsV2(listObjectsV2Request).contents().stream()
-                    .map((content) -> toDeleteObjectRequest(content))
+                    .map((content) -> createDeleteObjectRequest(content))
                     .forEach((request) -> s3Client.deleteObject(request));
 
         } catch (Exception e) {
@@ -100,7 +100,7 @@ public class S3ContainerRepository {
         }
     }
 
-    private DeleteObjectRequest toDeleteObjectRequest(S3Object content) {
+    private DeleteObjectRequest createDeleteObjectRequest(S3Object content) {
         return DeleteObjectRequest.builder()
                 .bucket(bucketName)
                 .key(content.key())

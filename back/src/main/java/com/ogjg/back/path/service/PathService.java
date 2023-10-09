@@ -2,16 +2,15 @@ package com.ogjg.back.path.service;
 
 import com.ogjg.back.container.domain.Container;
 import com.ogjg.back.file.domain.Path;
+import com.ogjg.back.file.exception.NotFoundFile;
 import com.ogjg.back.path.repository.PathRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.ogjg.back.common.util.PathUtil.*;
-import static com.ogjg.back.common.util.PathUtil.extractDirectoryName;
 
 @Service
 @RequiredArgsConstructor
@@ -91,7 +90,8 @@ public class PathService {
                 .toList();
     }
 
-    public Optional<String> findUuid(Long containerId, String filePrefix, String filename) {
-        return pathRepository.findUuid(containerId, filePrefix, filename);
+    public String findUuid(Long containerId, String filePrefix, String filename) {
+        return pathRepository.findUuid(containerId, filePrefix, filename)
+                .orElseThrow(() -> new NotFoundFile("존재하지 않는 파일입니다. containerId=" + containerId + ", filePrefix =" + filePrefix));
     }
 }

@@ -8,7 +8,6 @@ import com.ogjg.back.container.exception.DuplicatedContainerName;
 import com.ogjg.back.container.exception.NotFoundContainer;
 import com.ogjg.back.container.repository.ContainerRepository;
 import com.ogjg.back.directory.exception.NotFoundDirectory;
-import com.ogjg.back.file.exception.NotFoundFile;
 import com.ogjg.back.path.service.PathService;
 import com.ogjg.back.s3.repository.S3ContainerRepository;
 import com.ogjg.back.s3.service.S3ContainerService;
@@ -84,15 +83,15 @@ public class ContainerService {
         List<String> allKeys = s3ContainerService.getAllKeysByPrefix(prefix);
 
         for (String key : allKeys) {
-            log.info("key = {}", key);
+            log.debug("key = {}", key);
         }
 
         // 맨 앞에 이메일 부분이 절삭된 key 목록을 만든다.
-        List<String> emailRemovedKeys = parse(allKeys, email);
+        List<String> emailRemovedKeys = makeEmailRemovedKeys(allKeys, email);
 
         return ContainerGetResponse.builder()
                 .language(container.getLanguage())
-                .treeData(s3ContainerService.buildTreeFromKeys(emailRemovedKeys))
+                .treeData(ContainerGetNodeResponse.buildTreeFromKeys(emailRemovedKeys))
                 .fileData(getFileData(containerId, email, allKeys))
                 .directories(getDirectories(containerId, emailRemovedKeys))
                 .build();
@@ -107,37 +106,50 @@ public class ContainerService {
                 .filter((key) -> isFile(key))
                 .toList();
 
+        return getFileResponses(containerId, loginEmail, fileKeys);
+    }
+
+    private List<ContainerGetFileResponse> getFileResponses(Long containerId, String loginEmail, List<String> fileKeys) {
         List<ContainerGetFileResponse> fileData = fileKeys.stream()
-                .map((key) -> ContainerGetFileResponse.builder()
-                        .filePath(createEmailRemovedKey(key, loginEmail))
-                        .content(s3ContainerRepository.getFileContent(key))
-                        .uuid(pathService.findUuid(
-                                containerId,
-                                extractFilePrefix(
-                                        createEmailRemovedKey(key, loginEmail)
-                                ),
-                                extractFilename(key)
-                        ).orElseThrow(() -> new NotFoundFile("존재하지 않는 파일입니다. containerId="+ containerId +", key ="+ extractFilePrefix(createEmailRemovedKey(key, loginEmail)))))
-                        .build())
+                .map((key) -> toFileResponse(containerId, loginEmail, key))
                 .toList();
         return fileData;
     }
 
+    private ContainerGetFileResponse toFileResponse(Long containerId, String loginEmail, String key) {
+        return ContainerGetFileResponse.builder()
+                .filePath(createEmailRemovedKey(key, loginEmail))
+                .content(s3ContainerRepository.getFileContent(key))
+                .uuid(pathService.findUuid(
+                        containerId,
+                        extractFilePrefix(
+                                createEmailRemovedKey(key, loginEmail)
+                        ),
+                        extractFilename(key)
+                ))
+                .build();
+    }
     private List<ContainerGetDirectoryResponse> getDirectories(Long containerId, List<String> emailRemovedKeys) {
         return emailRemovedKeys.stream()
                 .filter((parsedKey) -> !isFile(parsedKey))
-                .map((emailRemovedKey) -> ContainerGetDirectoryResponse.builder()
-                        .directory(emailRemovedKey)
-                        .uuid(pathService.findUuid(
-                                containerId,
-                                extractDirectoryPrefix(emailRemovedKey),
-                                extractDirectoryName(emailRemovedKey)
-                                ).orElseThrow(() -> new NotFoundDirectory("해당 디렉토리가 DB에 존재하지 않습니다. prefix="+extractDirectoryPrefix(emailRemovedKey)+ ", filename="+ extractDirectoryName(emailRemovedKey)))
-                        ).build())
+                .map((emailRemovedKey) -> toContainerGetDirectoryResponse(emailRemovedKey, containerId))
                 .toList();
     }
 
-    private List<String> parse(List<String> allKeys, String email) {
+    private ContainerGetDirectoryResponse toContainerGetDirectoryResponse(String emailRemovedKey, Long containerId) {
+        return ContainerGetDirectoryResponse.builder()
+                .directory(emailRemovedKey)
+                .uuid(
+                    pathService.findUuid(
+                            containerId,
+                            extractDirectoryPrefix(emailRemovedKey),
+                            extractDirectoryName(emailRemovedKey)
+                    )
+                )
+                .build();
+    }
+
+    private List<String> makeEmailRemovedKeys(List<String> allKeys, String email) {
         return allKeys.stream()
                 .map((key) -> createEmailRemovedKey(key, email))
                 .toList();
@@ -146,14 +158,13 @@ public class ContainerService {
     @Transactional(readOnly = true)
     public List<ContainersResponse> searchContainers(String query, String email) {
 
+        List<Container> containers;
         if (query.isEmpty()) {
-            List<Container> containers = containerRepository.findAllByUserEmail(email);
-            return containers.stream()
-                    .map(ContainersResponse::new)
-                    .toList();
+            containers = containerRepository.findAllByUserEmail(email);
+        } else {
+            containers = containerRepository.findAllByNameContainingAndUserEmail(query, email);
         }
 
-        List<Container> containers = containerRepository.findAllByNameContainingAndUserEmail(query, email);
         return containers.stream()
                 .map(ContainersResponse::new)
                 .toList();
@@ -171,8 +182,7 @@ public class ContainerService {
 
     @Transactional
     public void updateContainerInfo(Long containerId, String info, String email) {
-        Container container = containerRepository.findById(containerId)
-                .orElseThrow(() -> new NotFoundContainer("컨테이너가 존재하지 않습니다."));
+        Container container = findContainerById(containerId);
 
         container.updateDescription(email, info);
         containerRepository.save(container);
@@ -180,8 +190,7 @@ public class ContainerService {
 
     @Transactional
     public boolean updatePinStatus(Long containerId, String email) {
-        Container container = containerRepository.findById(containerId)
-                .orElseThrow(() -> new NotFoundContainer("컨테이너가 존재하지 않습니다."));
+        Container container = findContainerById(containerId);
 
         container.updatePinned(email);
         containerRepository.save(container);
@@ -190,14 +199,18 @@ public class ContainerService {
 
     @Transactional
     public void deleteContainer(Long containerId, String email) {
-        Container container = containerRepository.findById(containerId)
-                .orElseThrow(() -> new NotFoundContainer("컨테이너가 존재하지 않습니다."));
+        Container container = findContainerById(containerId);
 
         String containerPrefix = createContainerPrefix(email, container.getName());
         if (!s3DirectoryService.isDirectoryAlreadyExist(containerPrefix)) throw new NotFoundDirectory("S3에 존재하지 않는 컨테이너 경로입니다.");
 
         containerRepository.delete(container);
         s3ContainerService.deleteAllByPrefix(containerPrefix);
+    }
 
+    private Container findContainerById(Long containerId) {
+        Container container = containerRepository.findById(containerId)
+                .orElseThrow(NotFoundContainer::new);
+        return container;
     }
 }

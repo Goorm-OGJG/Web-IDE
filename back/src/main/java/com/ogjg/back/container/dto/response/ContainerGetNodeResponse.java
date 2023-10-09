@@ -36,6 +36,10 @@ public class ContainerGetNodeResponse {
         return newNode;
     }
 
+    /**
+     * 컨테이너 모든 구조 가져오기 -> treeData 생성
+     * 이메일 경로를 제외한 구조를 응답값에 포함해야 하므로 절삭된 키 사용
+     */
     public static ContainerGetNodeResponse buildTreeFromKeys(List<String> s3Keys) {
         ContainerGetNodeResponse root = new ContainerGetNodeResponse("", "root");
 
