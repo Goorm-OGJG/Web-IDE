@@ -64,16 +64,21 @@ public class EmailAuthService {
     @Transactional
     private EmailAuth saveEmailAuth(String email, String clientId) {
 
-        if (emailAuthRepository.findByEmail(email).isPresent())
-            emailAuthRepository.delete(findEmailAuthByEmail(email));
+        EmailAuth emailAuth = null;
 
-        EmailAuthSaveDto emailAuthSaveDto = new EmailAuthSaveDto(email, clientId);
-        emailAuthRepository.save(new EmailAuth(emailAuthSaveDto));
+        if (emailAuthRepository.findByEmail(email).isPresent()) {
+            emailAuth = findEmailAuthByEmail(email);
+            emailAuth.resetEmailAuth(clientId);
+        }
 
-        EmailAuth emailAuth = findEmailAuthByEmail(email);
+        if (emailAuthRepository.findByEmail(email).isEmpty()) {
+            EmailAuthSaveDto emailAuthSaveDto = new EmailAuthSaveDto(email, clientId);
+            emailAuthRepository.save(new EmailAuth(emailAuthSaveDto));
+            emailAuth = findEmailAuthByEmail(email);
+        }
 
-        String emailAuthToken = createEmailAuthToken(emailAuth);
-        emailAuth.inPutEmailToken(emailAuthToken);
+            String emailAuthToken = createEmailAuthToken(emailAuth);
+            emailAuth.inPutEmailToken(emailAuthToken);
 
         return emailAuth;
     }

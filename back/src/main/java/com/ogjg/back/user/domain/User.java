@@ -16,6 +16,7 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "users")
 public class User {
+
     @Id
     private String email;
 

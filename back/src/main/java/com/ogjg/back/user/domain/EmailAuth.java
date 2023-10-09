@@ -28,7 +28,7 @@ public class EmailAuth {
 
     private boolean status = false;
 
-    private final LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
     private LocalDateTime authenticatedAt;
 
@@ -43,6 +43,14 @@ public class EmailAuth {
         this.status = true;
     }
 
+    public void resetEmailAuth(String client_id) {
+        this.createdAt = LocalDateTime.now();
+        this.status = false;
+        this.authenticatedAt = null;
+        this.client_id = client_id;
+        this.emailToken = null;
+    }
+
     public void completeEmailAuthTime() {
         this.authenticatedAt = LocalDateTime.now();
     }
@@ -50,6 +58,7 @@ public class EmailAuth {
     public EmailAuth(EmailAuthSaveDto emailAuthSaveDto) {
         this.client_id = emailAuthSaveDto.getClient_id();
         this.email = emailAuthSaveDto.getEmail();
+        this.createdAt = LocalDateTime.now();
     }
 }
 

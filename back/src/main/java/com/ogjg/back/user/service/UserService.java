@@ -12,10 +12,10 @@ import com.ogjg.back.user.repository.EmailAuthRepository;
 import com.ogjg.back.user.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.ResponseCookie;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -95,7 +95,6 @@ public class UserService {
      * */
     @Transactional
     public void signUp(SignUpRequest signUpRequest) {
-
         EmailAuth emailAuth = emailAuthValid(signUpRequest);
 
         String encryptionPassword = passwordEncoder.encode(signUpRequest.getPassword());
@@ -109,7 +108,7 @@ public class UserService {
      * 회원가입시 로그인 중복 , 이메일 인증 확인
      * */
     private EmailAuth emailAuthValid(SignUpRequest signUpRequest) {
-        if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent() && userRepository.findByEmail(signUpRequest.getEmail()).get().getUserStatus() == UserStatus.ACTIVE) {
             throw new SignUpFailure("이미 회원가입된 이메일 입니다");
         }
 
@@ -150,13 +149,30 @@ public class UserService {
         String refreshToken = jwtUtils.generateRefreshToken(jwtUserClaimsDto);
 
         response.addHeader("Authorization", "Bearer " + accessToken);
+        response.setHeader("Set-Cookie", refreshTokenCookie(refreshToken).toString());
 
-        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(true);
-        refreshTokenCookie.setDomain("ogjg.site");
-        refreshTokenCookie.setPath("/");
-        response.addCookie(refreshTokenCookie);
+    }
+
+    private ResponseCookie refreshTokenCookie(String refreshToken) {
+        return ResponseCookie.from("refreshToken", refreshToken)
+                .maxAge(14 * 24 * 60 * 60)
+                .path("/")
+                .domain("ogjg.site")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .build();
+    }
+
+    public ResponseCookie deleteRefreshTokenCookie() {
+        return ResponseCookie.from("refreshToken", null)
+                .maxAge(0)
+                .domain("ogjg.site")
+                .path("/")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .build();
     }
 
     @Transactional
