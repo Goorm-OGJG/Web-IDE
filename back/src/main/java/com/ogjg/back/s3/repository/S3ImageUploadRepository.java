@@ -27,18 +27,18 @@ public class S3ImageUploadRepository {
     private String region;
     private final S3Client s3Client;
 
-    public Optional<String> uploadFile(MultipartFile file, String filePath) {
+    public Optional<String> uploadFile(MultipartFile file, String s3Key) {
         String accessUrl = null;
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
-                    .key(filePath)
+                    .key(s3Key)
                     .build();
 
             s3Client.putObject(putObjectRequest,
                     RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
-            accessUrl = makeUrl(filePath);
+            accessUrl = makeUrl(s3Key);
             log.info("accessUrl={}",accessUrl);
 
         } catch (Exception e) {
