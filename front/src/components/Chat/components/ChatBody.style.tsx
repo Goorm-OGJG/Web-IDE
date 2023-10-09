@@ -48,7 +48,6 @@ export const MyChatText = styled.div`
   padding: 10px;
   margin-top: 10px;
   margin-bottom: 5px;
-
   border-radius: 10px;
   max-width: 70%;
   height: fit-content;
@@ -95,7 +94,7 @@ export const ChatText = styled.div`
   text-align: left;
   padding: 10px 8px;
   margin-top: 10px;
-  margin-left: 10px;
+  margin-left: 3px;
   border-radius: 10px;
   line-height: 15px;
   max-width: 70%;

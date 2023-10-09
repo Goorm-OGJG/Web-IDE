@@ -5,14 +5,32 @@ export default function useChatAPI() {
   const profileURL = `${API_URL}`;
   const axios = useAxios();
 
-  const requestChatUserInfo = async (
-    containerId: number,
-    setChatUserData: React.Dispatch<React.SetStateAction<T.chatUserDataType[]>>,
+  const requestChatInitalData = (
+    containerId: string,
+    setInitialData: React.Dispatch<React.SetStateAction<T.ChatInitialDataType[]>>,
   ) => {
-    await axios
-      .get(`${profileURL}/chat/${containerId}/users`)
+    axios
+      .get(`${profileURL}/api/chat/${containerId}/messages`)
       .then((response) => {
-        setChatUserData(response.data);
+        setInitialData(response.data.data);
+        console.log("containerId : ", response);
+      })
+
+      .catch((error) => {
+        alert(error);
+      });
+  };
+
+  const requestChatUserInfo = (
+    containerId: string,
+    setChatUserData: React.Dispatch<React.SetStateAction<T.ChatUserDataType[]>>,
+  ) => {
+    console.log(containerId);
+    axios
+      .get(`${profileURL}/api/chat/${containerId}/users`)
+      .then((response) => {
+        setChatUserData(response.data.data);
+        console.log("dsdsd", response.data.data);
       })
       .catch((error) => {
         alert(error);
@@ -20,6 +38,7 @@ export default function useChatAPI() {
   };
 
   return {
+    requestChatInitalData,
     requestChatUserInfo,
   };
 }

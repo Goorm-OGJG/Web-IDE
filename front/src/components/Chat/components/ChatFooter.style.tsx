@@ -17,7 +17,7 @@ export const DeleteIconDiv = styled.div`
   display: flex;
   margin: 10px;
   cursor: pointer;
-`;
+`; 
 
 export const PostBtn = styled.button`
   display: flex;
@@ -46,6 +46,7 @@ export const ChatInput = styled.textarea`
   color: ${COLOR.Gray6};
   font-size: ${FONT.S};
   border-color: ${COLOR.Gray8};
+  outline: none;
   resize: none;
   padding: 10px;
 `;

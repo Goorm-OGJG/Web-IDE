@@ -22,7 +22,7 @@ function Container(props: BodyContainerPops) {
   const [infoText, setInfoText] = useState<string>(props.data.info);
   const [prevInfoText, setPrevInfoText] = useState<string>(props.data.info);
   const [pinned, setPinned] = useState<boolean>(props.data.pinned);
-  console.log(props.data);
+
   const { requestPutContainerInfo } = useContainerAPI();
   const handleEdit = () => {
     setPrevInfoText(infoText);

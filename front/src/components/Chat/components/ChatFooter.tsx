@@ -18,7 +18,7 @@ function ChatFooter({ handleSendMessage, newMessage, setNewMessage }: ChatRoomPr
   //       content: newMessage,
   //     });
 
-  //     console.log(messageContent);
+  //     console.log(messageContent);console.log
   //     setNewMessage(""); // 메시지를 출력하고 나면 상태를 초기화합니다.
   //   }
   //   console.log(setSender);
@@ -26,7 +26,7 @@ function ChatFooter({ handleSendMessage, newMessage, setNewMessage }: ChatRoomPr
   // };
 
   const handleEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey && e.nativeEvent.isComposing === false) {
       e.preventDefault();
       handleSendMessage();
     }

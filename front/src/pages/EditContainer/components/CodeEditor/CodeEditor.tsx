@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { tabsState } from "../../../../recoil/CodeEditorState";
 import * as S from "./CodeEditor.style";
@@ -9,11 +9,12 @@ import * as Icon from "../../../../components/Icon";
 import { useFileManage } from "../../../../hooks/CodeEditor/useFileManage";
 import CodeMirror from "./CodeMirror";
 import VoiceChat from "../../../../components/VoiceChat/VoiceChat";
+import Chat from "../../../../components/Chat/Chat";
 
 function CodeEditer() {
   const [tabs, setTabs] = useRecoilState(tabsState);
   const { saveActiveTabFile } = useFileManage();
-
+  const [chatOpen, setChatOpen] = useState(false);
   const handleSave = () => {
     saveActiveTabFile();
   };
@@ -23,7 +24,12 @@ function CodeEditer() {
 
     navigator.clipboard.writeText(webAddress);
   };
-
+  const handleChat = () => {
+    setChatOpen((prev) => !prev);
+  };
+  const handleChatBox = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+  };
   useEffect(() => {
     const tabsDefulteValue = {
       active: -1,
@@ -52,8 +58,13 @@ function CodeEditer() {
                 <Icon.Share size={16} />
               </S.IconWrapper>
 
-              <S.IconWrapper>
+              <S.IconWrapper onClick={handleChat}>
                 <Icon.Chat size={14} />
+                {chatOpen && (
+                  <S.ChatBox onClick={handleChatBox}>
+                    <Chat />
+                  </S.ChatBox>
+                )}
               </S.IconWrapper>
               <VoiceChat />
             </S.Icons>

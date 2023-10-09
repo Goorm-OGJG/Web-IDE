@@ -40,3 +40,8 @@ export const IconWrapper = styled.div<Props>`
     transform: translateY(-50%);
   }
 `;
+export const ChatBox = styled.div`
+  position: absolute;
+  left: 50px;
+  top: 10px;
+`;

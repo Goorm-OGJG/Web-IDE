@@ -3,14 +3,9 @@ import * as Icon from "../../../../components/Icon";
 import React, { useState } from "react";
 import VoiceChat from "../../../../components/VoiceChat/VoiceChat";
 import { useFileManage } from "../../../../hooks/CodeEditor/useFileManage";
-import Chat from "../../../../components/Chat/Chat";
+import { PropsType } from "./MSidebar";
 
-type PropsType = {
-  isSidebarOpened: boolean;
-  setIsSidebarOpened: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-function MSidebar({ isSidebarOpened, setIsSidebarOpened }: PropsType) {
+export function MSidebar({ isSidebarOpened, setIsSidebarOpened }: PropsType) {
   const { saveActiveTabFile } = useFileManage();
   const [chatOpen, setChatOpen] = useState(false);
   const handleSidebar = () => {
@@ -48,18 +43,12 @@ function MSidebar({ isSidebarOpened, setIsSidebarOpened }: PropsType) {
           <Icon.Share size={25} />
         </S.IconWrapper>
 
-        <S.IconWrapper onClick={handleChat}>
+        <S.IconWrapper>
           <Icon.Chat size={25} />
-          {chatOpen && (
-            <S.ChatBox onClick={handleChatBox}>
-              <Chat />
-            </S.ChatBox>
-          )}
+          {chatOpen && <S.ChatBox onClick={handleChatBox}>{/* <Chat /> */}</S.ChatBox>}
         </S.IconWrapper>
         <VoiceChat />
       </S.Icons>
     </S.Container>
   );
 }
-
-export default MSidebar;

@@ -34,5 +34,13 @@ export const Icons = styled.div`
 `;
 
 export const IconWrapper = styled.div`
+  position: relative;
   cursor: pointer;
+`;
+export const ChatBox = styled.div`
+  position: absolute;
+  z-index: 99;
+  top: 20px;
+  right: -30px;
+  cursor: auto;
 `;
