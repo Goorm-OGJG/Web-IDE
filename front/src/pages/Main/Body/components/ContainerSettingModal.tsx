@@ -41,9 +41,9 @@ function ContainerSettingModal({
     setDeleteModal(true);
   };
   const handleCopyUrl = () => {
-    const API_URL = import.meta.env.VITE_API_URL;
+    const URL = "https://ogjg.site";
     window.navigator.clipboard
-      .writeText(`${API_URL}/container/${containerData.containerId}`)
+      .writeText(`${URL}/container/${containerData.containerId}`)
       .then(() => {
         alert("컨테이너 링크가 복사되었습니다.");
         setContainerSettingModal(false);

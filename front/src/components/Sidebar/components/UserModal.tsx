@@ -5,11 +5,14 @@ import { Desktop, Mobile } from "../../Responsive";
 import { userInfoState } from "../../../recoil/userState";
 import { useRecoilValue } from "recoil";
 import { useMyAPI } from "../../../api/useMyAPI";
+import { useEffect, useState } from "react";
 
 function UserModal() {
   const userInfo = useRecoilValue(userInfoState);
   const navigate = useNavigate();
   const { requestLogout } = useMyAPI();
+
+  const [userImg, setUserImg] = useState("");
   const handleNavigate = (destination: string) => {
     navigate(destination);
   };
@@ -17,13 +20,21 @@ function UserModal() {
   const handleLogout = () => {
     requestLogout();
   };
+  useEffect(() => {
+    if (userInfo?.userImg) {
+      setUserImg(userInfo?.userImg);
+    }
+  });
   return (
     <>
       <Desktop>
         <S.UserModalBox>
           <S.UserHeader>
             <S.UserImgBox>
-              <S.UserImg src={userInfo?.userImg} alt="userImg" />
+              <S.UserImg
+                src={userImg === "" ? "/images/default.png" : userImg}
+                alt="userImg"
+              />
             </S.UserImgBox>
             <S.UserName>{userInfo?.name}</S.UserName>
           </S.UserHeader>

@@ -29,7 +29,7 @@ export const CreateContainerBtn = styled.button`
   color: ${COLOR.White};
   cursor: pointer;
   &:hover {
-    background-color: rgb(70, 95, 184);
+    background-color: ${COLOR.Purple3};
   }
 `;
 export const PlusIcon = styled.div`
