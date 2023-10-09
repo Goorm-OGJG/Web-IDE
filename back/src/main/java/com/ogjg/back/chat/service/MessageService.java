@@ -10,6 +10,7 @@ import com.ogjg.back.chat.repository.MessageRepository;
 import com.ogjg.back.chat.repository.RoomRepository;
 import com.ogjg.back.chat.repository.UserRoomRepository;
 import com.ogjg.back.container.domain.Container;
+import com.ogjg.back.container.exception.NotFoundContainer;
 import com.ogjg.back.container.repository.ContainerRepository;
 import com.ogjg.back.user.domain.User;
 import com.ogjg.back.user.repository.UserRepository;
@@ -42,7 +43,6 @@ public class MessageService {
     private final ContainerRepository containerRepository;
 
 
-
     private void saveUserRoom(MessageDto message) {
         UserRoom.UserRoomPK userRoomPK = new UserRoom.UserRoomPK(message.getEmail(), message.getContainerId());
         UserRoom userRoom = new UserRoom(userRoomPK);
@@ -56,12 +56,6 @@ public class MessageService {
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
         Container container = containerRepository.findById(message.getContainerId())
                 .orElseThrow(() -> new IllegalArgumentException("컨테이너가 존재하지 않습니다."));
-
-        if (roomRepository.findByContainerContainerId(container.getContainerId()).isEmpty()) {
-            Room room = new Room(container);
-            roomRepository.save(room);
-        }
-
         Room room = roomRepository.findByContainerContainerId(container.getContainerId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 채팅방이 존재하지 않습니다."));
 
@@ -151,10 +145,11 @@ public class MessageService {
     @Transactional(readOnly = true)
     public List<MessageDto> getMessagesInChattingRoom(Long containerId) {
 
-        Room room = roomRepository.findById(containerId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 컨테이너 요청입니다."));
+        if (!roomRepository.existsByContainer_ContainerId(containerId)) {
+            throw new NotFoundContainer();
+        }
 
-        Optional<List<Message>> messages = messageRepository.findAllByRoom(room);
+        Optional<List<Message>> messages = messageRepository.findByRoom_Container_ContainerId(containerId);
         if (messages.isEmpty()) {
             return new ArrayList<>();
         }
@@ -164,8 +159,13 @@ public class MessageService {
                 .map(message -> MessageDto.builder()
                         .type(message.getType())
                         .email(message.getUser().getEmail())
+                        .containerId(
+                                message.getRoom()
+                                        .getContainer()
+                                        .getContainerId())
                         .sender(message.getUser().getName())
                         .content(message.getContent())
+                        .createdAt(message.getCreatedAt())
                         .build())
                 .toList();
     }
@@ -179,6 +179,7 @@ public class MessageService {
     @Transactional
     public void enterRoom(Long roomId, MessageDto message, SimpMessageHeaderAccessor headerAccessor) {
         addUserInfoInSessionAttribute(message, headerAccessor);
+        ensureChatRoomExists(roomId);
         saveUserRoom(message);
 
         message.setType(MessageType.ENTER);
@@ -186,5 +187,14 @@ public class MessageService {
         message.setCreatedAt(LocalDateTime.now());
 
         saveMessage(message);
+    }
+
+    private void ensureChatRoomExists(Long roomId) {
+        if (!roomRepository.existsByContainer_ContainerId(roomId)) {
+            Container container = containerRepository.findById(roomId)
+                    .orElseThrow(NotFoundContainer::new);
+            Room room = new Room(container);
+            roomRepository.save(room);
+        }
     }
 }
