@@ -67,7 +67,7 @@ function LanguageStacks({ language }: Props) {
                 <React.Fragment>
                   <S.Input type="radio" name="language" id={`${src}`} key={src} />
                   <S.MOption onClick={() => optionHandler(src, title)} key={src}>
-                    <S.MImg src={`/public/images/languages/${src}.png`} />
+                    <S.MImg src={`/images/languages/${src}.png`} />
                     {title}
                   </S.MOption>
                 </React.Fragment>

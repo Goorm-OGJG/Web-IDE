@@ -4,6 +4,7 @@ import * as Icon from "../../../../components/Icon";
 import { Desktop, Mobile } from "../../../../components/Responsive";
 import { useUserAPI } from "../../../../api/useUserAPI";
 import * as T from "../../../../types/userAPIType";
+import { EMAIL_REG, PASSWORD_REG } from "../../../../constants/regExp";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -34,20 +35,22 @@ export default function LoginForm() {
       // 이메일 폼이 비어있는 경우 처리
       alert("이메일을 입력하세요.");
       return;
-    }
-
-    if (value.trim() === "") {
+    } else if (value.trim() === "") {
       // 비밀번호 폼이 비어있는 경우
       alert("비밀번호를 입력하세요.");
       return;
+    } else if (!EMAIL_REG.test(email)) {
+      alert("이메일 정규식이 올바르지 않습니다.");
+    } else if (!PASSWORD_REG.test(value)) {
+      alert("비밀번호 정규식이 올바르지 않습니다.");
+    } else {
+      // 유효성 검사 통과 시 로그인 요청
+      const payload: T.LoginType = {
+        email,
+        password: value,
+      };
+      requestLogin(payload);
     }
-
-    // 유효성 검사 통과 시 로그인 요청
-    const payload: T.LoginType = {
-      email,
-      password: value,
-    };
-    requestLogin(payload);
   };
 
   const enterHandler = (e: React.KeyboardEvent) => {

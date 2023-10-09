@@ -63,7 +63,7 @@ function VoiceChat() {
     <S.Wrapper>
       <S.IconBox>
         <Desktop>
-          <S.Button onClick={connectRoom} isConnect={isConnect}>
+          <S.Button onClick={phoneHandler} isConnect={isConnect}>
             <Icon.Phone size={18} />
           </S.Button>
         </Desktop>

@@ -37,7 +37,7 @@ function ProfileImg({ img }: Props) {
   return (
     <S.Wrapper>
       <S.ImgBox>
-        <S.Img src={preview ? preview : (img as string)} />
+        <S.Img src={preview === "" ? "/images/default.png" : img} />
       </S.ImgBox>
       <S.ProfileDesc>
         <S.Buttons>

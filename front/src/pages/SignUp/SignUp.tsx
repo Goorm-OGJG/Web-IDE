@@ -38,34 +38,27 @@ const Signup = () => {
   };
 
   const handleSignup = () => {
-    if (
+    if (email.trim() === "") {
+      alert("이메일을 입력하세요.");
+      return;
+    } else if (passwordRef.current!.value.trim() === "") {
+      alert("비밀번호를 입력하세요.");
+      return;
+    } else if (passwordConfirmRef.current!.value.trim() === "") {
+      alert("비밀번호 확인을 입력하세요.");
+      return;
+    } else if (name.trim() === "") {
+      alert("이름을 입력하세요.");
+      return;
+    } else if (passwordRef.current!.value !== passwordConfirmRef.current!.value) {
+      alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+    } else if (
       emailOk === 1 &&
       nameOk === 1 &&
       PASSWORD_REG.test(passwordRef.current!.value) &&
       passwordRef.current!.value === passwordConfirmRef.current!.value &&
       isEmailSent === 3
-    )
-      if (email.trim() === "") {
-        alert("이메일을 입력하세요.");
-        return;
-      }
-
-    if (passwordRef.current!.value.trim() === "") {
-      alert("비밀번호를 입력하세요.");
-      return;
-    }
-
-    if (passwordConfirmRef.current!.value.trim() === "") {
-      alert("비밀번호 확인을 입력하세요.");
-      return;
-    }
-
-    if (name.trim() === "") {
-      alert("이름을 입력하세요.");
-      return;
-    }
-
-    {
+    ) {
       const payload: T.SignUpType = {
         email,
         password: passwordRef.current!.value,

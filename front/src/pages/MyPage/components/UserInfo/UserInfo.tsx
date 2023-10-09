@@ -3,6 +3,8 @@ import * as S from "./UserInfo.style";
 import UserInput from "./UserInput";
 import { NAME_REG } from "../../../../constants/regExp";
 import { useMyAPI } from "../../../../api/useMyAPI";
+import { useRecoilState } from "recoil";
+import { userInfoState } from "../../../../recoil/userState";
 
 interface Props {
   userName: string;
@@ -12,14 +14,17 @@ interface Props {
 function UserInfo({ userName, email }: Props) {
   const nameRef = useRef<HTMLInputElement>(null);
   const { requestEditUserName } = useMyAPI();
-
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const saveHandler = () => {
     const value = nameRef.current!.value;
     if (NAME_REG.test(value)) {
-      console.log("올바른 아이디 입니다");
+      // console.log("올바른 아이디 입니다");
+      const tmpInfo = { ...userInfo!, name: value };
+
       requestEditUserName(value);
+      setUserInfo(tmpInfo);
     } else {
-      console.log("올바르지 않은 아이디 입니다");
+      alert("올바르지 않은 아이디 양식입니다.");
     }
   };
   // console.log(userName);

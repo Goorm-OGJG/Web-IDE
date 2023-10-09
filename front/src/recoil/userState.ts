@@ -8,5 +8,9 @@ interface UserInfo {
 
 export const userInfoState = atom<UserInfo | null>({
   key: "userInfoState",
-  default: null,
+  default: {
+    email: "",
+    name: "",
+    userImg: "",
+  },
 });

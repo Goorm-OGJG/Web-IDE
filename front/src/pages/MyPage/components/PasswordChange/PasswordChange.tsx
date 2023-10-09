@@ -13,9 +13,10 @@ function PasswordChange() {
     const nowValue = nowRef.current!.value;
     const newValue = newRef.current!.value;
     const newConfirmValue = newConfirmRef.current!.value;
-
     if (newConfirmValue === newValue) {
       requestPwChange(nowValue, newValue);
+    } else {
+      alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
     }
     // console.log(nowValue, newValue, newConfirmValue);
   };
