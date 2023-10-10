@@ -7,7 +7,9 @@ export function useUserAPI() {
   const navigate = useNavigate();
   const requestLogin = (payload: T.LoginType) => {
     axios
-      .post(`${import.meta.env.VITE_API_URL}/api/users/login`, payload)
+      .post(`${import.meta.env.VITE_API_URL}/api/users/login`, payload, {
+        withCredentials: true,
+      })
       .then((response) => {
         if (response) {
           navigate("/main");
