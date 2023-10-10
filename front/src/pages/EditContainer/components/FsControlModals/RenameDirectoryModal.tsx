@@ -77,7 +77,7 @@ function RenameDirectoryModal() {
     <S.Container ref={modalRef}>
       <S.Title>폴더명 변경</S.Title>
       <S.Explain>
-        <S.Path>{path}</S.Path> 에서 변경할 새로운 폴더명을 입력해주세요.
+        <S.Path>{path as string}</S.Path> 에서 변경할 새로운 폴더명을 입력해주세요.
       </S.Explain>
       <InputFsName ref={inputRef} placeholder='특수 문자 /:*\?"<>|. 불가' />
       {isNotOK && <S.Warning>올바르지 않은 폴더명 입니다.</S.Warning>}

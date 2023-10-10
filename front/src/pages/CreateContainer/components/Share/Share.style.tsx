@@ -99,7 +99,7 @@ export const MPublicBox = styled(CheckBox)<MobileStyleProps>`
   color: ${COLOR.Gray10};
 `;
 
-export const MPrivateBox = styled(MPublicBox)`
+export const MPrivateBox = styled(MPublicBox)<MobileStyleProps>`
   background-color: ${(props) =>
     props.share === "private" ? `${COLOR.White}` : "transparent"};
 `;

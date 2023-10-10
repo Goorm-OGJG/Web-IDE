@@ -77,7 +77,7 @@ function RenameFileModal() {
     <S.Container ref={modalRef}>
       <S.Title>파일명 변경</S.Title>
       <S.Explain>
-        <S.Path>{path}</S.Path> 에서 변경할 새로운 파일명을 입력해주세요.
+        <S.Path>{path as string}</S.Path> 에서 변경할 새로운 파일명을 입력해주세요.
       </S.Explain>
       <InputFsName
         ref={inputRef}
