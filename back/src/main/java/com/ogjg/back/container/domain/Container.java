@@ -1,7 +1,7 @@
 package com.ogjg.back.container.domain;
 
 import com.ogjg.back.chat.domain.Room;
-import com.ogjg.back.file.domain.Path;
+import com.ogjg.back.s3entry.domain.S3Entry;
 import com.ogjg.back.file.exception.NotFoundFile;
 import com.ogjg.back.user.domain.User;
 import com.ogjg.back.user.exception.UnauthorizedUserAccessException;
@@ -41,7 +41,7 @@ public class Container {
             cascade = ALL,
             orphanRemoval = true
     )
-    private List<Path> paths = new ArrayList<>();
+    private List<S3Entry> s3Entries = new ArrayList<>();
 
     @Pattern(regexp = "^[a-zA-Z0-9\\-_]{1,20}$",
             message = "컨테이너 이름에는 영문, 숫자가 포함가능하며, 특수문자는 '-', '_'만 포함될 수 있습니다.")
@@ -70,11 +70,11 @@ public class Container {
     private LocalDateTime createdAt;
 
     @Builder
-    public Container(Long containerId, User user, Room room, List<Path> paths, String name, String description, String language, String containerUrl, Boolean isPrivate, Long availableStorage, Boolean isPinned, LocalDateTime modifiedAt, LocalDateTime createdAt) {
+    public Container(Long containerId, User user, Room room, List<S3Entry> s3Entries, String name, String description, String language, String containerUrl, Boolean isPrivate, Long availableStorage, Boolean isPinned, LocalDateTime modifiedAt, LocalDateTime createdAt) {
         this.containerId = containerId;
         this.user = user;
         this.room = room;
-        this.paths = paths;
+        this.s3Entries = s3Entries;
         this.name = name;
         this.description = description;
         this.language = language;
@@ -107,12 +107,12 @@ public class Container {
         }
     }
 
-    public Path findPathBy(String prefix, String name) {
+    public S3Entry findS3EntryBy(String prefix, String name) {
         // todo: 1) s3와 구분되는 에러코드 고려하기
         //       2) 쿼리문 활용 최적화 필요
-        return paths.stream()
-                .filter((file -> file.getPath().equals(prefix)))
-                .filter((file -> file.getName().equals(name)))
+        return s3Entries.stream()
+                .filter((entry -> entry.getPath().equals(prefix)))
+                .filter((entry -> entry.getName().equals(name)))
                 .findAny()
                 .orElseThrow(() -> new NotFoundFile("DB에 해당 경로가 존재하지 않습니다."));
     }

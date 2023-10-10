@@ -5,7 +5,7 @@ import com.ogjg.back.container.dto.request.ContainerCreateRequest;
 import com.ogjg.back.container.dto.response.ContainerCheckNameResponse;
 import com.ogjg.back.container.exception.DuplicatedContainerName;
 import com.ogjg.back.container.repository.ContainerRepository;
-import com.ogjg.back.path.service.PathService;
+import com.ogjg.back.s3entry.service.S3EntryService;
 import com.ogjg.back.s3.service.S3ContainerService;
 import com.ogjg.back.user.domain.User;
 import com.ogjg.back.user.domain.UserStatus;
@@ -38,7 +38,7 @@ public class ContainerServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private PathService pathService;
+    private S3EntryService s3EntryService;
 
     @Mock
     S3ContainerService s3ContainerService;
@@ -83,7 +83,7 @@ public class ContainerServiceTest {
         // then
         then(s3ContainerService).should().createContainer(anyString());
         then(containerRepository).should().save(any(Container.class));
-        then(pathService).should().saveDirectoryPath(any(Container.class), anyString(), anyString());
+        then(s3EntryService).should().saveDirectoryPath(any(Container.class), anyString(), anyString());
     }
 
     @DisplayName("컨테이너 생성 예외 - 유저가 존재하지 않는 경우")

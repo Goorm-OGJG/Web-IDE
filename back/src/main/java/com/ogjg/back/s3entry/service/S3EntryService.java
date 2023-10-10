@@ -1,27 +1,27 @@
-package com.ogjg.back.path.service;
+package com.ogjg.back.s3entry.service;
 
 import com.ogjg.back.container.domain.Container;
-import com.ogjg.back.file.domain.Path;
-import com.ogjg.back.file.exception.NotFoundFile;
-import com.ogjg.back.path.repository.PathRepository;
+import com.ogjg.back.s3entry.domain.S3Entry;
+import com.ogjg.back.s3entry.repository.S3EntryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.ogjg.back.common.util.PathUtil.*;
 
 @Service
 @RequiredArgsConstructor
-public class PathService {
+public class S3EntryService {
 
-    private final PathRepository pathRepository;
+    private final S3EntryRepository s3EntryRepository;
 
     @Transactional
     public void saveFilePath(Container container, String filePath, String uuid) {
-        pathRepository.save(
-                Path.builder()
+        s3EntryRepository.save(
+                S3Entry.builder()
                         .container(container)
                         .path(extractFilePrefix(filePath))
                         .name(extractFilename(filePath))
@@ -32,25 +32,25 @@ public class PathService {
 
     @Transactional
     public void deleteFilePath(Container container, String filePath) {
-        Path findPath = container.findPathBy(
+        S3Entry findS3Entry = container.findS3EntryBy(
                 extractFilePrefix(filePath),
                 extractFilename(filePath)
         );
-        pathRepository.delete(findPath);
+        s3EntryRepository.delete(findS3Entry);
     }
 
     @Transactional
     public void updateFilename(Container container, String filePath, String newFilename) {
-        Path findPath = container.findPathBy(
+        S3Entry findS3Entry = container.findS3EntryBy(
                 extractFilePrefix(filePath),
                 extractFilename(filePath)
         );
-        findPath.rename(newFilename);
+        findS3Entry.rename(newFilename);
     }
 
     @Transactional
     public void saveDirectoryPath(Container container, String directoryPath, String uuid) {
-        pathRepository.save(Path.builder()
+        s3EntryRepository.save(S3Entry.builder()
                 .container(container)
                 .path(extractDirectoryPrefix(directoryPath))
                 .name(extractDirectoryName(directoryPath))
@@ -60,38 +60,37 @@ public class PathService {
 
     @Transactional
     public void deleteDirectory(Container container, String directoryPath) {
-        Path findPath = container.findPathBy(
+        S3Entry findS3Entry = container.findS3EntryBy(
                 extractDirectoryPrefix(directoryPath),
                 extractDirectoryName(directoryPath)
         );
-        pathRepository.delete(findPath);
+        s3EntryRepository.delete(findS3Entry);
 
-        pathRepository.findByPathStartsWith(directoryPath).stream()
-                .forEach(pathRepository::delete);
+        s3EntryRepository.findByPathStartsWith(directoryPath).stream()
+                .forEach(s3EntryRepository::delete);
     }
 
     @Transactional
     public void renameDirectory(Container container, String directoryPath, String newDirectoryName) {
-        Path findPath = container.findPathBy(
+        S3Entry findS3Entry = container.findS3EntryBy(
                 extractDirectoryPrefix(directoryPath),
                 extractDirectoryName(directoryPath)
         );
-        findPath.rename(newDirectoryName + DELIMITER);
+        findS3Entry.rename(newDirectoryName + DELIMITER);
 
         renameAllPathInDirectory(directoryPath, newDirectoryName);
     }
 
     private void renameAllPathInDirectory(String directoryPath, String newDirectoryName) {
-        List<Path> toChangePaths = pathRepository.findByPathStartsWith(directoryPath);
+        List<S3Entry> toChangeS3Entries = s3EntryRepository.findByPathStartsWith(directoryPath);
         String newPrefix = createNewDirectoryPath(directoryPath, newDirectoryName);
 
-        toChangePaths.stream()
+        toChangeS3Entries.stream()
                 .map((path) -> path.rename(directoryPath, newPrefix))
                 .toList();
     }
 
-    public String findUuid(Long containerId, String filePrefix, String filename) {
-        return pathRepository.findUuid(containerId, filePrefix, filename)
-                .orElseThrow(() -> new NotFoundFile("존재하지 않는 파일입니다. containerId=" + containerId + ", filePrefix =" + filePrefix));
+    public Optional<String> findUuid(Long containerId, String filePrefix, String filename) {
+        return s3EntryRepository.findUuid(containerId, filePrefix, filename);
     }
 }

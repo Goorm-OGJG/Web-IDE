@@ -8,7 +8,8 @@ import com.ogjg.back.container.exception.DuplicatedContainerName;
 import com.ogjg.back.container.exception.NotFoundContainer;
 import com.ogjg.back.container.repository.ContainerRepository;
 import com.ogjg.back.directory.exception.NotFoundDirectory;
-import com.ogjg.back.path.service.PathService;
+import com.ogjg.back.file.exception.NotFoundFile;
+import com.ogjg.back.s3entry.service.S3EntryService;
 import com.ogjg.back.s3.repository.S3ContainerRepository;
 import com.ogjg.back.s3.service.S3ContainerService;
 import com.ogjg.back.s3.service.S3DirectoryService;
@@ -31,7 +32,7 @@ import static com.ogjg.back.common.util.PathUtil.*;
 public class ContainerService {
     private final UserRepository userRepository;
     private final ContainerRepository containerRepository;
-    private final PathService pathService;
+    private final S3EntryService s3EntryService;
     private final S3ContainerService s3ContainerService;
     private final S3ContainerRepository s3ContainerRepository;
     private final S3DirectoryService s3DirectoryService;
@@ -55,7 +56,7 @@ public class ContainerService {
         containerRepository.save(container);
 
         String containerPath = DELIMITER + request.getName() + DELIMITER;
-        pathService.saveDirectoryPath(container, containerPath, UUID.randomUUID().toString());
+        s3EntryService.saveDirectoryPath(container, containerPath, UUID.randomUUID().toString());
 
         return new ContainerResponse(container);
     }
@@ -120,13 +121,14 @@ public class ContainerService {
         return ContainerGetFileResponse.builder()
                 .filePath(createEmailRemovedKey(key, loginEmail))
                 .content(s3ContainerRepository.getFileContent(key))
-                .uuid(pathService.findUuid(
+                .uuid(s3EntryService.findUuid(
                         containerId,
                         extractFilePrefix(
                                 createEmailRemovedKey(key, loginEmail)
                         ),
                         extractFilename(key)
-                ))
+                ).orElseThrow(() -> new NotFoundFile("DB에 해당 파일 정보가 존재하지 않습니다."))
+                )
                 .build();
     }
     private List<ContainerGetDirectoryResponse> getDirectories(Long containerId, List<String> emailRemovedKeys) {
@@ -140,11 +142,11 @@ public class ContainerService {
         return ContainerGetDirectoryResponse.builder()
                 .directory(emailRemovedKey)
                 .uuid(
-                    pathService.findUuid(
+                        s3EntryService.findUuid(
                             containerId,
                             extractDirectoryPrefix(emailRemovedKey),
                             extractDirectoryName(emailRemovedKey)
-                    )
+                    ).orElseThrow(() -> new NotFoundFile("DB에 해당 디렉토리 정보가 존재하지 않습니다."))
                 )
                 .build();
     }

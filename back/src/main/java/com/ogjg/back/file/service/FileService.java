@@ -4,7 +4,7 @@ import com.ogjg.back.container.domain.Container;
 import com.ogjg.back.container.exception.NotFoundContainer;
 import com.ogjg.back.container.repository.ContainerRepository;
 import com.ogjg.back.file.dto.request.UpdateFileRequest;
-import com.ogjg.back.path.service.PathService;
+import com.ogjg.back.s3entry.service.S3EntryService;
 import com.ogjg.back.s3.service.S3FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,14 +19,14 @@ import static com.ogjg.back.common.util.PathUtil.createNewFilePath;
 public class FileService {
     private final ContainerRepository containerRepository;
     private final S3FileService s3FileService;
-    private final PathService pathService;
+    private final S3EntryService s3EntryService;
 
     @Transactional
     public void createFile(Long containerId, String filePath, String uuid) {
         Container findContainer = findContainerById(containerId);
         String email = findContainer.getUser().getEmail();
 
-        pathService.saveFilePath(findContainer, filePath, uuid);
+        s3EntryService.saveFilePath(findContainer, filePath, uuid);
         s3FileService.createFileKey(email, filePath);
     }
 
@@ -35,7 +35,7 @@ public class FileService {
         Container findContainer = findContainerById(containerId);
         String email = findContainer.getUser().getEmail();
 
-        pathService.deleteFilePath(findContainer, filePath);
+        s3EntryService.deleteFilePath(findContainer, filePath);
         s3FileService.deleteFile(email, filePath);
     }
 
@@ -53,7 +53,7 @@ public class FileService {
         String email = findContainer.getUser().getEmail();
         String newFilePath = createNewFilePath(filePath, newFilename);
 
-        pathService.updateFilename(findContainer, filePath, newFilename);
+        s3EntryService.updateFilename(findContainer, filePath, newFilename);
         s3FileService.updateFileKey(email, filePath, newFilePath);
     }
 

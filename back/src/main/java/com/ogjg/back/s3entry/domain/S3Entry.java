@@ -1,4 +1,4 @@
-package com.ogjg.back.file.domain;
+package com.ogjg.back.s3entry.domain;
 
 import com.ogjg.back.container.domain.Container;
 import jakarta.persistence.*;
@@ -12,7 +12,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class Path {
+public class S3Entry {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -29,19 +29,19 @@ public class Path {
     private String path;
 
     @Builder
-    public Path(String uuid, Container container, String name, String path) {
+    public S3Entry(String uuid, Container container, String name, String path) {
         this.uuid = uuid;
         this.container = container;
         this.name = name;
         this.path = path;
     }
 
-    public Path rename(String newFilename) {
+    public S3Entry rename(String newFilename) {
         this.name = newFilename;
         return this;
     }
 
-    public Path rename(String directoryPath, String newPrefix) {
+    public S3Entry rename(String directoryPath, String newPrefix) {
         this.path = (this.path).replace(directoryPath, newPrefix);
         return this;
     }
