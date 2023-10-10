@@ -7,21 +7,25 @@ public class PathUtil {
     public static final String PROFILE_IMAGE_FIXED_NAME = "image";
 
     public static String createImagePrefix(String email) {
+        email = toS3Email(email);
         return DELIMITER + email + DELIMITER + PROFILE_IMAGE_FIXED_NAME + EXTENSION_SEPARATOR;
     }
 
-    public static String pathToS3Key(String loginEmail, String filePath) {
-        loginEmail = loginEmail
-                .replace(".", S3_URL_DELIMITER)
-                .replace("@", S3_URL_DELIMITER);
-        return (DELIMITER + loginEmail + filePath);
+    public static String pathToS3Key(String email, String filePath) {
+        email = toS3Email(email);
+        return (DELIMITER + email + filePath);
     }
 
-    public static String createContainerPrefix(String loginEmail, String containerName) {
-        loginEmail = loginEmail
+    public static String createContainerPrefix(String email, String containerName) {
+        email = toS3Email(email);
+        return (DELIMITER + email + DELIMITER + containerName + DELIMITER);
+    }
+
+    private static String toS3Email(String email) {
+        email = email
                 .replace(".", S3_URL_DELIMITER)
                 .replace("@", S3_URL_DELIMITER);
-        return (DELIMITER + loginEmail + DELIMITER + containerName + DELIMITER);
+        return email;
     }
 
     /**
