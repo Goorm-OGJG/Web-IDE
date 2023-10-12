@@ -157,7 +157,7 @@ public class UserService {
         return ResponseCookie.from("refreshToken", refreshToken)
                 .maxAge(14 * 24 * 60 * 60)
                 .path("/")
-                .domain("ogjg.site")
+                .domain("ide.ogjg.site")
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("None")
@@ -167,7 +167,7 @@ public class UserService {
     public ResponseCookie deleteRefreshTokenCookie() {
         return ResponseCookie.from("refreshToken", null)
                 .maxAge(0)
-                .domain("ogjg.site")
+                .domain("ide.ogjg.site")
                 .path("/")
                 .httpOnly(true)
                 .secure(true)

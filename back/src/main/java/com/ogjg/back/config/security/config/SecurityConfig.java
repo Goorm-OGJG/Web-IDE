@@ -10,6 +10,7 @@ import com.ogjg.back.config.security.jwt.refreshtoken.RefreshTokenAuthentication
 import com.ogjg.back.user.service.EmailAuthService;
 import com.ogjg.back.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.ProviderManager;
@@ -40,6 +41,12 @@ public class SecurityConfig {
     private final UserService userService;
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final JwtUtils jwtUtils;
+
+    @Value("${origins.prod}")
+    private String prodDomain;
+
+    @Value("${origins.dev}")
+    private String devDomain;
 
     private final List<String> permitUrlList = new ArrayList<>(
             List.of(
@@ -85,7 +92,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedHeader("*");
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "https://ogjg.site"));
+        configuration.setAllowedOrigins(Arrays.asList(devDomain, prodDomain));
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader("Authorization");
 
