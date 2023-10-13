@@ -6,18 +6,18 @@ import { Desktop, Mobile } from "../../../../components/Responsive";
 import EmptyActiveTap from "./EmptyActiveTap";
 import Tab from "./Tab";
 import * as Icon from "../../../../components/Icon";
-import { useFileManage } from "../../../../hooks/CodeEditor/useFileManage";
+// import { useFileManage } from "../../../../hooks/CodeEditor/useFileManage";
 import CodeMirror from "./CodeMirror";
 import VoiceChat from "../../../../components/VoiceChat/VoiceChat";
 import Chat from "../../../../components/Chat/Chat";
 
 function CodeEditer() {
   const [tabs, setTabs] = useRecoilState(tabsState);
-  const { saveActiveTabFile } = useFileManage();
+  // const { saveActiveTabFile } = useFileManage();
   const [chatOpen, setChatOpen] = useState(false);
-  const handleSave = () => {
-    saveActiveTabFile();
-  };
+  // const handleSave = () => {
+  //   saveActiveTabFile();
+  // };
 
   const handleShare = () => {
     const webAddress = window.location.href;
@@ -50,9 +50,9 @@ function CodeEditer() {
               ))}
             </S.Tabs>
             <S.Icons>
-              <S.IconWrapper onClick={handleSave}>
+              {/* <S.IconWrapper onClick={handleSave}>
                 <Icon.Save size={16} />
-              </S.IconWrapper>
+              </S.IconWrapper> */}
 
               <S.IconWrapper onClick={handleShare}>
                 <Icon.Share size={16} />
