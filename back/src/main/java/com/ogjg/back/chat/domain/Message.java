@@ -30,17 +30,20 @@ public class Message {
 
     private MessageType type;
 
+    private String userImg;
+
     private String content;
 
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Builder
-    public Message(Room room, User user, MessageType type, String content, LocalDateTime createdAt) {
+    public Message(Room room, User user, MessageType type, String content, String userImg, LocalDateTime createdAt) {
         this.room = room;
         this.user = user;
         this.type = type;
         this.content = content;
+        this.userImg = userImg;
         this.createdAt = createdAt;
     }
 }

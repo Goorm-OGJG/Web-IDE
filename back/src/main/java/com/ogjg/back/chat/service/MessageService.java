@@ -20,6 +20,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
@@ -64,6 +65,7 @@ public class MessageService {
                 .user(user)
                 .type(message.getType())
                 .content(message.getContent())
+                .userImg(message.getUserImg())
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -106,6 +108,9 @@ public class MessageService {
         log.info("UserRooms: {}", userRooms);
         userRoomRepository.deleteAll(userRooms);
 
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 이메일입니다."));
+
         log.info("UserRooms: {}", userRooms);
         String leaveMessage = username + "님이 퇴장하셨습니다.";
         for (UserRoom userRoom : userRooms) {
@@ -115,6 +120,7 @@ public class MessageService {
                     .email(email)
                     .sender(username)
                     .content(leaveMessage)
+                    .userImg(user.getUserImg())
                     .build();
             template.convertAndSend("/sub/room/" + userRoom.getId().getRoomId(), message);
         }
@@ -160,6 +166,7 @@ public class MessageService {
                                         .getContainerId())
                         .sender(message.getUser().getName())
                         .content(message.getContent())
+                        .userImg(message.getUserImg())
                         .createdAt(message.getCreatedAt())
                         .build())
                 .toList();
