@@ -20,7 +20,6 @@ function Space() {
   const [spaceItemId, setSpaceItemId] = useRecoilState(isSpaceItemId);
   // 🔥API를 받아와서 컨테이너를 뿌려주는 데이터
   const [totalContainers, setTotalContainers] = useRecoilState(totalContainersState);
-
   // 🔥container종류 개수
   const allContainerCnt = totalContainers.length;
   const myContainerCnt = totalContainers.filter((containers: containerDataType) => {
@@ -37,7 +36,6 @@ function Space() {
   const handleItemActive = (id: number) => {
     setSpaceItemId(id);
     ScrollTop();
-    console.log(spaceItemId);
   };
   const ScrollTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -65,7 +63,7 @@ function Space() {
     if (searchContainer === "") {
       requestContainerData(searchContainer, setTotalContainers);
     }
-  }, []);
+  }, [totalContainers]);
 
   return (
     <div>

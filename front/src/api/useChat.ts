@@ -13,7 +13,7 @@ export default function useChatAPI() {
       .get(`${profileURL}/api/chat/${containerId}/messages`)
       .then((response) => {
         setInitialData(response.data.data);
-        console.log("containerId : ", response);
+        // console.log("containerId : ", response);
       })
 
       .catch((error) => {
@@ -25,12 +25,10 @@ export default function useChatAPI() {
     containerId: string,
     setChatUserData: React.Dispatch<React.SetStateAction<T.ChatUserDataType[]>>,
   ) => {
-    console.log(containerId);
     axios
       .get(`${profileURL}/api/chat/${containerId}/users`)
       .then((response) => {
         setChatUserData(response.data.data);
-        console.log("dsdsd", response.data.data);
       })
       .catch((error) => {
         alert(error);

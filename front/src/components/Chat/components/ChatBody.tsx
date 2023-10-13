@@ -8,21 +8,6 @@ import { useRecoilValue } from "recoil";
 import { userInfoState } from "../../../recoil/userState";
 import { chatUserState } from "../../../recoil/ChatState";
 
-// interface ChatData {
-//   userId: string;
-//   userImg: string;
-//   userName: string;
-//   text: string;
-// }
-// const initialData: ChatData[] = [
-//   {
-//     id: 1,
-//     userImg:
-//       "https://blog.kakaocdn.net/dn/AFzsZ/btqI088tZW3/HCqq10x0OG9SoMdG2Bo3YK/img.jpg",
-//     userName: "James",
-//     text: "안녕하세요",
-//   },
-// ];
 interface ChatBodyProps {
   containerId: string;
   messageList: ChatMessage[];
@@ -62,11 +47,12 @@ function ChatBody({ containerId, messageList }: ChatBodyProps) {
                     </S.ChatUserName>
                     <S.MyChatImg
                       src={
-                        chatUserData.find((data) => data.email === chat.email)
-                          ?.userImg === null
-                          ? "/images/default.png"
-                          : chatUserData.find((data) => data.email === chat.email)
-                              ?.userImg
+                        chat.userImg
+                        // chatUserData.find((data) => data.email === chat.email)
+                        //   ?.userImg === null
+                        //   ? "/images/default.png"
+                        //   : chatUserData.find((data) => data.email === chat.email)
+                        //       ?.userImg
                       }
                       alt="userImg"
                     />
@@ -80,11 +66,12 @@ function ChatBody({ containerId, messageList }: ChatBodyProps) {
                     </S.ChatUserName>
                     <S.ChatImg
                       src={
-                        chatUserData.find((data) => data.email === chat.email)
-                          ?.userImg === null
-                          ? "/images/default.png"
-                          : chatUserData.find((data) => data.email === chat.email)
-                              ?.userImg
+                        chat.userImg
+                        // chatUserData.find((data) => data.email === chat.email)
+                        //   ?.userImg === null
+                        //   ? "/images/default.png"
+                        //   : chatUserData.find((data) => data.email === chat.email)
+                        //       ?.userImg
                       }
                       alt="userImg"
                     />
@@ -109,11 +96,12 @@ function ChatBody({ containerId, messageList }: ChatBodyProps) {
                     </S.ChatUserName>
                     <S.MyChatImg
                       src={
-                        chatUserData.find((data) => data.email === chat.email)
-                          ?.userImg === null
-                          ? "/images/default.png"
-                          : chatUserData.find((data) => data.email === chat.email)
-                              ?.userImg
+                        chat.userImg
+                        // chatUserData.find((data) => data.email === chat.email)
+                        //   ?.userImg === null
+                        //   ? "/images/default.png"
+                        //   : chatUserData.find((data) => data.email === chat.email)
+                        //       ?.userImg
                       }
                       alt="userImg"
                     />
@@ -127,11 +115,12 @@ function ChatBody({ containerId, messageList }: ChatBodyProps) {
                     </S.ChatUserName>
                     <S.ChatImg
                       src={
-                        chatUserData.find((data) => data.email === chat.email)
-                          ?.userImg === null
-                          ? "/images/default.png"
-                          : chatUserData.find((data) => data.email === chat.email)
-                              ?.userImg
+                        chat.userImg
+                        // chatUserData.find((data) => data.email === chat.email)
+                        //   ?.userImg === null
+                        //   ? "/images/default.png"
+                        //   : chatUserData.find((data) => data.email === chat.email)
+                        //       ?.userImg
                       }
                       alt="userImg"
                     />

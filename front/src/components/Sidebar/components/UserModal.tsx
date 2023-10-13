@@ -3,15 +3,16 @@ import * as Icon from "../../Icon";
 import { useNavigate } from "react-router";
 import { Desktop, Mobile } from "../../Responsive";
 import { userInfoState } from "../../../recoil/userState";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useMyAPI } from "../../../api/useMyAPI";
 import { useEffect, useState } from "react";
+import { isUserInfo } from "../../../recoil/SidebarState";
 
 function UserModal() {
   const userInfo = useRecoilValue(userInfoState);
   const navigate = useNavigate();
   const { requestLogout } = useMyAPI();
-
+  const setInfoOpen = useSetRecoilState<boolean>(isUserInfo);
   const [userImg, setUserImg] = useState("");
   const handleNavigate = (destination: string) => {
     navigate(destination);
@@ -19,6 +20,7 @@ function UserModal() {
 
   const handleLogout = () => {
     requestLogout();
+    setInfoOpen(false);
   };
   useEffect(() => {
     if (userInfo?.userImg) {
@@ -45,6 +47,7 @@ function UserModal() {
             <S.SettingBox
               onClick={() => {
                 handleNavigate(`/my`);
+                setInfoOpen(false);
               }}
             >
               <S.SettingIcon>

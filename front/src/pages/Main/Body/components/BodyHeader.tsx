@@ -26,7 +26,6 @@ function BodyHeader() {
   const handleSearchContainerEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       setSearchContainer(searchText);
-      console.log(searchContainer);
     }
   };
   const handleRecent = () => {
