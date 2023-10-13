@@ -17,15 +17,17 @@ public class MessageDto {
     private Long containerId;
     private String sender;
     private String content;
+    private String userImg;
     private LocalDateTime createdAt;
 
     @Builder
-    public MessageDto(MessageType type, String email, Long containerId, String sender, String content, LocalDateTime createdAt) {
+    public MessageDto(MessageType type, String email, Long containerId, String sender, String content, String userImg, LocalDateTime createdAt) {
         this.type = type;
         this.email = email;
         this.containerId = containerId;
         this.sender = sender;
         this.content = content;
+        this.userImg = userImg;
         this.createdAt = createdAt;
     }
 }
