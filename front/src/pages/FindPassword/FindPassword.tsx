@@ -40,7 +40,7 @@ const FindPassword = () => {
         <S.LinkWrapper>
           <S.LinkWrapper>
             <S.Helpinfo>이미 계정이 있으세요?</S.Helpinfo>
-            <S.HelpLink to="/Login"> 로그인 </S.HelpLink>
+            <S.HelpLink to="/login"> 로그인 </S.HelpLink>
           </S.LinkWrapper>
         </S.LinkWrapper>
       </S.FindPasswordForm>

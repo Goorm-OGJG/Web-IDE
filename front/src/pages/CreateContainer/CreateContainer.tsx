@@ -23,6 +23,7 @@ function CreateContainer() {
   const isPrivate = useRef(true);
   const language = useRef("java");
   const { requestCreateContainer } = useCreateContainerAPI();
+  const clickRef = useRef(true);
   const backHandler = () => {
     navigate(-1);
   };
@@ -35,7 +36,7 @@ function CreateContainer() {
         private: isPrivate.current,
         language: language.current,
       };
-      requestCreateContainer(payload);
+      requestCreateContainer(payload, clickRef);
     }
   };
 

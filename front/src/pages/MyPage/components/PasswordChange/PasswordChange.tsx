@@ -7,6 +7,7 @@ function PasswordChange() {
   const nowRef = useRef<HTMLInputElement>(null);
   const newRef = useRef<HTMLInputElement>(null);
   const newConfirmRef = useRef<HTMLInputElement>(null);
+  const clickRef = useRef(false);
   const { requestPwChange } = useMyAPI();
 
   const changePasswordHandler = () => {
@@ -14,7 +15,7 @@ function PasswordChange() {
     const newValue = newRef.current!.value;
     const newConfirmValue = newConfirmRef.current!.value;
     if (newConfirmValue === newValue) {
-      requestPwChange(nowValue, newValue);
+      requestPwChange(nowValue, newValue, clickRef);
     } else {
       alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
     }

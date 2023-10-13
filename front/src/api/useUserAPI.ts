@@ -5,36 +5,50 @@ import axios from "axios";
 export function useUserAPI() {
   // const axios = useAxios();
   const navigate = useNavigate();
-  const requestLogin = (payload: T.LoginType) => {
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/api/users/login`, payload, {
-        withCredentials: true,
-      })
-      .then((response) => {
-        if (response) {
-          navigate("/main");
-          localStorage.setItem("accessToken", response.headers.authorization);
-        }
-      })
-      .catch((error) => {
-        alert(error.response.data.status.message);
-      });
+  const requestLogin = (
+    payload: T.LoginType,
+    clickRef: React.MutableRefObject<boolean>,
+  ) => {
+    if (clickRef.current) {
+      clickRef.current = false;
+      axios
+        .post(`${import.meta.env.VITE_API_URL}/api/users/login`, payload, {
+          withCredentials: true,
+        })
+        .then((response) => {
+          if (response) {
+            navigate("/main");
+            localStorage.setItem("accessToken", response.headers.authorization);
+          }
+        })
+        .catch((error) => {
+          alert(error.response.data.status.message);
+          clickRef.current = true;
+        });
+    }
   };
 
-  const requestSignUp = (payload: T.SignUpType) => {
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/api/users/signup`, payload)
-      .then((response) => {
-        if (response) {
-          alert("회원가입에 성공하셨습니다.");
-          navigate("/login");
-        } else {
-          alert("회원가입에 실패하셨습니다. 입력한 정보를 다시 확인해주세요.");
-        }
-      })
-      .catch((error) => {
-        alert(error.response.data.status.message);
-      });
+  const requestSignUp = (
+    payload: T.SignUpType,
+    clickRef: React.MutableRefObject<boolean>,
+  ) => {
+    if (clickRef.current) {
+      clickRef.current = false;
+      axios
+        .post(`${import.meta.env.VITE_API_URL}/api/users/signup`, payload)
+        .then((response) => {
+          if (response) {
+            alert("회원가입에 성공하셨습니다.");
+            navigate("/login");
+          } else {
+            alert("회원가입에 실패하셨습니다. 입력한 정보를 다시 확인해주세요.");
+          }
+        })
+        .catch((error) => {
+          alert(error.response.data.status.message);
+          clickRef.current = true;
+        });
+    }
   };
 
   const requestFindPassword = (

@@ -7,13 +7,14 @@ function DeleteAccount() {
   const [isOpen, setOpen] = useState(false);
 
   const ref = useRef<HTMLInputElement>(null);
+  const clickRef = useRef(true);
   const { requestDeleteUser } = useMyAPI();
 
   const cancelHandler = () => {
     setOpen(!isOpen);
   };
   const deleteUserHandler = () => {
-    requestDeleteUser(ref.current!.value);
+    requestDeleteUser(ref.current!.value, clickRef);
   };
   return (
     <React.Fragment>
