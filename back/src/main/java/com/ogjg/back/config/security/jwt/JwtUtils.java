@@ -16,7 +16,7 @@ import java.util.Map;
 @Component
 public class JwtUtils {
 
-    private final static long ACCESS_TOKEN_VALID_TIME = 500 * 60 * 1000;
+    private final static long ACCESS_TOKEN_VALID_TIME =  60 * 1000;
     private final static long REFRESH_TOKEN_VALID_TIME = 14 * 24 * 60 * 60 * 1000;
     private final static long EMAIL_TOKEN_VALID_TIME = 3 * 60 * 1000;
     private final static String ISSUER = "team_ogjg_Web_IDE";
