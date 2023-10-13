@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import * as S from "./LoginForm.style";
 import * as Icon from "../../../../components/Icon";
 import { Desktop, Mobile } from "../../../../components/Responsive";
@@ -12,7 +12,7 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [value, setValue] = useState("");
   const { requestLogin } = useUserAPI();
-
+  const clickRef = useRef(true);
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
@@ -49,7 +49,7 @@ export default function LoginForm() {
         email,
         password: value,
       };
-      requestLogin(payload);
+      requestLogin(payload, clickRef);
     }
   };
 

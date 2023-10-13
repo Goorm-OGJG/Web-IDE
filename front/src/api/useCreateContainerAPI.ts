@@ -13,20 +13,27 @@ export function useCreateContainerAPI() {
   const axios = useAxios();
   const navigate = useNavigate();
 
-  const requestCreateContainer = (payload: CreateContainerType) => {
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/api/containers`, payload)
-      .then((response) => {
-        if (response) {
-          alert("컨테이너 생성 완료!");
-          navigate("/main");
-        } else {
-          alert("컨테이너 생성 실패");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  const requestCreateContainer = (
+    payload: CreateContainerType,
+    clickRef: React.MutableRefObject<boolean>,
+  ) => {
+    if (clickRef.current) {
+      clickRef.current = false;
+      axios
+        .post(`${import.meta.env.VITE_API_URL}/api/containers`, payload)
+        .then((response) => {
+          if (response) {
+            alert("컨테이너 생성 완료!");
+            navigate("/main");
+          } else {
+            alert("컨테이너 생성 실패");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          clickRef.current = true;
+        });
+    }
   };
 
   const requestDuplicateContainerName = (

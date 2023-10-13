@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as S from "./ProfileImg.style";
 import { useMyAPI } from "../../../../api/useMyAPI";
 
@@ -10,6 +10,7 @@ function ProfileImg({ img }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState(img);
   const { requestEditProfile } = useMyAPI();
+  const clickRef = useRef(true);
   // console.log(preview);
   const fileHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const maxSize = 1024 ** 2;
@@ -36,7 +37,7 @@ function ProfileImg({ img }: Props) {
   const saveHandler = () => {
     if (file) {
       // alert("프로필 이미지 저장");
-      requestEditProfile(file, setFile);
+      requestEditProfile(file, setFile, clickRef);
     }
   };
 

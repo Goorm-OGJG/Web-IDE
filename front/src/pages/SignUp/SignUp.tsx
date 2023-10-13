@@ -16,7 +16,7 @@ const Signup = () => {
   const { requestSignUp, requestSendEmail } = useUserAPI();
   const passwordRef = useRef<HTMLInputElement>(null);
   const passwordConfirmRef = useRef<HTMLInputElement>(null);
-
+  const clickRef = useRef(false);
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
     setEmailOk(EMAIL_REG, e.target.value);
@@ -64,7 +64,7 @@ const Signup = () => {
         password: passwordRef.current!.value,
         name,
       };
-      requestSignUp(payload);
+      requestSignUp(payload, clickRef);
     }
   };
 
@@ -89,7 +89,7 @@ const Signup = () => {
             {isEmailSent === 1 ? <Spinner /> : "인증"}
           </S.AuthButton>
           {emailOk === 1 && isEmailSent === 0 && (
-            <S.EmailSuccessP>사용 가능한 이름입니다.</S.EmailSuccessP>
+            <S.EmailSuccessP>사용 가능한 이메일입니다.</S.EmailSuccessP>
           )}
           {emailOk === 0 && isEmailSent === 0 && (
             <S.EmailAlertP>이름 형식이 올바르지 않습니다.</S.EmailAlertP>
@@ -114,19 +114,6 @@ const Signup = () => {
           />
           <PasswordInput placeholder="비밀번호 확인" ref={passwordConfirmRef} />
         </S.Wrapper>
-
-        {/* <React.Fragment>
-          <S.NameBOX>
-            <S.StyledInputBox
-              placeholder="이름"
-              minLength={2}
-              maxLength={30}
-              onChange={changeNameHandler}
-            />
-            {nameOk === 1 && <S.CorrectP>사용 가능한 이름입니다.</S.CorrectP>}
-            {nameOk === 0 && <S.AlertP>이름 형식이 올바르지 않습니다.</S.AlertP>}
-          </S.NameBOX>
-        </React.Fragment> */}
         <S.EmailInputWrapper>
           <S.EmailInput
             placeholder="이름"
@@ -142,7 +129,7 @@ const Signup = () => {
 
         <S.LinkWrapper>
           <S.Logininfo>이미 계정이 있으세요?</S.Logininfo>
-          <S.LoginLink to="/Login">로그인</S.LoginLink>
+          <S.LoginLink to="/login">로그인</S.LoginLink>
         </S.LinkWrapper>
       </S.SingupForm>
     </S.BackGround>

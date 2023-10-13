@@ -15,13 +15,14 @@ function UserInfo({ userName, email }: Props) {
   const nameRef = useRef<HTMLInputElement>(null);
   const { requestEditUserName } = useMyAPI();
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const clickRef = useRef(false);
   const saveHandler = () => {
     const value = nameRef.current!.value;
     if (NAME_REG.test(value)) {
       // console.log("올바른 아이디 입니다");
       const tmpInfo = { ...userInfo!, name: value };
 
-      requestEditUserName(value);
+      requestEditUserName(value, clickRef);
       setUserInfo(tmpInfo);
     } else {
       alert("올바르지 않은 아이디 양식입니다.");
