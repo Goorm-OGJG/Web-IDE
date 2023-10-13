@@ -16,7 +16,7 @@ const Signup = () => {
   const { requestSignUp, requestSendEmail } = useUserAPI();
   const passwordRef = useRef<HTMLInputElement>(null);
   const passwordConfirmRef = useRef<HTMLInputElement>(null);
-  const clickRef = useRef(false);
+  const clickRef = useRef(true);
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
     setEmailOk(EMAIL_REG, e.target.value);
