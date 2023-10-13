@@ -2,7 +2,7 @@ import * as S from "./MSidebar.style";
 import * as Icon from "../../../../components/Icon";
 import React, { useState } from "react";
 import VoiceChat from "../../../../components/VoiceChat/VoiceChat";
-import { useFileManage } from "../../../../hooks/CodeEditor/useFileManage";
+// import { useFileManage } from "../../../../hooks/CodeEditor/useFileManage";
 import Chat from "../../../../components/Chat/Chat";
 
 type PropsType = {
@@ -11,15 +11,15 @@ type PropsType = {
 };
 
 function MSidebar({ isSidebarOpened, setIsSidebarOpened }: PropsType) {
-  const { saveActiveTabFile } = useFileManage();
+  // const { saveActiveTabFile } = useFileManage();
   const [chatOpen, setChatOpen] = useState(false);
   const handleSidebar = () => {
     setIsSidebarOpened((prev) => !prev);
   };
 
-  const handleSave = () => {
-    saveActiveTabFile();
-  };
+  // const handleSave = () => {
+  //   saveActiveTabFile();
+  // };
 
   const handleShare = () => {
     const webAddress = window.location.href;
@@ -40,9 +40,9 @@ function MSidebar({ isSidebarOpened, setIsSidebarOpened }: PropsType) {
           <Icon.Space size={25} />
         </S.IconWrapper>
 
-        <S.IconWrapper onClick={handleSave}>
+        {/* <S.IconWrapper onClick={handleSave}>
           <Icon.Save size={25} />
-        </S.IconWrapper>
+        </S.IconWrapper> */}
 
         <S.IconWrapper onClick={handleShare}>
           <Icon.Share size={25} />
