@@ -77,7 +77,6 @@ export default function useContainerAPI() {
 
   //🔥Delete : 해당 container 핀 여부 수정 요청
   const requestDeleteContainer = async (containerId: number) => {
-    console.log(containerId);
     await axios
       .delete(`${profileURL}/containers/${containerId}`)
       .then(() => {})

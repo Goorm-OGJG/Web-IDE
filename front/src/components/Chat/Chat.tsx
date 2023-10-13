@@ -18,6 +18,7 @@ export interface receiveMessageType {
 export interface ChatMessage {
   type: string;
   email: string;
+  userImg: string;
   containerId: string;
   content: string;
   sender: string;
@@ -25,6 +26,8 @@ export interface ChatMessage {
 function Chat() {
   const userInfo = useRecoilValue(userInfoState);
   const userEmail = userInfo?.email;
+  const userImg =
+    userInfo && userInfo.userImg === null ? "/images/default.png" : userInfo?.userImg;
   const sender = userInfo?.name;
   const { containerId } = useParams();
   const [messageList, setMessageList] = useState<ChatMessage[]>([]);
@@ -37,10 +40,10 @@ function Chat() {
     if (clientRef.current === null) {
       const socket = new SockJS(`${API_URL}/ws/chat`);
       const client = Stomp.over(socket);
-      console.log("client", client);
+      // console.log("client", client);
       // 연결 되었을때
       client.connect({}, () => {
-        console.log("Connected to WebSocket");
+        // console.log("Connected to WebSocket");
         joinRoom(containerId as string);
       });
       clientRef.current = client;
@@ -62,6 +65,7 @@ function Chat() {
       const chatMessage: ChatMessage = {
         type: "ENTER",
         email: userEmail as string,
+        userImg: userImg as string,
         containerId: room,
         sender: sender as string,
         content: "",
@@ -94,6 +98,7 @@ function Chat() {
       const chatMessage: ChatMessage = {
         type: "TALK",
         email: userEmail as string,
+        userImg: userImg as string,
         containerId: containerId as string,
         sender: sender as string,
         content: newMessage,

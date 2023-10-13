@@ -7,6 +7,7 @@ export interface ChatUserDataType {
 export interface ChatInitialDataType {
   type: string;
   email: string;
+  userImg: string;
   sender: string;
   content: string;
   createdAt: Date;

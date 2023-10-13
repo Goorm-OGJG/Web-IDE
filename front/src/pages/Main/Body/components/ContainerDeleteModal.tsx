@@ -1,4 +1,4 @@
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import * as S from "./ContainerDeleteModal.style";
 import {
   containersState,
@@ -19,9 +19,8 @@ function ContainerDeleteModal({
   setContainerSettingModal,
 }: PropsType) {
   const setDeleteModal = useSetRecoilState(isDeleteModal);
-  const searchContainer = useRecoilValue(isSearchContainer);
+  const [searchContainer, setSearchContainer] = useRecoilState(isSearchContainer);
   const setContainers = useSetRecoilState(containersState);
-
   const { requestDeleteContainer, requestContainerData } = useContainerAPI();
   const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -39,10 +38,11 @@ function ContainerDeleteModal({
     try {
       await requestDeleteContainer(containerId);
       // 🔥 삭제 요청 날리고 API containerData 요청
-      requestContainerData(searchContainer, setContainers);
+      await requestContainerData(searchContainer, setContainers);
     } catch (error) {
       alert(error);
     }
+    setSearchContainer("");
   };
 
   return (

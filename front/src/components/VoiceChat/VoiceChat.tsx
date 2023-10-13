@@ -8,7 +8,6 @@ import Spinner from "../Spinner/Spinner";
 
 function VoiceChat() {
   const param = useParams();
-  console.log(param);
   const roomId = param.containerId;
   const localMedia = useRef<ILocalMedia>();
   const room = useRef<IRoom>();

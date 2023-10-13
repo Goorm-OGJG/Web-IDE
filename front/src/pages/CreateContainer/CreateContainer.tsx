@@ -12,8 +12,6 @@ import {
   CreateContainerType,
   useCreateContainerAPI,
 } from "../../api/useCreateContainerAPI";
-import Sidebar from "../../components/Sidebar/Sidebar";
-import Header from "../../components/Header/Header";
 
 function CreateContainer() {
   const navigate = useNavigate();
@@ -42,8 +40,6 @@ function CreateContainer() {
 
   return (
     <>
-      <Header />
-      <Sidebar />
       <S.BackGround>
         {/* Desktop */}
         {/* <Desktop> */}
