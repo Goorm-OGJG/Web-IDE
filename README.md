@@ -49,6 +49,18 @@ https://github.com/Goorm-OGJG/Web-IDE/assets/79975172/1034d809-5a2d-4bb0-a8a0-e1
 https://github.com/Goorm-OGJG/Web-IDE/assets/79975172/0f7d74d4-c6d6-42db-b779-b37957fc71cf
 
 ### 3. 메인 UI
+#### 3-1. 컨테이너 사이드바 UI
+#### 3-2. 컨테이너 검색 기능
+
+#### 3-1. 컨테이너 삭제
+#### 3-1. 컨테이너 참여 유저 정보 UI
+https://github.com/Goorm-OGJG/Web-IDE/assets/93318615/5f36e3b8-24a6-41cb-84f0-eae3981ec45d
+#### 3-1. 컨테이너 시작
+https://github.com/Goorm-OGJG/Web-IDE/assets/93318615/7fc30149-6ade-4661-8173-bfbf8b9fc738
+#### 3-1. 컨테이너 고정, 링크 복사, 공개 비공개 전환
+#### 3-1. 컨테이너 소개 정보 수정
+#### 3-1. 컨테이너 정렬
+
 
 ### 4. 컨테이너 생성 UI
 https://github.com/Goorm-OGJG/Web-IDE/assets/79975172/a818fe47-df59-462c-8b66-e69ddd6a4c36
