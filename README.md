@@ -27,7 +27,7 @@
 ### Frontend
 - [김준서](https://github.com/narcoker)  
 - [한승재](https://github.com/stat1202)  
-- [조재균](https://github.com/stat1202)  
+- [조재균](https://github.com/JamesJoe0830)  
 - [한세라](https://github.com/hansera)  
 
 ### Backend
@@ -49,6 +49,22 @@ https://github.com/Goorm-OGJG/Web-IDE/assets/79975172/1034d809-5a2d-4bb0-a8a0-e1
 https://github.com/Goorm-OGJG/Web-IDE/assets/79975172/0f7d74d4-c6d6-42db-b779-b37957fc71cf
 
 ### 3. 메인 UI
+#### 3-1. 컨테이너 사이드바 UI
+https://github.com/Goorm-OGJG/Web-IDE/assets/93318615/3fb37e9e-efb3-4edf-832d-36f9576f0caf
+#### 3-2. 컨테이너 검색 기능
+https://github.com/Goorm-OGJG/Web-IDE/assets/93318615/9b1e9900-3d00-4d2f-b5e0-c2d11a5b4a39
+#### 3-3. 컨테이너 삭제
+https://github.com/Goorm-OGJG/Web-IDE/assets/93318615/0a08d837-ecfc-4f41-a54d-c12faaa2a4cc
+#### 3-4. 컨테이너 참여 유저 정보 UI
+https://github.com/Goorm-OGJG/Web-IDE/assets/93318615/5f36e3b8-24a6-41cb-84f0-eae3981ec45d
+#### 3-5. 컨테이너 시작
+https://github.com/Goorm-OGJG/Web-IDE/assets/93318615/7fc30149-6ade-4661-8173-bfbf8b9fc738
+#### 3-6. 컨테이너 고정, 링크 복사, 공개 비공개 전환
+https://github.com/Goorm-OGJG/Web-IDE/assets/93318615/86ee0819-dea0-4315-8e04-840e287d3167
+#### 3-7. 컨테이너 소개 정보 수정
+https://github.com/Goorm-OGJG/Web-IDE/assets/93318615/37e00797-e5e1-4e0e-8686-e8ddcd389a3c
+#### 3-8. 컨테이너 정렬 기능
+https://github.com/Goorm-OGJG/Web-IDE/assets/93318615/093efa9d-4957-4197-aab2-9f8f33230c69
 
 ### 4. 컨테이너 생성 UI
 https://github.com/Goorm-OGJG/Web-IDE/assets/79975172/a818fe47-df59-462c-8b66-e69ddd6a4c36
